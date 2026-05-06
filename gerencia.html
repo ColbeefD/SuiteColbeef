@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Suite Workbeef - espacio privado de gerencia." />
+    <title>Workbeef - Gerencia</title>
+    <link rel="stylesheet" href="./css/site.css" />
+  </head>
+  <body>
+    <div class="suiteLayout sidebar-open" id="suiteLayout">
+      <aside class="sidebar" id="sidebar" aria-label="Navegación Gerencia">
+        <div class="brand">
+          <div class="brandAvatar" aria-label="Workbeef">W</div>
+          <div class="brandText">
+            <div class="brandTitle">
+              <span class="brandLetters" aria-hidden="true">
+                <span class="brandLetter brandLetter--work" style="--i: 0">W</span><span class="brandLetter brandLetter--work" style="--i: 1">o</span><span class="brandLetter brandLetter--work" style="--i: 2">r</span><span class="brandLetter brandLetter--work" style="--i: 3">k</span><span class="brandLetter brandLetter--beef" style="--i: 4">b</span><span class="brandLetter brandLetter--beef" style="--i: 5">e</span><span class="brandLetter brandLetter--beef" style="--i: 6">e</span><span class="brandLetter brandLetter--beef" style="--i: 7">f</span>
+              </span>
+            </div>
+            <div class="brandSub">Gerencia</div>
+          </div>
+        </div>
+
+        <nav class="menu" id="appsMenu">
+          <a class="menuItem active" href="./gerencia.html" data-app-id="gerencia" data-app-name="Gerencia">
+            <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M8 40h32" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path d="M12 40V20h24v20" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+              <path d="M10 20l14-12 14 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M24 24v16M18 28h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>Gerencia</span>
+          </a>
+          <a class="menuItem" href="./site.html" data-app-id="workbeef" data-app-name="Workbeef">
+            <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="8" y="10" width="32" height="28" rx="3" stroke="currentColor" stroke-width="2" />
+              <path d="M14 20h8M14 26h20M14 32h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <circle cx="34" cy="20" r="3" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span>Volver a Workbeef</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="mainPanel">
+        <div id="mainContent" class="mainContent">
+          <section id="viewHome" class="mainView mainView--active" aria-label="Panel de gerencia">
+            <div class="homePanelArt">
+              <div class="homePanelArtMedia" aria-hidden="true">
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcset="
+                      img/site/fondoSite-900.webp 900w,
+                      img/site/fondoSite-1200.webp 1200w,
+                      img/site/fondoSite-1600.webp 1600w
+                    "
+                  />
+                  <source type="image/jpeg" srcset="img/site/fondoSite-hero.jpg" />
+                  <img src="img/site/fondoSite.png" alt="" width="1920" height="1080" decoding="async" />
+                </picture>
+              </div>
+              <div class="homePanelArtOverlay" aria-label="Workbeef Gerencia">
+                <span class="brandLetters brandLetters--hero" aria-hidden="true">
+                  <span class="brandLetter brandLetter--work" style="--i: 0">G</span><span class="brandLetter brandLetter--work" style="--i: 1">e</span><span class="brandLetter brandLetter--work" style="--i: 2">r</span><span class="brandLetter brandLetter--work" style="--i: 3">e</span><span class="brandLetter brandLetter--beef" style="--i: 4">n</span><span class="brandLetter brandLetter--beef" style="--i: 5">c</span><span class="brandLetter brandLetter--beef" style="--i: 6">i</span><span class="brandLetter brandLetter--beef" style="--i: 7">a</span>
+                </span>
+              </div>
+            </div>
+            <div class="dashboard">
+              <header class="dashboardIntro">
+                <p class="dashboardKicker">Workbeef privado</p>
+                <h2 class="dashboardTitle">Panel de Gerencia</h2>
+                <p class="dashboardSubtitle">Este espacio está vacío por ahora. Aquí vamos a agregar los módulos exclusivos de gerencia.</p>
+              </header>
+              <article class="settingsCard" aria-label="Estado del panel de gerencia">
+                <h3 class="settingsCardTitle">Sin módulos configurados</h3>
+                <p class="fieldHint">Cuando me digas, empiezo a montar los primeros módulos de gerencia en esta misma página.</p>
+              </article>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

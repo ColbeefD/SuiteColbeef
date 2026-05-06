@@ -404,6 +404,7 @@
   var powerBiPinOk = false;
   var pendingPowerBiHref = null;
   var RENDIMIENTOS_PIN = "250626";
+  var GERENCIA_PASSWORD = "gerencia2026*";
 
   function setPowerBiPinError(msg) {
     var err = document.getElementById("powerBiPinError");
@@ -457,6 +458,18 @@
     sendUsageEvent("module_click", "logistica");
     closeSettingsView();
     setActiveMenuByAppId("logistica");
+    window.location.href = href;
+  }
+
+  function requireGerenciaPasswordThenOpen(href) {
+    if (!href) return;
+    var input = window.prompt("Ingresa la contraseña para abrir Gerencia:");
+    if (input === null) return;
+    if (String(input) !== GERENCIA_PASSWORD) {
+      window.alert("Contraseña incorrecta.");
+      return;
+    }
+    closeSettingsView();
     window.location.href = href;
   }
 
@@ -1104,6 +1117,7 @@
     links.forEach(function (a) {
       a.addEventListener("click", function (e) {
         var href = a.getAttribute("href") || "";
+        var requiresPassword = a.getAttribute("data-requires-password");
         e.preventDefault();
         closeSearchModal();
         closeSettingsView();
@@ -1121,6 +1135,10 @@
           } else {
             window.location.href = href;
           }
+        } else if (requiresPassword === "gerencia") {
+          requireGerenciaPasswordThenOpen(href);
+        } else if (href && href !== "#") {
+          window.location.href = href;
         }
       });
     });
@@ -1522,11 +1540,16 @@
         closeSettingsView();
 
         var appId = a.getAttribute("data-app-id") || "";
+        var requiresPassword = a.getAttribute("data-requires-password");
         if (appId) {
           sendUsageEvent("module_click", appId);
         }
         var targetUrl = a.getAttribute("data-target-url");
         if (targetUrl && String(targetUrl).trim() !== "" && targetUrl !== "#") {
+          if (requiresPassword === "gerencia") {
+            requireGerenciaPasswordThenOpen(targetUrl);
+            return;
+          }
           window.location.href = targetUrl;
           return;
         }
@@ -1562,11 +1585,17 @@
   function initDashboardMosaic() {
     var tiles = Array.prototype.slice.call(document.querySelectorAll(".moduleTile"));
     tiles.forEach(function (tile) {
-      tile.addEventListener("click", function () {
+      tile.addEventListener("click", function (evt) {
         var id = tile.getAttribute("data-app-id");
+        var requiresPassword = tile.getAttribute("data-requires-password");
+        var href = tile.getAttribute("href");
         if (id) {
           sendUsageEvent("module_click", id);
           setActiveMenuByAppId(id);
+        }
+        if (requiresPassword === "gerencia") {
+          evt.preventDefault();
+          requireGerenciaPasswordThenOpen(href);
         }
       });
     });
