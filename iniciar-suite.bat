@@ -5,7 +5,7 @@ REM Launcher rapido para Workbeef Suite en Windows.
 cd /d "%~dp0"
 
 set "MODE=%~1"
-set "HOST=0.0.0.0"
+set "HOST=192.168.20.205"
 set "PORT=8000"
 
 if /i "%MODE%"=="laravel" goto :run_laravel
@@ -44,10 +44,10 @@ if errorlevel 1 (
 )
 
 echo.
-echo Iniciando Laravel en http://localhost:%PORT% ...
+echo Iniciando Laravel en http://%HOST%:%PORT% ...
 start "Workbeef Laravel" cmd /k "cd /d ""%~dp0laravel"" && php artisan serve --host=%HOST% --port=%PORT%"
 timeout /t 2 >nul
-start "" "http://localhost:%PORT%/"
+start "" "http://%HOST%:%PORT%/"
 goto :end
 
 :run_node
