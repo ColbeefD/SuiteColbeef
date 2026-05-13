@@ -16,17 +16,9 @@ echo =======================================
 echo   Workbeef Suite - Lanzador rapido
 echo =======================================
 echo.
-echo 1^) Laravel ^(recomendado^)
-echo 2^) Node
+echo Iniciando Laravel automaticamente...
 echo.
-set /p MODE=Elige modo [1/2]: 
-
-if "%MODE%"=="1" goto :run_laravel
-if "%MODE%"=="2" goto :run_node
-
-echo.
-echo Opcion invalida. Cerrando...
-goto :end
+goto :run_laravel
 
 :run_laravel
 if not exist "laravel\artisan" (
