@@ -860,12 +860,14 @@ body {
 }
 
 .moduleTile--powerBi,
-.moduleTile--logistica {
+.moduleTile--logistica,
+.moduleTile--gestion-humana {
   cursor: default;
 }
 
 .moduleTile--powerBi .moduleTileDesc,
-.moduleTile--logistica .moduleTileDesc {
+.moduleTile--logistica .moduleTileDesc,
+.moduleTile--gestion-humana .moduleTileDesc {
   margin-bottom: 0;
 }
 
@@ -884,7 +886,8 @@ body {
 }
 
 .moduleTile--powerBi .moduleTileActions,
-.moduleTile--logistica .moduleTileActions {
+.moduleTile--logistica .moduleTileActions,
+.moduleTile--gestion-humana .moduleTileActions {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -902,7 +905,9 @@ body {
 .moduleTile--powerBi:hover .moduleTileActions,
 .moduleTile--powerBi:focus-within .moduleTileActions,
 .moduleTile--logistica:hover .moduleTileActions,
-.moduleTile--logistica:focus-within .moduleTileActions {
+.moduleTile--logistica:focus-within .moduleTileActions,
+.moduleTile--gestion-humana:hover .moduleTileActions,
+.moduleTile--gestion-humana:focus-within .moduleTileActions {
   max-height: 260px;
   opacity: 1;
   pointer-events: auto;
@@ -914,7 +919,9 @@ body {
 .moduleTile--powerBi:hover .moduleTileHoverHint,
 .moduleTile--powerBi:focus-within .moduleTileHoverHint,
 .moduleTile--logistica:hover .moduleTileHoverHint,
-.moduleTile--logistica:focus-within .moduleTileHoverHint {
+.moduleTile--logistica:focus-within .moduleTileHoverHint,
+.moduleTile--gestion-humana:hover .moduleTileHoverHint,
+.moduleTile--gestion-humana:focus-within .moduleTileHoverHint {
   opacity: 0;
   max-height: 0;
   margin: 0;
@@ -924,7 +931,8 @@ body {
 
 @media (hover: none) {
   .moduleTile--powerBi .moduleTileActions,
-  .moduleTile--logistica .moduleTileActions {
+  .moduleTile--logistica .moduleTileActions,
+  .moduleTile--gestion-humana .moduleTileActions {
     max-height: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -934,7 +942,8 @@ body {
   }
 
   .moduleTile--powerBi .moduleTileHoverHint,
-  .moduleTile--logistica .moduleTileHoverHint {
+  .moduleTile--logistica .moduleTileHoverHint,
+  .moduleTile--gestion-humana .moduleTileHoverHint {
     display: none;
   }
 }
@@ -942,6 +951,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .moduleTile--powerBi .moduleTileActions,
   .moduleTile--logistica .moduleTileActions,
+  .moduleTile--gestion-humana .moduleTileActions,
   .moduleTileHoverHint {
     transition: none;
   }
@@ -2292,12 +2302,14 @@ body[data-suite-theme="oscuro"] .feedbackModal-dialog {
 }
 
 .searchModal-powerBiBlock,
-.searchModal-logisticaBlock {
+.searchModal-logisticaBlock,
+.searchModal-gestionHumanaBlock {
   padding: 12px 14px;
 }
 
 .searchModal-powerBiHeading,
-.searchModal-logisticaHeading {
+.searchModal-logisticaHeading,
+.searchModal-gestionHumanaHeading {
   display: block;
   font-size: 12px;
   font-weight: 800;
@@ -2308,14 +2320,16 @@ body[data-suite-theme="oscuro"] .feedbackModal-dialog {
 }
 
 .searchModal-powerBiActions,
-.searchModal-logisticaActions {
+.searchModal-logisticaActions,
+.searchModal-gestionHumanaActions {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .searchModal-item--powerBi .searchModal-link,
-.searchModal-item--logistica .searchModal-link {
+.searchModal-item--logistica .searchModal-link,
+.searchModal-item--gestion-humana .searchModal-link {
   border-radius: 8px;
   border: 1px solid rgba(8, 77, 38, 0.28);
   background: rgba(8, 77, 38, 0.05);
@@ -2324,7 +2338,8 @@ body[data-suite-theme="oscuro"] .feedbackModal-dialog {
 }
 
 .searchModal-item--powerBi .searchModal-link:hover,
-.searchModal-item--logistica .searchModal-link:hover {
+.searchModal-item--logistica .searchModal-link:hover,
+.searchModal-item--gestion-humana .searchModal-link:hover {
   background: var(--row-hover);
   border-color: rgba(8, 77, 38, 0.4);
 }

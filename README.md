@@ -185,6 +185,7 @@ Estas URLs se abren desde las tarjetas del panel (mosaico), y la información de
 
 - **Control operativo**: `http://192.168.100.241:5001/`
 - **Gestión humana**: `http://192.168.20.205:5000/login`
+- **Gestión humana — Contratista (login)**: `http://192.168.20.205:8009/login`
 - **Logística — Desposte (login)**: `http://192.168.20.205:8004/login`
 - **Logística — Inventarios**: `http://192.168.20.205:8501/`
 - **Logística — ERP logístico (login)**: `http://192.168.20.205:8088/login.php`

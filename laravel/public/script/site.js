@@ -1003,7 +1003,7 @@
     var visible = 0;
     items.forEach(function (li) {
       var anchors = li.querySelectorAll("a.searchModal-link");
-      var heading = li.querySelector(".searchModal-powerBiHeading, .searchModal-logisticaHeading");
+      var heading = li.querySelector(".searchModal-powerBiHeading, .searchModal-logisticaHeading, .searchModal-gestionHumanaHeading");
       var headingText = heading ? normalizeSearchText(heading.textContent) : "";
       if (!anchors.length) return;
       var match = !q;
@@ -1513,6 +1513,17 @@
     });
   }
 
+  function initGestionHumanaNav() {
+    var els = document.querySelectorAll(".moduleTile--gestion-humana .moduleTileBtn");
+    els.forEach(function (el) {
+      el.addEventListener("click", function () {
+        sendUsageEvent("module_click", "gestion-humana");
+        closeSettingsView();
+        setActiveMenuByAppId("gestion-humana");
+      });
+    });
+  }
+
   function initMenuTracking() {
     var links = Array.prototype.slice.call(document.querySelectorAll(".menuItem"));
     links.forEach(function (a) {
@@ -1546,6 +1557,15 @@
           if (tileLog && tileLog.scrollIntoView) {
             window.requestAnimationFrame(function () {
               tileLog.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+          }
+          return;
+        }
+        if (appId === "gestion-humana") {
+          var tileGh = document.querySelector(".moduleTile--gestion-humana");
+          if (tileGh && tileGh.scrollIntoView) {
+            window.requestAnimationFrame(function () {
+              tileGh.scrollIntoView({ behavior: "smooth", block: "nearest" });
             });
           }
           return;
@@ -1626,6 +1646,7 @@
     initPowerBiNav();
     initPowerBiPinModal();
     initLogisticaNav();
+    initGestionHumanaNav();
     initDashboardMosaic();
     initAdminAccessModal();
     initSettingsOpen();

@@ -41,7 +41,7 @@
             />
             <span>Control operativo</span>
           </a>
-          <a class="menuItem" href="http://192.168.20.205:5000/login" data-app-id="gestion-humana" data-app-name="Gestion Humana" data-target-url="http://192.168.20.205:5000/login">
+          <a class="menuItem" href="#" data-app-id="gestion-humana" data-app-name="Gestion Humana" aria-label="Gestión humana: ir al panel y elegir aplicación">
             <img
               class="menuIcon"
               src="img/site/menu/gestionHumana.webp"
@@ -176,13 +176,25 @@
                   <span class="moduleTileName">Control operativo</span>
                   <span class="moduleTileDesc">Central operativa para gestionar el flujo de procesos de la planta de beneficio.</span>
                 </a>
-                <a class="moduleTile" href="http://192.168.20.205:5000/login" data-app-id="gestion-humana" data-app-name="Gestion Humana">
+                <div
+                  class="moduleTile moduleTile--gestion-humana"
+                  data-app-id="gestion-humana"
+                  data-app-name="Gestion Humana"
+                  role="group"
+                  aria-label="Gestión humana: pasa el cursor o usa tab para ver Gestión humana y Contratista"
+                  tabindex="0"
+                >
                   <span class="moduleTileIcon" aria-hidden="true">
                     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="6" stroke="currentColor" stroke-width="2"/><path d="M8 38c0-6 6-10 10-10s10 4 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="34" cy="20" r="5" stroke="currentColor" stroke-width="2"/><path d="M28 38c-.5-4 3-7 6-7s6 3 6 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                   </span>
                   <span class="moduleTileName">Gestión humana</span>
                   <span class="moduleTileDesc">Personal activo, permisos, eventos, beneficios, EPS y tableros de talento.</span>
-                </a>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Gestión humana y Contratista.</p>
+                  <div class="moduleTileActions">
+                    <a class="moduleTileBtn" href="http://192.168.20.205:5000/login">Gestión humana</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8009/login">Contratista</a>
+                  </div>
+                </div>
                 <div
                   class="moduleTile moduleTile--logistica"
                   data-app-id="logistica"
@@ -437,8 +449,22 @@
           <li class="searchModal-item" data-app="control-operativo">
             <a class="searchModal-link" href="http://192.168.100.241:5001/" data-search="control operativo planta beneficio faena proceso">Control operativo</a>
           </li>
-          <li class="searchModal-item" data-app="gestion-humana">
-            <a class="searchModal-link" href="http://192.168.20.205:5000/login" data-search="gestion humana rrhh personal talento permisos nómina">Gestión humana</a>
+          <li class="searchModal-item searchModal-item--gestion-humana" data-app="gestion-humana">
+            <div class="searchModal-gestionHumanaBlock">
+              <span class="searchModal-gestionHumanaHeading">Gestión humana</span>
+              <div class="searchModal-gestionHumanaActions">
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:5000/login"
+                  data-search="gestion humana rrhh personal talento permisos nómina 5000"
+                  >Gestión humana</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8009/login"
+                  data-search="contratista gestion humana gh rrhh 8009 login"
+                  >Contratista</a>
+              </div>
+            </div>
           </li>
           <li class="searchModal-item searchModal-item--logistica" data-app="logistica">
             <div class="searchModal-logisticaBlock">
