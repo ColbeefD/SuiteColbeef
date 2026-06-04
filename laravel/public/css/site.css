@@ -868,13 +868,15 @@ body {
 
 .moduleTile--powerBi,
 .moduleTile--logistica,
-.moduleTile--gestion-humana {
+.moduleTile--gestion-humana,
+.moduleTile--calidad {
   cursor: default;
 }
 
 .moduleTile--powerBi .moduleTileDesc,
 .moduleTile--logistica .moduleTileDesc,
-.moduleTile--gestion-humana .moduleTileDesc {
+.moduleTile--gestion-humana .moduleTileDesc,
+.moduleTile--calidad .moduleTileDesc {
   margin-bottom: 0;
 }
 
@@ -894,7 +896,8 @@ body {
 
 .moduleTile--powerBi .moduleTileActions,
 .moduleTile--logistica .moduleTileActions,
-.moduleTile--gestion-humana .moduleTileActions {
+.moduleTile--gestion-humana .moduleTileActions,
+.moduleTile--calidad .moduleTileActions {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -914,7 +917,9 @@ body {
 .moduleTile--logistica:hover .moduleTileActions,
 .moduleTile--logistica:focus-within .moduleTileActions,
 .moduleTile--gestion-humana:hover .moduleTileActions,
-.moduleTile--gestion-humana:focus-within .moduleTileActions {
+.moduleTile--gestion-humana:focus-within .moduleTileActions,
+.moduleTile--calidad:hover .moduleTileActions,
+.moduleTile--calidad:focus-within .moduleTileActions {
   max-height: 260px;
   opacity: 1;
   pointer-events: auto;
@@ -928,7 +933,9 @@ body {
 .moduleTile--logistica:hover .moduleTileHoverHint,
 .moduleTile--logistica:focus-within .moduleTileHoverHint,
 .moduleTile--gestion-humana:hover .moduleTileHoverHint,
-.moduleTile--gestion-humana:focus-within .moduleTileHoverHint {
+.moduleTile--gestion-humana:focus-within .moduleTileHoverHint,
+.moduleTile--calidad:hover .moduleTileHoverHint,
+.moduleTile--calidad:focus-within .moduleTileHoverHint {
   opacity: 0;
   max-height: 0;
   margin: 0;
@@ -939,7 +946,8 @@ body {
 @media (hover: none) {
   .moduleTile--powerBi .moduleTileActions,
   .moduleTile--logistica .moduleTileActions,
-  .moduleTile--gestion-humana .moduleTileActions {
+  .moduleTile--gestion-humana .moduleTileActions,
+  .moduleTile--calidad .moduleTileActions {
     max-height: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -950,7 +958,8 @@ body {
 
   .moduleTile--powerBi .moduleTileHoverHint,
   .moduleTile--logistica .moduleTileHoverHint,
-  .moduleTile--gestion-humana .moduleTileHoverHint {
+  .moduleTile--gestion-humana .moduleTileHoverHint,
+  .moduleTile--calidad .moduleTileHoverHint {
     display: none;
   }
 }
@@ -959,6 +968,7 @@ body {
   .moduleTile--powerBi .moduleTileActions,
   .moduleTile--logistica .moduleTileActions,
   .moduleTile--gestion-humana .moduleTileActions,
+  .moduleTile--calidad .moduleTileActions,
   .moduleTileHoverHint {
     transition: none;
   }

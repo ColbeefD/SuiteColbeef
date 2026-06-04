@@ -67,10 +67,10 @@
           </a>
           <a
             class="menuItem"
-            href="http://192.168.20.205:8006/login"
+            href="#"
             data-app-id="calidad"
             data-app-name="Calidad"
-            data-target-url="http://192.168.20.205:8006/login"
+            aria-label="Calidad: ir al panel y elegir Qualapp"
           >
             <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="10" y="8" width="22" height="32" rx="2" stroke="currentColor" stroke-width="2" />
@@ -217,7 +217,14 @@
                     <a class="moduleTileBtn" href="http://192.168.20.205:8005/">Lenguas</a>
                   </div>
                 </div>
-                <a class="moduleTile" href="http://192.168.20.205:8006/login" data-app-id="calidad" data-app-name="Calidad">
+                <div
+                  class="moduleTile moduleTile--calidad"
+                  data-app-id="calidad"
+                  data-app-name="Calidad"
+                  role="group"
+                  aria-label="Calidad: pasa el cursor o usa tab para ver Qualapp"
+                  tabindex="0"
+                >
                   <span class="moduleTileIcon" aria-hidden="true">
                     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <rect x="10" y="8" width="22" height="32" rx="2" stroke="currentColor" stroke-width="2" />
@@ -227,7 +234,11 @@
                   </span>
                   <span class="moduleTileName">Calidad</span>
                   <span class="moduleTileDesc">Gestión de procesos, registros y controles de calidad en planta.</span>
-                </a>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para abrir Qualapp.</p>
+                  <div class="moduleTileActions">
+                    <a class="moduleTileBtn" href="http://192.168.20.205:5009/admin/login/">Qualapp</a>
+                  </div>
+                </div>
                 <div
                   class="moduleTile moduleTile--powerBi"
                   data-app-id="power-bi"
@@ -500,11 +511,16 @@
             </div>
           </li>
           <li class="searchModal-item" data-app="calidad">
-            <a
-              class="searchModal-link"
-              href="http://192.168.20.205:8006/login"
-              data-search="calidad aseguramiento procesos auditoria registros controles planta"
-              >Calidad</a>
+            <div class="searchModal-gestionHumanaBlock">
+              <span class="searchModal-gestionHumanaHeading">Calidad</span>
+              <div class="searchModal-gestionHumanaActions">
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:5009/admin/login/"
+                  data-search="calidad qualapp aseguramiento procesos auditoria registros controles planta admin login"
+                  >Qualapp</a>
+              </div>
+            </div>
           </li>
           <li class="searchModal-item searchModal-item--powerBi" data-app="power-bi">
             <div class="searchModal-powerBiBlock">

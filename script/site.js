@@ -1524,6 +1524,17 @@
     });
   }
 
+  function initCalidadNav() {
+    var els = document.querySelectorAll(".moduleTile--calidad .moduleTileBtn");
+    els.forEach(function (el) {
+      el.addEventListener("click", function () {
+        sendUsageEvent("module_click", "calidad");
+        closeSettingsView();
+        setActiveMenuByAppId("calidad");
+      });
+    });
+  }
+
   function initMenuTracking() {
     var links = Array.prototype.slice.call(document.querySelectorAll(".menuItem"));
     links.forEach(function (a) {
@@ -1566,6 +1577,15 @@
           if (tileGh && tileGh.scrollIntoView) {
             window.requestAnimationFrame(function () {
               tileGh.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+          }
+          return;
+        }
+        if (appId === "calidad") {
+          var tileCal = document.querySelector(".moduleTile--calidad");
+          if (tileCal && tileCal.scrollIntoView) {
+            window.requestAnimationFrame(function () {
+              tileCal.scrollIntoView({ behavior: "smooth", block: "nearest" });
             });
           }
           return;
@@ -1647,6 +1667,7 @@
     initPowerBiPinModal();
     initLogisticaNav();
     initGestionHumanaNav();
+    initCalidadNav();
     initDashboardMosaic();
     initAdminAccessModal();
     initSettingsOpen();

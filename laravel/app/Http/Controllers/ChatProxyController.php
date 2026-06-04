@@ -39,10 +39,12 @@ class ChatProxyController extends Controller
             .'3) LOGÍSTICA (incluye: módulo de Desposte en http://192.168.20.205:8004/login — ahí se gestiona el desposte; '
             .'inventarios en http://192.168.20.205:8501/; ERP logístico en http://192.168.20.205:8088/login.php; '
             .'lenguas en http://192.168.20.205:8005/; ingresar lenguas a inventario y generar documentación operativa). '
-            .'4) CANALES (incluye: registro de hallazgos y tolerancia, historial de registros, animales procesados, '
+            .'4) CALIDAD (incluye: Qualapp en http://192.168.20.205:5009/admin/login/ — acceso desde la tarjeta Calidad '
+            .'en WorkColbeef, botón Qualapp; gestión de procesos, registros y controles de calidad en planta). '
+            .'5) CANALES (incluye: registro de hallazgos y tolerancia, historial de registros, animales procesados, '
             .'dashboards diarios y mensuales con resumen gráfico, asignación de operación, asignación de puestos de trabajo '
             .'que puede cambiar cada día, gestión de usuarios, seguimiento de tiempo de uso o usabilidad). '
-            .'5) LOCKERBEEF (incluye: migración del control basado en hojas de cálculo a un aplicativo web integral para la '
+            .'6) LOCKERBEEF (incluye: migración del control basado en hojas de cálculo a un aplicativo web integral para la '
             .'gestión de recursos físicos, operando sobre una base de datos robusta y centralizada). '
             .'Si te preguntan algo fuera de este sistema, indica amablemente que solo puedes ayudar con la plataforma WorkColbeef.';
 
