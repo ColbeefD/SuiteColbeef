@@ -1,6 +1,6 @@
-# Worldbeef (Suite)
+# WorkColbeef (Suite)
 
-Portal web (HTML/CSS/JS) para navegar los módulos del sistema **Worldbeef**, con:
+Portal web (HTML/CSS/JS) para navegar los módulos del sistema **WorkColbeef**, con:
 
 - **Buscador en tiempo real** de módulos.
 - **Panel “Ajustes” protegido** por contraseña maestra (JWT en cookie HttpOnly).
@@ -16,7 +16,7 @@ Este repositorio incluye **dos formas de ejecutar**:
 
 ## Estructura del proyecto
 
-- `site.html`, `css/`, `script/`, `img/`, `data/`: frontend estático (Worldbeef).
+- `site.html`, `css/`, `script/`, `img/`, `data/`: frontend estático (WorkColbeef).
 - `server.js`: servidor Node opcional (proxy Gemini + admin login JWT + sirve estáticos).
 - `laravel/`: app Laravel (proxy Gemini + admin login JWT + middleware) y carpeta pública `laravel/public/` con el frontend.
 
@@ -41,13 +41,13 @@ Este repositorio incluye **dos formas de ejecutar**:
 
 Pon el proyecto en una ruta **sin espacios** y corta. Recomendado:
 
-- **Laragon**: `C:\laragon\www\Worldbeef`
-- **Sin Laragon (carpeta normal)**: `C:\Worldbeef`
+- **Laragon**: `C:\laragon\www\WorkColbeef`
+- **Sin Laragon (carpeta normal)**: `C:\WorkColbeef`
 
 Ejemplo (si vas a moverlo):
 
 ```bash
-mkdir C:\Worldbeef
+mkdir C:\WorkColbeef
 ```
 
 ---
@@ -78,7 +78,7 @@ Edita `laravel/.env` y configura, como mínimo:
 - `APP_URL` (para tu red): `http://192.168.20.205:8000`
 - `GEMINI_API_KEY` (para el chat)
 - `MASTER_PASSWORD_HASH` y `ADMIN_JWT_SECRET` (para Ajustes)
-- `ADMIN_COOKIE_NAME` (por defecto `Worldbeef_admin_token`)
+- `ADMIN_COOKIE_NAME` (por defecto `WorkColbeef_admin_token`)
 
 ### 4) (Opcional) Base de datos
 
@@ -168,7 +168,7 @@ Abrir:
 
 ---
 
-## Estadísticas de uso (Worldbeef)
+## Estadísticas de uso (WorkColbeef)
 
 El portal registra en el servidor eventos anónimos (visitas al portal, clics en módulos, búsqueda, chat). El resumen se ve en **Ajustes → Estadísticas** (requiere contraseña maestra).
 
@@ -205,8 +205,8 @@ Estas URLs se abren desde las tarjetas del panel (mosaico), y la información de
 
 ## Notas para Laragon (si lo vas a usar)
 
-- Coloca el repo en `C:\laragon\www\Worldbeef`
-- Asegura que el **document root** apunte a: `C:\laragon\www\Worldbeef\laravel\public`
+- Coloca el repo en `C:\laragon\www\WorkColbeef`
+- Asegura que el **document root** apunte a: `C:\laragon\www\WorkColbeef\laravel\public`
 - Crea `laravel/.env` y corre `composer install` + `php artisan key:generate`
 
 ---
@@ -249,5 +249,5 @@ En PowerShell, desde la raíz del proyecto:
 
 Los logs se guardan en:
 
-- `%LOCALAPPDATA%\WorldbeefSuite\logs\`
+- `%LOCALAPPDATA%\WorkColbeefSuite\logs\`
 

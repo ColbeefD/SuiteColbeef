@@ -12,7 +12,7 @@ class VerifyAdminJwt
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $cookieName = (string) config('admin.cookie_name', 'Worldbeef_admin_token');
+        $cookieName = (string) config('admin.cookie_name', 'WorkColbeef_admin_token');
         $jwt = $request->cookie($cookieName);
 
         if (!$jwt) {

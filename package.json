@@ -1,7 +1,7 @@
 {
-  "name": "suite-Worldbeef",
+  "name": "suite-WorkColbeef",
   "private": true,
-  "description": "Servidor local: sirve Worldbeef y el proxy /api/chat (clave Gemini solo en .env).",
+  "description": "Servidor local: sirve WorkColbeef y el proxy /api/chat (clave Gemini solo en .env).",
   "scripts": {
     "start": "node server.js",
     "optimize:hero": "node scripts/optimize-hero-image.js",

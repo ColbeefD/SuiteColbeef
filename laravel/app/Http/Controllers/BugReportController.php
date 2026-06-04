@@ -12,7 +12,7 @@ class BugReportController extends Controller
 {
     /** @var array<string, string> */
     private const SOFTWARE_LABELS = [
-        'Worldbeef-portal' => 'Worldbeef (portal)',
+        'WorkColbeef-portal' => 'WorkColbeef (portal)',
         'control-operativo' => 'Control operativo',
         'gestion-humana' => 'Gestión humana',
         'logistica' => 'Logística',
@@ -195,7 +195,7 @@ class BugReportController extends Controller
 
     private function visitorHash(Request $request): string
     {
-        $key = (string) config('app.key', 'Worldbeef');
+        $key = (string) config('app.key', 'WorkColbeef');
         $ip = (string) $request->ip();
         $ua = substr((string) $request->userAgent(), 0, 512);
 

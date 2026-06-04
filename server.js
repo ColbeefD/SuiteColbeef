@@ -36,7 +36,7 @@ function loadAdminPasswordHash() {
 var ADMIN_PASSWORD_HASH = loadAdminPasswordHash();
 var ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || "";
 var ADMIN_JWT_EXPIRES = process.env.ADMIN_JWT_EXPIRES || "8h";
-var ADMIN_COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "Worldbeef_admin_token";
+var ADMIN_COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "WorkColbeef_admin_token";
 /** Solo true si sirves HTTPS; en http://IP en red local debe ser false o la cookie no se guarda. */
 var COOKIE_SECURE =
   process.env.ADMIN_COOKIE_SECURE === "1" || String(process.env.ADMIN_COOKIE_SECURE || "").toLowerCase() === "true";
@@ -57,7 +57,7 @@ function loadPowerBiPinHash() {
 }
 
 var POWERBI_PIN_HASH = loadPowerBiPinHash();
-var POWERBI_PIN_COOKIE = process.env.POWERBI_PIN_COOKIE || "Worldbeef_powerbi_unlocked";
+var POWERBI_PIN_COOKIE = process.env.POWERBI_PIN_COOKIE || "WorkColbeef_powerbi_unlocked";
 var POWERBI_PIN_TTL_MINUTES = parseInt(String(process.env.POWERBI_PIN_TTL_MINUTES || "120"), 10) || 120;
 
 function normalizeModelName(rawModel) {
@@ -72,7 +72,7 @@ function normalizeModelName(rawModel) {
 }
 
 var COLBEEF_CHAT_SYSTEM =
-  "Eres el asistente virtual del sistema Worldbeef de Colbeef. Respondes de forma breve, amable y profesional en español. CONTEXTO DE LA EMPRESA: Colbeef es un matadero de bovinos ubicado en el municipio de Floridablanca (Santander, Colombia); allí se presta el servicio de faena o beneficio de bovinos. La suite Worldbeef agrupa el acceso a las aplicaciones internas; no inventes datos operativos ni cifras que no estén en esta descripción. MÓDULOS: 1) GESTIÓN HUMANA — Es el espacio donde se concentran los temas de talento y bienestar del personal: app principal en http://192.168.20.205:5000/login; módulo Contratista en http://192.168.20.205:8009/login (acceso desde la tarjeta Gestión humana en Worldbeef, botón Contratista). Accesos rápidos típicos como gráficos, cumpleaños y tarjeta del mes, aniversario laboral, áreas de trabajo, EPS, fondo de pensiones, personal activo, hijos activos, solicitudes de permiso y de vacaciones, entre otros. Orienta al usuario a usar ese módulo para RRHH, beneficios y trámites de personal. 2) CONTROL OPERATIVO — Corresponde a la operación de planta y consulta operativa: ingreso de vehículos, plan de faena, pesaje, corrales, insensibilización, rendimientos, consulta de facturas, ranking de clientes, panel o monitor operativo, historial/descargas según la app, etc. 3) LOGÍSTICA — El módulo de Desposte está en http://192.168.20.205:8004/login (acceso desde la tarjeta Logística en Worldbeef, botón Desposte); Inventarios en http://192.168.20.205:8501/ ; ERP logístico (App Logística) en http://192.168.20.205:8088/login.php ; Lenguas en http://192.168.20.205:8005/ . 4) CALIDAD — Aplicación de gestión de calidad y controles en planta; el acceso es por pantalla de login en http://192.168.20.205:8006/login . 5) POWER BI — Dos informes en vista web pública de solo lectura (Microsoft Power BI): Datos y cifras Colbeef y Control PQRS. En el panel principal la tarjeta Power BI muestra esas opciones al pasar el cursor o al enfocar con teclado; el ítem Power BI del menú lleva a esa tarjeta. Enlaces: Datos y cifras Colbeef → https://app.powerbi.com/view?r=eyJrIjoiOTVmN2UwN2QtNDMyYy00NjZlLTlmMWItYzQyNzNmMTFjYTY1IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 ; Control PQRS → https://app.powerbi.com/view?r=eyJrIjoiZmViY2FjN2MtZDk2Yy00YWEwLTg2YjQtZjIxZWRlMjMzYzY2IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 . Si preguntan algo fuera de esta suite o de Colbeef como empresa genérica sin relación con estas herramientas, indica amablemente que solo puedes orientar sobre el uso de Worldbeef y los módulos descritos.";
+  "Eres el asistente virtual del sistema WorkColbeef de Colbeef. Respondes de forma breve, amable y profesional en español. CONTEXTO DE LA EMPRESA: Colbeef es un matadero de bovinos ubicado en el municipio de Floridablanca (Santander, Colombia); allí se presta el servicio de faena o beneficio de bovinos. La suite WorkColbeef agrupa el acceso a las aplicaciones internas; no inventes datos operativos ni cifras que no estén en esta descripción. MÓDULOS: 1) GESTIÓN HUMANA — Es el espacio donde se concentran los temas de talento y bienestar del personal: app principal en http://192.168.20.205:5000/login; módulo Contratista en http://192.168.20.205:8009/login (acceso desde la tarjeta Gestión humana en WorkColbeef, botón Contratista). Accesos rápidos típicos como gráficos, cumpleaños y tarjeta del mes, aniversario laboral, áreas de trabajo, EPS, fondo de pensiones, personal activo, hijos activos, solicitudes de permiso y de vacaciones, entre otros. Orienta al usuario a usar ese módulo para RRHH, beneficios y trámites de personal. 2) CONTROL OPERATIVO — Corresponde a la operación de planta y consulta operativa: ingreso de vehículos, plan de faena, pesaje, corrales, insensibilización, rendimientos, consulta de facturas, ranking de clientes, panel o monitor operativo, historial/descargas según la app, etc. 3) LOGÍSTICA — El módulo de Desposte está en http://192.168.20.205:8004/login (acceso desde la tarjeta Logística en WorkColbeef, botón Desposte); Inventarios en http://192.168.20.205:8501/ ; ERP logístico (App Logística) en http://192.168.20.205:8088/login.php ; Lenguas en http://192.168.20.205:8005/ . 4) CALIDAD — Aplicación de gestión de calidad y controles en planta; el acceso es por pantalla de login en http://192.168.20.205:8006/login . 5) POWER BI — Dos informes en vista web pública de solo lectura (Microsoft Power BI): Datos y cifras Colbeef y Control PQRS. En el panel principal la tarjeta Power BI muestra esas opciones al pasar el cursor o al enfocar con teclado; el ítem Power BI del menú lleva a esa tarjeta. Enlaces: Datos y cifras Colbeef → https://app.powerbi.com/view?r=eyJrIjoiOTVmN2UwN2QtNDMyYy00NjZlLTlmMWItYzQyNzNmMTFjYTY1IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 ; Control PQRS → https://app.powerbi.com/view?r=eyJrIjoiZmViY2FjN2MtZDk2Yy00YWEwLTg2YjQtZjIxZWRlMjMzYzY2IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 . Si preguntan algo fuera de esta suite o de Colbeef como empresa genérica sin relación con estas herramientas, indica amablemente que solo puedes orientar sobre el uso de WorkColbeef y los módulos descritos.";
 
 var rootDir = path.join(__dirname);
 var STATS_FILE = path.join(rootDir, "data", "usage-stats.json");
@@ -134,7 +134,7 @@ function isStatsPostRateLimited(req) {
 function visitorHashNode(req) {
   var ip = String(getClientIp(req));
   var ua = String(req.headers["user-agent"] || "").slice(0, 512);
-  var secret = ADMIN_JWT_SECRET && ADMIN_JWT_SECRET.length >= 8 ? ADMIN_JWT_SECRET : "Worldbeef-node-stats";
+  var secret = ADMIN_JWT_SECRET && ADMIN_JWT_SECRET.length >= 8 ? ADMIN_JWT_SECRET : "WorkColbeef-node-stats";
   return crypto.createHmac("sha256", secret).update(ip + "|" + ua).digest("hex").slice(0, 32);
 }
 
@@ -474,7 +474,7 @@ app.use("/admin", requireAdminJwt, express.static(path.join(rootDir, "admin")));
 app.use(express.static(rootDir));
 
 app.listen(PORT, function () {
-  console.log("Worldbeef → http://localhost:" + PORT + "/site.html");
+  console.log("WorkColbeef → http://localhost:" + PORT + "/site.html");
   console.log("La API Key de Gemini se lee solo desde .env (no expuesta al navegador).");
   console.log("Modelo Gemini activo → " + normalizeModelName(GEMINI_MODEL));
   console.log("Auth admin activa → " + (ADMIN_PASSWORD_HASH && ADMIN_JWT_SECRET ? "SI" : "NO"));

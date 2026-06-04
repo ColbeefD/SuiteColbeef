@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$dataDir = Join-Path $env:LOCALAPPDATA "WorldbeefSuite"
+$dataDir = Join-Path $env:LOCALAPPDATA "WorkColbeefSuite"
 $logDir = Join-Path $dataDir "logs"
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 

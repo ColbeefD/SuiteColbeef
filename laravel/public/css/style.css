@@ -1,5 +1,5 @@
 :root {
-  /* Misma paleta que la Suite (Worldbeef) */
+  /* Misma paleta que la Suite (WorkColbeef) */
   --green: #084d26;
   --red: #d61f2c;
   --shadow3d: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.5));
@@ -121,8 +121,8 @@ body {
   gap: clamp(4px, 1.3vw, 10px);
 }
 
-/* Marca Worldbeef: letras aparecen en orden y se quedan (sin temblor) */
-.word--Worldbeef {
+/* Marca WorkColbeef: letras aparecen en orden y se quedan (sin temblor) */
+.word--WorkColbeef {
   align-items: center;
   gap: clamp(2px, 0.9vw, 8px);
 }
@@ -139,14 +139,14 @@ body {
   animation-delay: calc(var(--i) * 0.09s);
 }
 
-.letterChar--world {
+.letterChar--work {
   color: var(--green);
   text-shadow:
     0 2px 0 rgba(0, 40, 18, 0.35),
     0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
-.letterChar--beef {
+.letterChar--colbeef {
   color: var(--red);
   text-shadow:
     0 2px 0 rgba(80, 10, 10, 0.35),

@@ -9,7 +9,7 @@ param(
   [ValidateSet("runkey", "task")]
   [string]$Method = "runkey",
 
-  [string]$TaskName = "WorldbeefSuite",
+  [string]$TaskName = "WorkColbeefSuite",
 
   [string]$HostAddress = "0.0.0.0",
 
@@ -72,7 +72,7 @@ if ($Method -eq "task") {
   }
 
   Write-Host "OK: tarea creada ($TaskName) -> $Mode"
-  Write-Host "Logs: $env:LOCALAPPDATA\\WorldbeefSuite\\logs\\"
+  Write-Host "Logs: $env:LOCALAPPDATA\\WorkColbeefSuite\\logs\\"
   exit 0
 }
 
@@ -82,5 +82,5 @@ New-ItemProperty -Path $runKeyPath -Name $TaskName -Value $taskCmd -PropertyType
 
 Write-Host "OK: auto-inicio instalado (Run key) -> $Mode"
 Write-Host "Nombre: $TaskName"
-Write-Host "Logs: $env:LOCALAPPDATA\\WorldbeefSuite\\logs\\"
+Write-Host "Logs: $env:LOCALAPPDATA\\WorkColbeefSuite\\logs\\"
 

@@ -16,7 +16,7 @@ $envPath = dirname(__DIR__) . '/.env';
 /**
  * @return array{b64: string, legacy_hash: string}
  */
-function WorldbeefParseEnvHashes(string $path): array
+function WorkColbeefParseEnvHashes(string $path): array
 {
     $out = ['b64' => '', 'legacy_hash' => ''];
     if (! is_readable($path)) {
@@ -58,7 +58,7 @@ function WorldbeefParseEnvHashes(string $path): array
     return $out;
 }
 
-$parsed = WorldbeefParseEnvHashes($envPath);
+$parsed = WorkColbeefParseEnvHashes($envPath);
 $rawB64 = $parsed['b64'];
 $legacy = $parsed['legacy_hash'];
 
@@ -75,7 +75,7 @@ if ($rawB64 !== '') {
 $fromConfig = (string) config('admin.password_hash');
 $cachedFile = dirname(__DIR__) . '/bootstrap/cache/config.php';
 
-echo '--- Worldbeef: verificación contraseña maestra ---' . PHP_EOL;
+echo '--- WorkColbeef: verificación contraseña maestra ---' . PHP_EOL;
 echo 'probando_clave: ' . $plain . PHP_EOL;
 echo 'archivo .env: ' . $envPath . ' (' . (is_readable($envPath) ? 'ok' : 'no legible') . ')' . PHP_EOL;
 
