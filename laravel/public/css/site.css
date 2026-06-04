@@ -615,24 +615,6 @@ body {
   padding: 12px 20px;
 }
 
-.homePanelArtOverlay::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(92%, 720px);
-  height: 72%;
-  transform: translate(-50%, -50%);
-  border-radius: 14px;
-  background: radial-gradient(
-    ellipse 100% 100% at 50% 50%,
-    rgba(255, 255, 255, 0.88) 0%,
-    rgba(255, 255, 255, 0.45) 55%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
 .brandLetters--hero {
   position: relative;
   z-index: 1;
