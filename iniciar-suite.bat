@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions
 
-REM Launcher rapido para Workbeef Suite en Windows.
+REM Launcher rapido para Worldbeef Suite en Windows.
 cd /d "%~dp0"
 
 set "MODE=%~1"
@@ -13,7 +13,7 @@ if /i "%MODE%"=="node" goto :run_node
 
 echo.
 echo =======================================
-echo   Workbeef Suite - Lanzador rapido
+echo   Worldbeef Suite - Lanzador rapido
 echo =======================================
 echo.
 echo Iniciando Laravel automaticamente...
@@ -37,7 +37,7 @@ if errorlevel 1 (
 
 echo.
 echo Iniciando Laravel en http://%HOST%:%PORT% ...
-start "Workbeef Laravel" cmd /k "cd /d ""%~dp0laravel"" && php artisan serve --host=%HOST% --port=%PORT%"
+start "Worldbeef Laravel" cmd /k "cd /d ""%~dp0laravel"" && php artisan serve --host=%HOST% --port=%PORT%"
 timeout /t 2 >nul
 start "" "http://%HOST%:%PORT%/"
 goto :end
@@ -58,7 +58,7 @@ if errorlevel 1 (
 
 echo.
 echo Iniciando Node en http://localhost:3000/site.html ...
-start "Workbeef Node" cmd /k "cd /d ""%~dp0"" && npm start"
+start "Worldbeef Node" cmd /k "cd /d ""%~dp0"" && npm start"
 timeout /t 2 >nul
 start "" "http://localhost:3000/site.html"
 goto :end

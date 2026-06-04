@@ -28,12 +28,12 @@ class ChatProxyController extends Controller
             ], 400);
         }
 
-        $systemPrompt = 'Eres el asistente virtual del sistema Workbeef. Respondes de forma breve, amable y profesional. '
+        $systemPrompt = 'Eres el asistente virtual del sistema Worldbeef. Respondes de forma breve, amable y profesional. '
             .'Ayudas a los usuarios a navegar por el sistema. Conoces módulos principales: '
             .'1) CONTROL OPERATIVO (incluye: ingreso de vehículos, plan de faena, pesaje, corrales, '
             .'insensibilización, rendimientos, facturas, ranking de clientes). '
             .'2) GESTIÓN HUMANA (incluye: app principal en http://192.168.20.205:5000/login; módulo Contratista en '
-            .'http://192.168.20.205:8009/login — acceso desde la tarjeta Gestión humana en Workbeef; personal activo, '
+            .'http://192.168.20.205:8009/login — acceso desde la tarjeta Gestión humana en Worldbeef; personal activo, '
             .'perfiles por área, eventos como cumpleaños, solicitudes de permisos y vacaciones, datos de beneficios '
             .'como EPS y pensiones, y panel de gráficos). '
             .'3) LOGÍSTICA (incluye: módulo de Desposte en http://192.168.20.205:8004/login — ahí se gestiona el desposte; '
@@ -44,7 +44,7 @@ class ChatProxyController extends Controller
             .'que puede cambiar cada día, gestión de usuarios, seguimiento de tiempo de uso o usabilidad). '
             .'5) LOCKERBEEF (incluye: migración del control basado en hojas de cálculo a un aplicativo web integral para la '
             .'gestión de recursos físicos, operando sobre una base de datos robusta y centralizada). '
-            .'Si te preguntan algo fuera de este sistema, indica amablemente que solo puedes ayudar con la plataforma Workbeef.';
+            .'Si te preguntan algo fuera de este sistema, indica amablemente que solo puedes ayudar con la plataforma Worldbeef.';
 
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/'
             .urlencode($geminiModel)

@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $laravelDir = Join-Path $ProjectRoot "laravel"
 
-$dataDir = Join-Path $env:LOCALAPPDATA "WorkbeefSuite"
+$dataDir = Join-Path $env:LOCALAPPDATA "WorldbeefSuite"
 $logDir = Join-Path $dataDir "logs"
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 

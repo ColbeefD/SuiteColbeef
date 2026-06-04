@@ -6,14 +6,14 @@
   var geminiChatHistory = [];
   var hasAdminSession = false;
   var pendingAdminAccessResolver = null;
-  var ADMIN_UNLOCKED_KEY = "workbeef_admin_unlocked_v1";
+  var ADMIN_UNLOCKED_KEY = "Worldbeef_admin_unlocked_v1";
 
   /** Modelo por defecto (alineado con data/suite-settings-default.json) */
   var DEFAULT_SETTINGS = {
     version: 1,
     cuenta: {
       empleadoId: "",
-      nombreCompleto: "Workbeef",
+      nombreCompleto: "Worldbeef",
       cargo: "ninguno",
       departamento: "santander",
       fotoUrl: null,
@@ -574,10 +574,10 @@
 
   function recordPageViewOnce() {
     try {
-      if (sessionStorage.getItem("workbeef_usage_pv") === "1") {
+      if (sessionStorage.getItem("Worldbeef_usage_pv") === "1") {
         return;
       }
-      sessionStorage.setItem("workbeef_usage_pv", "1");
+      sessionStorage.setItem("Worldbeef_usage_pv", "1");
     } catch (e) {
       return;
     }
@@ -1059,7 +1059,7 @@
     if (ticketBox) ticketBox.hidden = true;
     lastBugMailtoPayload = null;
     var sw = document.getElementById("feedbackSoftware");
-    if (sw) sw.value = "workbeef-portal";
+    if (sw) sw.value = "Worldbeef-portal";
     fillFeedbackDetalleOptions("");
     var firstField = document.getElementById("feedbackTema");
     if (firstField) firstField.focus();
@@ -1377,7 +1377,7 @@
           return;
         }
         var p = lastBugMailtoPayload;
-        var subject = "[Workbeef] " + p.tema + " — " + p.detalle + " [" + p.ticket_code + "]";
+        var subject = "[Worldbeef] " + p.tema + " — " + p.detalle + " [" + p.ticket_code + "]";
         var body =
           "ID caso: " +
           p.ticket_code +
@@ -1391,7 +1391,7 @@
           p.detalle +
           "\n\nDescripción:\n" +
           p.mensaje +
-          "\n\n---\nWorkbeef (bugs / PQR)";
+          "\n\n---\nWorldbeef (bugs / PQR)";
         var url =
           "mailto:" + FEEDBACK_EMAIL +
           "?subject=" + encodeURIComponent(subject) +

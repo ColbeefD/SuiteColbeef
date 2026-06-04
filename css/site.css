@@ -1,4 +1,4 @@
-/* Paleta Workbeef: verde + rojo + blanco (más viva, menos grisácea) */
+/* Paleta Worldbeef: verde + rojo + blanco (más viva, menos grisácea) */
 :root {
   --green: #084d26;
   --green-rgb: 8, 77, 38;
@@ -131,7 +131,7 @@ body {
   line-height: 1.2;
 }
 
-/* Workbeef: letras en orden (misma idea que index.html) */
+/* Worldbeef: letras en orden (misma idea que index.html) */
 .brandLetters {
   display: inline-flex;
   align-items: baseline;
@@ -147,7 +147,7 @@ body {
   animation-delay: calc(var(--i) * 0.065s);
 }
 
-.brandLetter--work {
+.brandLetter--world {
   color: var(--green);
 }
 
@@ -601,18 +601,11 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center 62%;
 }
 
 .homePanelArtOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  padding: 8px 16px;
+  display: none;
 }
 
 .brandLetters--hero {
@@ -640,7 +633,7 @@ body {
   }
 
   .homePanelArtMedia img {
-    object-position: center 28%;
+    object-position: center 62%;
   }
 }
 
@@ -2632,7 +2625,7 @@ body[data-suite-theme="oscuro"] .adminAccessModal-dialog {
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
 }
 
-/* --- Asistente flotante Gemini (Workbeef) --- */
+/* --- Asistente flotante Gemini (Worldbeef) --- */
 .colbeefChat {
   --colbeef-chat-green: var(--green);
   --colbeef-chat-bot-bg: #ececec;

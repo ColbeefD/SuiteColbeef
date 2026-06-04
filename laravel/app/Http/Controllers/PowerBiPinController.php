@@ -12,7 +12,7 @@ class PowerBiPinController extends Controller
 {
     public function session(Request $request): JsonResponse
     {
-        $cookieName = (string) config('powerbi.cookie_name', 'workbeef_powerbi_unlocked');
+        $cookieName = (string) config('powerbi.cookie_name', 'Worldbeef_powerbi_unlocked');
         $val = (string) $request->cookie($cookieName, '');
 
         return response()->json([
@@ -53,7 +53,7 @@ class PowerBiPinController extends Controller
 
         RateLimiter::clear($key);
 
-        $cookieName = (string) config('powerbi.cookie_name', 'workbeef_powerbi_unlocked');
+        $cookieName = (string) config('powerbi.cookie_name', 'Worldbeef_powerbi_unlocked');
         $ttl = (int) config('powerbi.ttl_minutes', 120);
 
         $cookie = cookie(

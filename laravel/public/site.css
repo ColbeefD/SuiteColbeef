@@ -1,4 +1,4 @@
-/* Paleta corporativa: verde + rojo (Workbeef) */
+/* Paleta corporativa: verde + rojo (Worldbeef) */
 :root {
   --green: #1f9d3a;
   --green-soft: #eaf7ed;
@@ -128,7 +128,7 @@ body {
   line-height: 1.2;
 }
 
-/* Workbeef: letras en orden (misma idea que index.html) */
+/* Worldbeef: letras en orden (misma idea que index.html) */
 .brandLetters {
   display: inline-flex;
   align-items: baseline;
@@ -144,7 +144,7 @@ body {
   animation-delay: calc(var(--i) * 0.065s);
 }
 
-.brandLetter--work {
+.brandLetter--world {
   color: var(--green);
 }
 
@@ -2028,7 +2028,7 @@ body[data-suite-theme="oscuro"] .adminAccessModal-dialog {
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
 }
 
-/* --- Asistente flotante Gemini (Workbeef) --- */
+/* --- Asistente flotante Gemini (Worldbeef) --- */
 .colbeefChat {
   --colbeef-chat-green: #2e8b57;
   --colbeef-chat-bot-bg: #ececec;

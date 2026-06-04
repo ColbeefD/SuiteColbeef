@@ -137,7 +137,7 @@ class UsageStatsController extends Controller
 
     private function visitorHash(Request $request): string
     {
-        $key = (string) config('app.key', 'workbeef');
+        $key = (string) config('app.key', 'Worldbeef');
         $ip = (string) $request->ip();
         $ua = substr((string) $request->userAgent(), 0, 512);
 
