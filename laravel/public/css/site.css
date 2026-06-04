@@ -569,7 +569,7 @@ body {
   margin-left: calc(50% - 50vw + 202px);
 }
 
-/* Franja hero: imagen completa visible (texto del mapa + marca) */
+/* Franja hero: imagen a ancho completo */
 .homePanelArt {
   position: relative;
   z-index: 0;
@@ -579,9 +579,9 @@ body {
   line-height: 0;
   overflow: hidden;
   border-radius: 0 0 18px 18px;
-  height: clamp(100px, 16vh, 188px);
-  max-height: min(20vh, 200px);
-  background: #f2f6f9;
+  height: clamp(140px, 22vh, 280px);
+  max-height: min(28vh, 300px);
+  background: #eef3f7;
 }
 
 .homePanelArtMedia {
@@ -600,8 +600,8 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center center;
+  object-fit: cover;
+  object-position: center 48%;
 }
 
 .homePanelArtOverlay {
@@ -629,8 +629,12 @@ body {
 
 @media (min-width: 1100px) {
   .homePanelArt {
-    height: clamp(108px, 17vh, 200px);
-    max-height: min(22vh, 210px);
+    height: clamp(160px, 24vh, 300px);
+    max-height: min(30vh, 320px);
+  }
+
+  .homePanelArtMedia img {
+    object-position: center 46%;
   }
 }
 
@@ -1903,8 +1907,12 @@ body[data-suite-theme="oscuro"] .toggleUi {
 
   .homePanelArt {
     border-radius: 0 0 14px 14px;
-    height: clamp(72px, 12vh, 140px);
-    max-height: min(16vh, 150px);
+    height: clamp(120px, 20vh, 220px);
+    max-height: min(26vh, 240px);
+  }
+
+  .homePanelArtMedia img {
+    object-position: center 50%;
   }
 
   .brandLetters--hero {
