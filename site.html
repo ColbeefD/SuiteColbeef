@@ -70,7 +70,7 @@
             href="#"
             data-app-id="calidad"
             data-app-name="Calidad"
-            aria-label="Calidad: ir al panel y elegir Qualapp o Canales"
+            aria-label="Calidad: ir al panel y elegir Qualapp, Canales o Colbeef-Ops"
           >
             <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="10" y="8" width="22" height="32" rx="2" stroke="currentColor" stroke-width="2" />
@@ -222,7 +222,7 @@
                   data-app-id="calidad"
                   data-app-name="Calidad"
                   role="group"
-                  aria-label="Calidad: pasa el cursor o usa tab para ver Qualapp y Canales"
+                  aria-label="Calidad: pasa el cursor o usa tab para ver Qualapp, Canales y Colbeef-Ops"
                   tabindex="0"
                 >
                   <span class="moduleTileIcon" aria-hidden="true">
@@ -234,10 +234,11 @@
                   </span>
                   <span class="moduleTileName">Calidad</span>
                   <span class="moduleTileDesc">Gestión de procesos, registros y controles de calidad en planta.</span>
-                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Qualapp y Canales.</p>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Qualapp, Canales y Colbeef-Ops.</p>
                   <div class="moduleTileActions">
                     <a class="moduleTileBtn" href="http://192.168.20.205:5009/admin/login/">Qualapp</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8006/login">Canales</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8081">Colbeef-Ops</a>
                   </div>
                 </div>
                 <div
@@ -525,6 +526,11 @@
                   href="http://192.168.20.205:8006/login"
                   data-search="calidad canales hallazgos tolerancia registros dashboards"
                   >Canales</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8081"
+                  data-search="calidad colbeef ops operaciones calidad planta"
+                  >Colbeef-Ops</a>
               </div>
             </div>
           </li>
