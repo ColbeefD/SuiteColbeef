@@ -1614,6 +1614,63 @@
     });
   }
 
+  function initMobileNav() {
+    var layout = document.getElementById("suiteLayout");
+    var toggle = document.getElementById("mobileNavToggle");
+    var backdrop = document.getElementById("sidebarBackdrop");
+    if (!layout || !toggle) return;
+
+    var mq = window.matchMedia("(max-width: 900px)");
+
+    function isMobile() {
+      return mq.matches;
+    }
+
+    function setMobileNavOpen(open) {
+      if (!isMobile()) {
+        layout.classList.remove("mobile-nav-open");
+        document.body.classList.remove("mobile-nav-locked");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Abrir menú");
+        if (backdrop) backdrop.setAttribute("aria-hidden", "true");
+        return;
+      }
+
+      layout.classList.toggle("mobile-nav-open", open);
+      document.body.classList.toggle("mobile-nav-locked", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+      if (backdrop) backdrop.setAttribute("aria-hidden", open ? "false" : "true");
+    }
+
+    toggle.addEventListener("click", function () {
+      setMobileNavOpen(!layout.classList.contains("mobile-nav-open"));
+    });
+
+    if (backdrop) {
+      backdrop.addEventListener("click", function () {
+        setMobileNavOpen(false);
+      });
+    }
+
+    var navLinks = document.querySelectorAll("#appsMenu .menuItem, #utilityMenu .toolItem");
+    navLinks.forEach(function (link) {
+      link.addEventListener("click", function () {
+        if (isMobile()) setMobileNavOpen(false);
+      });
+    });
+
+    mq.addEventListener("change", function () {
+      setMobileNavOpen(false);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      if (!isMobile() || !layout.classList.contains("mobile-nav-open")) return;
+      setMobileNavOpen(false);
+    });
+  }
+
   function initSidebarHover() {
     var layout = document.getElementById("suiteLayout");
     var sidebar = document.getElementById("sidebar");
@@ -1621,7 +1678,6 @@
     if (!layout || !sidebar || !zone) return;
 
     if (window.matchMedia("(max-width: 900px)").matches) {
-      layout.classList.add("sidebar-open");
       return;
     }
 
@@ -1662,6 +1718,7 @@
 
     applySettingsToUI(loadSettings());
     initSidebarHover();
+    initMobileNav();
     initMenuTracking();
     initPowerBiNav();
     initPowerBiPinModal();
