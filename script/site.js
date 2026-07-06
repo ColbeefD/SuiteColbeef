@@ -180,6 +180,7 @@
   }
 
   function renderRecentAccess() {
+    var section = document.getElementById("recentAccessSection");
     var listEl = document.getElementById("recentAccessList");
     var emptyEl = document.getElementById("recentAccessEmpty");
     var clearBtn = document.getElementById("recentAccessClearBtn");
@@ -189,11 +190,13 @@
     listEl.textContent = "";
 
     if (!items.length) {
-      emptyEl.hidden = false;
+      if (section) section.hidden = true;
+      emptyEl.hidden = true;
       if (clearBtn) clearBtn.hidden = true;
       return;
     }
 
+    if (section) section.hidden = false;
     emptyEl.hidden = true;
     if (clearBtn) clearBtn.hidden = false;
 
