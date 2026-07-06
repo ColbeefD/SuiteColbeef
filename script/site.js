@@ -824,17 +824,6 @@
     });
   }
 
-  function getUsageUserLabel() {
-    var settings = loadSettings();
-    var c = settings.cuenta || {};
-    var name = String(c.nombreCompleto || "").trim();
-    var employee = String(c.empleadoId || "").trim();
-    if (name && name.toLowerCase() !== "workcolbeef") {
-      return employee ? name + " (" + employee + ")" : name;
-    }
-    return "";
-  }
-
   function programIdFromHref(href) {
     return String(href || "")
       .toLowerCase()
@@ -855,10 +844,6 @@
     }
     if (meta.programLabel) {
       payload.program_label = String(meta.programLabel);
-    }
-    var userLabel = getUsageUserLabel();
-    if (userLabel) {
-      payload.user_label = userLabel;
     }
     fetch("/api/stats/event", {
       method: "POST",
@@ -931,7 +916,7 @@
     var totals = data.totals || {};
     var order = [
       ["page_view", "Visitas al portal"],
-      ["module_click", "Clics en módulos"],
+      ["module_click", "Aperturas de módulos"],
       ["search_open", "Búsquedas abiertas"],
       ["chat_open", "Aperturas del chat"],
       ["chat_message", "Mensajes al asistente"]
@@ -968,7 +953,7 @@
     if (byApp.length) {
       var sub = document.createElement("h4");
       sub.className = "usageStatsSubTitle";
-      sub.textContent = "Clics por módulo";
+      sub.textContent = "Uso por módulo principal";
       root.appendChild(sub);
       var maxC = 0;
       byApp.forEach(function (row) {
@@ -1008,7 +993,7 @@
     if (byProgram.length) {
       var psub = document.createElement("h4");
       psub.className = "usageStatsSubTitle";
-      psub.textContent = "Uso por programa";
+      psub.textContent = "Uso por programa / acceso específico";
       root.appendChild(psub);
 
       var maxProgram = 1;
@@ -1027,11 +1012,7 @@
           (row.label || row.program_id || "");
         var count = document.createElement("span");
         count.className = "usageBarCount";
-        count.textContent =
-          String(row.clicks != null ? row.clicks : 0) +
-          " uso(s), " +
-          String(row.users != null ? row.users : 0) +
-          " usuario(s)";
+        count.textContent = String(row.clicks != null ? row.clicks : 0) + " uso(s)";
         var track = document.createElement("div");
         track.className = "usageBarTrack";
         var fill = document.createElement("div");
@@ -1044,70 +1025,6 @@
         programList.appendChild(rowEl);
       });
       root.appendChild(programList);
-    }
-
-    var byUser = Array.isArray(data.by_user) ? data.by_user : [];
-    if (byUser.length) {
-      var usub = document.createElement("h4");
-      usub.className = "usageStatsSubTitle";
-      usub.textContent = "Uso por usuario / equipo";
-      root.appendChild(usub);
-
-      var maxUser = 1;
-      byUser.forEach(function (row) {
-        if (row.clicks > maxUser) maxUser = row.clicks;
-      });
-
-      var userList = document.createElement("div");
-      userList.className = "usageBarList";
-      byUser.forEach(function (row) {
-        var rowEl = document.createElement("div");
-        rowEl.className = "usageBarRow";
-        var name = document.createElement("span");
-        name.textContent = row.label || "Usuario anónimo";
-        var count = document.createElement("span");
-        count.className = "usageBarCount";
-        count.textContent =
-          String(row.clicks != null ? row.clicks : 0) +
-          " uso(s), " +
-          String(row.programs != null ? row.programs : 0) +
-          " programa(s)";
-        var track = document.createElement("div");
-        track.className = "usageBarTrack";
-        var fill = document.createElement("div");
-        fill.className = "usageBarFill";
-        fill.style.width = ((row.clicks / maxUser) * 100) + "%";
-        track.appendChild(fill);
-        rowEl.appendChild(name);
-        rowEl.appendChild(count);
-        rowEl.appendChild(track);
-        userList.appendChild(rowEl);
-      });
-      root.appendChild(userList);
-    }
-
-    var byUserProgram = Array.isArray(data.by_user_program) ? data.by_user_program : [];
-    if (byUserProgram.length) {
-      var upsub = document.createElement("h4");
-      upsub.className = "usageStatsSubTitle";
-      upsub.textContent = "Detalle: usuario por programa";
-      root.appendChild(upsub);
-
-      var upList = document.createElement("ul");
-      upList.className = "usageDailyList";
-      byUserProgram.slice(0, 30).forEach(function (row) {
-        var li = document.createElement("li");
-        li.textContent =
-          (row.user_label || "Usuario anónimo") +
-          " → " +
-          (row.module_label ? row.module_label + " · " : "") +
-          (row.program_label || row.program_id || "Programa") +
-          ": " +
-          (row.clicks != null ? row.clicks : 0) +
-          " uso(s)";
-        upList.appendChild(li);
-      });
-      root.appendChild(upList);
     }
 
     var daily = Array.isArray(data.daily) ? data.daily : [];

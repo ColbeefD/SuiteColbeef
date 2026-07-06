@@ -51,7 +51,7 @@ class UsageStatsController extends Controller
             'program_id' => $this->cleanStatText($validated['program_id'] ?? null),
             'program_label' => $this->cleanStatText($validated['program_label'] ?? null),
             'visitor_hash' => $visitorHash,
-            'user_label' => $this->userLabel($request, $validated['user_label'] ?? null, $visitorHash),
+            'user_label' => null,
             'created_at' => now(),
         ]);
 
@@ -112,7 +112,7 @@ class UsageStatsController extends Controller
             ->where('created_at', '>=', $since)
             ->where('event', 'module_click')
             ->whereNotNull('program_id')
-            ->selectRaw('program_id, MAX(program_label) as program_label, MAX(app_id) as app_id, COUNT(*) as c, COUNT(DISTINCT COALESCE(user_label, visitor_hash)) as users')
+            ->selectRaw('program_id, MAX(program_label) as program_label, MAX(app_id) as app_id, COUNT(*) as c')
             ->groupBy('program_id')
             ->orderByDesc('c')
             ->limit(30)
@@ -123,48 +123,6 @@ class UsageStatsController extends Controller
                 'program_id' => $row->program_id,
                 'label' => $row->program_label ?: $row->program_id,
                 'app_id' => $row->app_id,
-                'module_label' => self::APP_LABELS[$row->app_id] ?? $row->app_id,
-                'clicks' => (int) $row->c,
-                'users' => (int) $row->users,
-            ];
-        })->values()->all();
-
-        $byUserRows = UsageEvent::query()
-            ->where('created_at', '>=', $since)
-            ->where('event', 'module_click')
-            ->selectRaw('COALESCE(user_label, visitor_hash) as user_key, MAX(user_label) as user_label, COUNT(*) as c, COUNT(DISTINCT program_id) as programs')
-            ->groupBy(DB::raw('COALESCE(user_label, visitor_hash)'))
-            ->orderByDesc('c')
-            ->limit(30)
-            ->get();
-
-        $byUser = $byUserRows->map(function ($row) {
-            $fallback = $row->user_key ? 'Equipo '.substr((string) $row->user_key, 0, 8) : 'Usuario anónimo';
-
-            return [
-                'label' => $row->user_label ?: $fallback,
-                'clicks' => (int) $row->c,
-                'programs' => (int) $row->programs,
-            ];
-        })->values()->all();
-
-        $byUserProgramRows = UsageEvent::query()
-            ->where('created_at', '>=', $since)
-            ->where('event', 'module_click')
-            ->whereNotNull('program_id')
-            ->selectRaw('COALESCE(user_label, visitor_hash) as user_key, MAX(user_label) as user_label, program_id, MAX(program_label) as program_label, MAX(app_id) as app_id, COUNT(*) as c')
-            ->groupBy(DB::raw('COALESCE(user_label, visitor_hash)'), 'program_id')
-            ->orderByDesc('c')
-            ->limit(60)
-            ->get();
-
-        $byUserProgram = $byUserProgramRows->map(function ($row) {
-            $fallback = $row->user_key ? 'Equipo '.substr((string) $row->user_key, 0, 8) : 'Usuario anónimo';
-
-            return [
-                'user_label' => $row->user_label ?: $fallback,
-                'program_id' => $row->program_id,
-                'program_label' => $row->program_label ?: $row->program_id,
                 'module_label' => self::APP_LABELS[$row->app_id] ?? $row->app_id,
                 'clicks' => (int) $row->c,
             ];
@@ -200,8 +158,6 @@ class UsageStatsController extends Controller
             'unique_visitors_estimate' => $uniqueVisitors,
             'by_app' => $byApp,
             'by_program' => $byProgram,
-            'by_user' => $byUser,
-            'by_user_program' => $byUserProgram,
             'daily' => $daily,
         ]);
     }
@@ -211,16 +167,6 @@ class UsageStatsController extends Controller
         $text = trim((string) $value);
 
         return $text === '' ? null : Str::limit($text, 160, '');
-    }
-
-    private function userLabel(Request $request, ?string $userLabel, string $visitorHash): string
-    {
-        $clean = $this->cleanStatText($userLabel);
-        if ($clean !== null && ! in_array(Str::lower($clean), ['workcolbeef', 'usuario', 'anonimo', 'anónimo'], true)) {
-            return $clean;
-        }
-
-        return 'Equipo '.substr($visitorHash, 0, 8);
     }
 
     private function visitorHash(Request $request): string
