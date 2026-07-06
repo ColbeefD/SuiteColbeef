@@ -67,6 +67,242 @@
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(model));
   }
 
+  var RECENT_ACCESS_KEY = "WorkColbeef_recent_access_v1";
+  var RECENT_ACCESS_SESSION_KEY = "WorkColbeef_recent_access_session_v1";
+  var RECENT_MAX_ITEMS = 8;
+  var pendingRecentAccessMeta = null;
+
+  var APP_ID_LABELS = {
+    "control-operativo": "Control operativo",
+    "gestion-humana": "Gestión humana",
+    logistica: "Logística",
+    calidad: "Calidad",
+    "power-bi": "Power BI"
+  };
+
+  function getHistorialMode() {
+    var s = loadSettings();
+    return (s.privacidad && s.privacidad.historialPaginas) || "guardar_30_dias";
+  }
+
+  function getRecentStorageBackend() {
+    if (getHistorialMode() === "borrar_al_cerrar") {
+      try {
+        return sessionStorage;
+      } catch (e) {
+        return localStorage;
+      }
+    }
+    return localStorage;
+  }
+
+  function getRecentStorageKey() {
+    return getHistorialMode() === "borrar_al_cerrar" ? RECENT_ACCESS_SESSION_KEY : RECENT_ACCESS_KEY;
+  }
+
+  function getRecentRetentionMs() {
+    var mode = getHistorialMode();
+    if (mode === "guardar_7_dias") return 7 * 24 * 60 * 60 * 1000;
+    if (mode === "guardar_30_dias") return 30 * 24 * 60 * 60 * 1000;
+    return Infinity;
+  }
+
+  function buildRecentEntry(label, href, appId, pinType) {
+    return {
+      id: String(href),
+      label: String(label || "Módulo").trim(),
+      href: String(href),
+      appId: appId || "",
+      pinType: pinType || "",
+      ts: Date.now()
+    };
+  }
+
+  function purgeRecentAccessList(arr) {
+    var now = Date.now();
+    var retention = getRecentRetentionMs();
+    return arr.filter(function (item) {
+      if (!item || !item.href || !item.ts) return false;
+      if (retention !== Infinity && now - item.ts > retention) return false;
+      return true;
+    });
+  }
+
+  function loadRecentAccessList() {
+    try {
+      var raw = getRecentStorageBackend().getItem(getRecentStorageKey());
+      if (!raw) return [];
+      var parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return purgeRecentAccessList(parsed);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveRecentAccessList(arr) {
+    try {
+      getRecentStorageBackend().setItem(getRecentStorageKey(), JSON.stringify(arr.slice(0, RECENT_MAX_ITEMS)));
+    } catch (e) {}
+  }
+
+  function recordRecentAccess(entry) {
+    if (!entry || !entry.href) return;
+    var list = loadRecentAccessList();
+    var id = entry.id || entry.href;
+    list = list.filter(function (x) {
+      return x.id !== id;
+    });
+    list.unshift({
+      id: id,
+      label: entry.label || "Módulo",
+      href: entry.href,
+      appId: entry.appId || "",
+      pinType: entry.pinType || "",
+      ts: Date.now()
+    });
+    saveRecentAccessList(list.slice(0, RECENT_MAX_ITEMS));
+    renderRecentAccess();
+  }
+
+  function formatRecentTime(ts) {
+    var diff = Date.now() - ts;
+    if (diff < 60000) return "Hace un momento";
+    if (diff < 3600000) return "Hace " + Math.max(1, Math.floor(diff / 60000)) + " min";
+    if (diff < 86400000) return "Hace " + Math.max(1, Math.floor(diff / 3600000)) + " h";
+    if (diff < 172800000) return "Ayer";
+    if (diff < 604800000) return "Hace " + Math.floor(diff / 86400000) + " días";
+    try {
+      return new Date(ts).toLocaleDateString("es-CO", { day: "numeric", month: "short" });
+    } catch (e) {
+      return "Antes";
+    }
+  }
+
+  function renderRecentAccess() {
+    var listEl = document.getElementById("recentAccessList");
+    var emptyEl = document.getElementById("recentAccessEmpty");
+    var clearBtn = document.getElementById("recentAccessClearBtn");
+    if (!listEl || !emptyEl) return;
+
+    var items = loadRecentAccessList();
+    listEl.textContent = "";
+
+    if (!items.length) {
+      emptyEl.hidden = false;
+      if (clearBtn) clearBtn.hidden = true;
+      return;
+    }
+
+    emptyEl.hidden = true;
+    if (clearBtn) clearBtn.hidden = false;
+
+    items.forEach(function (item) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "historyItem historyItem--action";
+      btn.setAttribute("role", "listitem");
+      btn.setAttribute("data-href", item.href);
+      btn.setAttribute("data-app-id", item.appId || "");
+      btn.setAttribute("data-pin-type", item.pinType || "");
+
+      var main = document.createElement("span");
+      main.className = "historyItemMain";
+
+      var moduleLabel = APP_ID_LABELS[item.appId] || "";
+      if (moduleLabel) {
+        var mod = document.createElement("span");
+        mod.className = "historyItemModule";
+        mod.textContent = moduleLabel;
+        main.appendChild(mod);
+      }
+
+      var name = document.createElement("span");
+      name.className = "historyItemName";
+      name.textContent = item.label;
+      main.appendChild(name);
+
+      var time = document.createElement("span");
+      time.className = "historyItemTime";
+      time.textContent = formatRecentTime(item.ts);
+
+      btn.appendChild(main);
+      btn.appendChild(time);
+      btn.addEventListener("click", function () {
+        openRecentAccessItem(item);
+      });
+      listEl.appendChild(btn);
+    });
+  }
+
+  function openRecentAccessItem(item) {
+    if (!item || !item.href) return;
+    if (item.appId) {
+      sendUsageEvent("module_click", item.appId);
+      setActiveMenuByAppId(item.appId);
+    }
+    closeSettingsView();
+    navigateToModule(item.href, {
+      label: item.label,
+      appId: item.appId,
+      pinType: item.pinType,
+      skipRecord: true
+    });
+  }
+
+  function clearRecentAccess() {
+    try {
+      getRecentStorageBackend().removeItem(getRecentStorageKey());
+    } catch (e) {}
+    renderRecentAccess();
+  }
+
+  function navigateToModule(href, meta) {
+    if (!href || !/^https?:\/\//i.test(String(href))) return;
+    meta = meta || {};
+
+    if (meta.pinType === "powerbi") {
+      requirePowerBiPinThenOpen(href, meta);
+      return;
+    }
+    if (meta.pinType === "rendimientos") {
+      requireRendimientosPinThenOpen(href, meta);
+      return;
+    }
+
+    if (!meta.skipRecord) {
+      recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, ""));
+    }
+    window.location.href = href;
+  }
+
+  function moduleMetaFromLink(el, appId) {
+    var label = (el.textContent || "").replace(/\s+/g, " ").trim();
+    var tile = el.closest(".moduleTile");
+    var tileName = tile && tile.querySelector(".moduleTileName");
+    var moduleName = tileName ? tileName.textContent.trim() : APP_ID_LABELS[appId] || "";
+    if (moduleName && label && label !== moduleName) {
+      label = moduleName + " · " + label;
+    } else if (!label && moduleName) {
+      label = moduleName;
+    }
+    return {
+      label: label || moduleName || "Módulo",
+      appId: appId || (tile && tile.getAttribute("data-app-id")) || "",
+      pinType: el.getAttribute("data-requires-pin") === "rendimientos" ? "rendimientos" : appId === "power-bi" ? "powerbi" : ""
+    };
+  }
+
+  function initRecentAccess() {
+    renderRecentAccess();
+    var clearBtn = document.getElementById("recentAccessClearBtn");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        clearRecentAccess();
+      });
+    }
+  }
+
   function applyTheme(tema) {
     document.body.setAttribute("data-suite-theme", tema === "oscuro" ? "oscuro" : "claro");
   }
@@ -437,16 +673,17 @@
     document.body.style.overflow = "";
     setPowerBiPinError("");
     pendingPowerBiHref = null;
+    pendingRecentAccessMeta = null;
   }
 
-  function requirePowerBiPinThenOpen(href) {
+  function requirePowerBiPinThenOpen(href, meta) {
     if (!href || !/^https?:\/\//i.test(String(href))) return;
-    // Modo estricto: siempre pedir PIN al abrir Power BI
     pendingPowerBiHref = href;
+    pendingRecentAccessMeta = meta || null;
     openPowerBiPinModal();
   }
 
-  function requireRendimientosPinThenOpen(href) {
+  function requireRendimientosPinThenOpen(href, meta) {
     if (!href || !/^https?:\/\//i.test(String(href))) return;
     var pin = window.prompt("Ingresa el PIN para abrir Rendimientos:");
     if (pin === null) return;
@@ -457,6 +694,8 @@
     sendUsageEvent("module_click", "logistica");
     closeSettingsView();
     setActiveMenuByAppId("logistica");
+    meta = meta || { label: "Logística · Rendimientos", appId: "logistica", pinType: "rendimientos" };
+    recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "rendimientos"));
     window.location.href = href;
   }
 
@@ -509,8 +748,14 @@
           }
           powerBiPinOk = true;
           var href = pendingPowerBiHref;
+          var meta = pendingRecentAccessMeta;
           closePowerBiPinModal();
           if (href) {
+            if (meta) {
+              recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "powerbi"));
+            } else {
+              recordRecentAccess(buildRecentEntry("Power BI", href, "power-bi", "powerbi"));
+            }
             window.location.href = href;
           }
         })
@@ -539,6 +784,7 @@
     var model = collectSettingsFromUI();
     saveSettingsModel(model);
     applyTheme(model.preferencias && model.preferencias.tema);
+    renderRecentAccess();
   }
 
   /** Sin botón Guardar: preferencias, notificaciones y privacidad se guardan al cambiar. */
@@ -1114,12 +1360,17 @@
           setActiveMenuByAppId(appId);
         }
         if (/^https?:\/\//i.test(href)) {
+          var meta = moduleMetaFromLink(a, appId || "");
           if (appId === "power-bi") {
-            requirePowerBiPinThenOpen(href);
+            meta.pinType = "powerbi";
+            meta.appId = "power-bi";
+            requirePowerBiPinThenOpen(href, meta);
           } else if (a.getAttribute("data-requires-pin") === "rendimientos") {
-            requireRendimientosPinThenOpen(href);
+            meta.pinType = "rendimientos";
+            meta.appId = meta.appId || "logistica";
+            requireRendimientosPinThenOpen(href, meta);
           } else {
-            window.location.href = href;
+            navigateToModule(href, meta);
           }
         } else if (href && href !== "#") {
           window.location.href = href;
@@ -1491,7 +1742,9 @@
         sendUsageEvent("module_click", "power-bi");
         closeSettingsView();
         setActiveMenuByAppId("power-bi");
-        requirePowerBiPinThenOpen(href);
+        var meta = moduleMetaFromLink(el, "power-bi");
+        meta.pinType = "powerbi";
+        requirePowerBiPinThenOpen(href, meta);
       });
     });
   }
@@ -1501,14 +1754,19 @@
     els.forEach(function (el) {
       el.addEventListener("click", function (e) {
         var href = el.getAttribute("href");
-        if (el.getAttribute("data-requires-pin") === "rendimientos") {
-          if (e && e.preventDefault) e.preventDefault();
-          requireRendimientosPinThenOpen(href);
-          return;
-        }
+        if (!href) return;
         sendUsageEvent("module_click", "logistica");
         closeSettingsView();
         setActiveMenuByAppId("logistica");
+        var meta = moduleMetaFromLink(el, "logistica");
+        if (el.getAttribute("data-requires-pin") === "rendimientos") {
+          if (e && e.preventDefault) e.preventDefault();
+          meta.pinType = "rendimientos";
+          requireRendimientosPinThenOpen(href, meta);
+          return;
+        }
+        if (e && e.preventDefault) e.preventDefault();
+        navigateToModule(href, meta);
       });
     });
   }
@@ -1516,10 +1774,14 @@
   function initGestionHumanaNav() {
     var els = document.querySelectorAll(".moduleTile--gestion-humana .moduleTileBtn");
     els.forEach(function (el) {
-      el.addEventListener("click", function () {
+      el.addEventListener("click", function (e) {
+        var href = el.getAttribute("href");
+        if (!href) return;
         sendUsageEvent("module_click", "gestion-humana");
         closeSettingsView();
         setActiveMenuByAppId("gestion-humana");
+        if (e && e.preventDefault) e.preventDefault();
+        navigateToModule(href, moduleMetaFromLink(el, "gestion-humana"));
       });
     });
   }
@@ -1527,10 +1789,14 @@
   function initCalidadNav() {
     var els = document.querySelectorAll(".moduleTile--calidad .moduleTileBtn");
     els.forEach(function (el) {
-      el.addEventListener("click", function () {
+      el.addEventListener("click", function (e) {
+        var href = el.getAttribute("href");
+        if (!href) return;
         sendUsageEvent("module_click", "calidad");
         closeSettingsView();
         setActiveMenuByAppId("calidad");
+        if (e && e.preventDefault) e.preventDefault();
+        navigateToModule(href, moduleMetaFromLink(el, "calidad"));
       });
     });
   }
@@ -1551,7 +1817,10 @@
         }
         var targetUrl = a.getAttribute("data-target-url");
         if (targetUrl && String(targetUrl).trim() !== "" && targetUrl !== "#") {
-          window.location.href = targetUrl;
+          navigateToModule(targetUrl, {
+            label: a.getAttribute("data-app-name") || APP_ID_LABELS[appId] || "Módulo",
+            appId: appId
+          });
           return;
         }
         if (appId === "power-bi") {
@@ -1609,6 +1878,14 @@
         if (id) {
           sendUsageEvent("module_click", id);
           setActiveMenuByAppId(id);
+        }
+        var href = tile.getAttribute("href");
+        if (href && /^https?:\/\//i.test(href) && tile.tagName === "A") {
+          if (evt && evt.preventDefault) evt.preventDefault();
+          navigateToModule(href, {
+            label: tile.getAttribute("data-app-name") || (tile.querySelector(".moduleTileName") || {}).textContent || "Módulo",
+            appId: id || ""
+          });
         }
       });
     });
@@ -1726,6 +2003,7 @@
     initGestionHumanaNav();
     initCalidadNav();
     initDashboardMosaic();
+    initRecentAccess();
     initAdminAccessModal();
     initSettingsOpen();
     initBackFromSettings();

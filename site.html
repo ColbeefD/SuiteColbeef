@@ -184,7 +184,7 @@
                   </span>
                 </p>
                 <h2 class="dashboardTitle">Panel de módulos</h2>
-                <p class="dashboardSubtitle">Lee la descripción de cada módulo y haz clic para abrir su aplicación.</p>
+                <p class="dashboardSubtitle">Elige un módulo o retoma uno de tus accesos recientes.</p>
               </header>
 
               <div class="moduleMosaic" role="navigation" aria-label="Accesos a módulos">
@@ -293,6 +293,15 @@
                   </div>
                 </div>
               </div>
+
+              <section class="historyWrap" id="recentAccessSection" aria-labelledby="recentAccessTitle">
+                <div class="historyWrapHeader">
+                  <h2 id="recentAccessTitle">Accesos recientes</h2>
+                  <button type="button" class="historyClearBtn" id="recentAccessClearBtn" hidden>Limpiar</button>
+                </div>
+                <div class="historyList" id="recentAccessList" role="list"></div>
+                <p class="historyEmpty" id="recentAccessEmpty">Aún no hay accesos recientes. Al abrir un módulo aparecerá aquí para volver rápido.</p>
+              </section>
             </div>
           </section>
 

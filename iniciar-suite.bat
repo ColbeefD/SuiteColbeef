@@ -7,6 +7,7 @@ cd /d "%~dp0"
 set "MODE=%~1"
 set "HOST=192.168.20.205"
 set "PORT=8000"
+set "SUITE_URL=http://WorkColbeef:8000/"
 
 if /i "%MODE%"=="laravel" goto :run_laravel
 if /i "%MODE%"=="node" goto :run_node
@@ -36,10 +37,10 @@ if errorlevel 1 (
 )
 
 echo.
-echo Iniciando Laravel en http://%HOST%:%PORT% ...
+echo Iniciando Laravel en %SUITE_URL% ...
 start "WorkColbeef Laravel" cmd /k "cd /d ""%~dp0laravel"" && php artisan serve --host=%HOST% --port=%PORT%"
 timeout /t 2 >nul
-start "" "http://%HOST%:%PORT%/"
+start "" "%SUITE_URL%"
 goto :end
 
 :run_node
