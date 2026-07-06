@@ -107,12 +107,14 @@
     return Infinity;
   }
 
-  function buildRecentEntry(label, href, appId, pinType) {
+  function buildRecentEntry(label, href, appId, pinType, programId, programLabel) {
     return {
       id: String(href),
       label: String(label || "Módulo").trim(),
       href: String(href),
       appId: appId || "",
+      programId: programId || programIdFromHref(href),
+      programLabel: programLabel || label || "Módulo",
       pinType: pinType || "",
       ts: Date.now()
     };
@@ -158,6 +160,8 @@
       label: entry.label || "Módulo",
       href: entry.href,
       appId: entry.appId || "",
+      programId: entry.programId || programIdFromHref(entry.href),
+      programLabel: entry.programLabel || entry.label || "Módulo",
       pinType: entry.pinType || "",
       ts: Date.now()
     });
@@ -248,6 +252,8 @@
     navigateToModule(item.href, {
       label: item.label,
       appId: item.appId,
+        programId: item.programId || programIdFromHref(item.href),
+        programLabel: item.programLabel || item.label,
       pinType: item.pinType,
       skipRecord: true
     });
@@ -274,8 +280,9 @@
     }
 
     if (!meta.skipRecord) {
-      recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, ""));
+      recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "", meta.programId, meta.programLabel));
     }
+    sendUsageEvent("module_click", meta.appId, meta);
     window.location.href = href;
   }
 
@@ -292,6 +299,8 @@
     return {
       label: label || moduleName || "Módulo",
       appId: appId || (tile && tile.getAttribute("data-app-id")) || "",
+      programId: programIdFromHref(el.getAttribute("href") || label),
+      programLabel: label || moduleName || "Módulo",
       pinType: el.getAttribute("data-requires-pin") === "rendimientos" ? "rendimientos" : appId === "power-bi" ? "powerbi" : ""
     };
   }
@@ -694,11 +703,13 @@
       window.alert("PIN incorrecto.");
       return;
     }
-    sendUsageEvent("module_click", "logistica");
     closeSettingsView();
     setActiveMenuByAppId("logistica");
     meta = meta || { label: "Logística · Rendimientos", appId: "logistica", pinType: "rendimientos" };
-    recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "rendimientos"));
+    meta.programId = meta.programId || programIdFromHref(href);
+    meta.programLabel = meta.programLabel || meta.label;
+    sendUsageEvent("module_click", "logistica", meta);
+    recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "rendimientos", meta.programId, meta.programLabel));
     window.location.href = href;
   }
 
@@ -755,9 +766,13 @@
           closePowerBiPinModal();
           if (href) {
             if (meta) {
-              recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "powerbi"));
+              meta.programId = meta.programId || programIdFromHref(href);
+              meta.programLabel = meta.programLabel || meta.label;
+              sendUsageEvent("module_click", "power-bi", meta);
+              recordRecentAccess(buildRecentEntry(meta.label, href, meta.appId, "powerbi", meta.programId, meta.programLabel));
             } else {
-              recordRecentAccess(buildRecentEntry("Power BI", href, "power-bi", "powerbi"));
+              sendUsageEvent("module_click", "power-bi", { programId: programIdFromHref(href), programLabel: "Power BI" });
+              recordRecentAccess(buildRecentEntry("Power BI", href, "power-bi", "powerbi", programIdFromHref(href), "Power BI"));
             }
             window.location.href = href;
           }
@@ -809,10 +824,41 @@
     });
   }
 
-  function sendUsageEvent(event, appId) {
+  function getUsageUserLabel() {
+    var settings = loadSettings();
+    var c = settings.cuenta || {};
+    var name = String(c.nombreCompleto || "").trim();
+    var employee = String(c.empleadoId || "").trim();
+    if (name && name.toLowerCase() !== "workcolbeef") {
+      return employee ? name + " (" + employee + ")" : name;
+    }
+    return "";
+  }
+
+  function programIdFromHref(href) {
+    return String(href || "")
+      .toLowerCase()
+      .replace(/^https?:\/\//, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 160);
+  }
+
+  function sendUsageEvent(event, appId, meta) {
     var payload = { event: event };
     if (appId) {
       payload.app_id = String(appId);
+    }
+    meta = meta || {};
+    if (meta.programId) {
+      payload.program_id = String(meta.programId);
+    }
+    if (meta.programLabel) {
+      payload.program_label = String(meta.programLabel);
+    }
+    var userLabel = getUsageUserLabel();
+    if (userLabel) {
+      payload.user_label = userLabel;
     }
     fetch("/api/stats/event", {
       method: "POST",
@@ -956,6 +1002,112 @@
         list.appendChild(rowEl);
       });
       root.appendChild(list);
+    }
+
+    var byProgram = Array.isArray(data.by_program) ? data.by_program : [];
+    if (byProgram.length) {
+      var psub = document.createElement("h4");
+      psub.className = "usageStatsSubTitle";
+      psub.textContent = "Uso por programa";
+      root.appendChild(psub);
+
+      var maxProgram = 1;
+      byProgram.forEach(function (row) {
+        if (row.clicks > maxProgram) maxProgram = row.clicks;
+      });
+
+      var programList = document.createElement("div");
+      programList.className = "usageBarList";
+      byProgram.forEach(function (row) {
+        var rowEl = document.createElement("div");
+        rowEl.className = "usageBarRow";
+        var name = document.createElement("span");
+        name.textContent =
+          (row.module_label ? row.module_label + " · " : "") +
+          (row.label || row.program_id || "");
+        var count = document.createElement("span");
+        count.className = "usageBarCount";
+        count.textContent =
+          String(row.clicks != null ? row.clicks : 0) +
+          " uso(s), " +
+          String(row.users != null ? row.users : 0) +
+          " usuario(s)";
+        var track = document.createElement("div");
+        track.className = "usageBarTrack";
+        var fill = document.createElement("div");
+        fill.className = "usageBarFill";
+        fill.style.width = ((row.clicks / maxProgram) * 100) + "%";
+        track.appendChild(fill);
+        rowEl.appendChild(name);
+        rowEl.appendChild(count);
+        rowEl.appendChild(track);
+        programList.appendChild(rowEl);
+      });
+      root.appendChild(programList);
+    }
+
+    var byUser = Array.isArray(data.by_user) ? data.by_user : [];
+    if (byUser.length) {
+      var usub = document.createElement("h4");
+      usub.className = "usageStatsSubTitle";
+      usub.textContent = "Uso por usuario / equipo";
+      root.appendChild(usub);
+
+      var maxUser = 1;
+      byUser.forEach(function (row) {
+        if (row.clicks > maxUser) maxUser = row.clicks;
+      });
+
+      var userList = document.createElement("div");
+      userList.className = "usageBarList";
+      byUser.forEach(function (row) {
+        var rowEl = document.createElement("div");
+        rowEl.className = "usageBarRow";
+        var name = document.createElement("span");
+        name.textContent = row.label || "Usuario anónimo";
+        var count = document.createElement("span");
+        count.className = "usageBarCount";
+        count.textContent =
+          String(row.clicks != null ? row.clicks : 0) +
+          " uso(s), " +
+          String(row.programs != null ? row.programs : 0) +
+          " programa(s)";
+        var track = document.createElement("div");
+        track.className = "usageBarTrack";
+        var fill = document.createElement("div");
+        fill.className = "usageBarFill";
+        fill.style.width = ((row.clicks / maxUser) * 100) + "%";
+        track.appendChild(fill);
+        rowEl.appendChild(name);
+        rowEl.appendChild(count);
+        rowEl.appendChild(track);
+        userList.appendChild(rowEl);
+      });
+      root.appendChild(userList);
+    }
+
+    var byUserProgram = Array.isArray(data.by_user_program) ? data.by_user_program : [];
+    if (byUserProgram.length) {
+      var upsub = document.createElement("h4");
+      upsub.className = "usageStatsSubTitle";
+      upsub.textContent = "Detalle: usuario por programa";
+      root.appendChild(upsub);
+
+      var upList = document.createElement("ul");
+      upList.className = "usageDailyList";
+      byUserProgram.slice(0, 30).forEach(function (row) {
+        var li = document.createElement("li");
+        li.textContent =
+          (row.user_label || "Usuario anónimo") +
+          " → " +
+          (row.module_label ? row.module_label + " · " : "") +
+          (row.program_label || row.program_id || "Programa") +
+          ": " +
+          (row.clicks != null ? row.clicks : 0) +
+          " uso(s)";
+        upList.appendChild(li);
+      });
+      root.appendChild(upList);
     }
 
     var daily = Array.isArray(data.daily) ? data.daily : [];
@@ -1359,7 +1511,6 @@
         var li = a.closest(".searchModal-item");
         var appId = li && li.getAttribute("data-app");
         if (appId) {
-          sendUsageEvent("module_click", appId);
           setActiveMenuByAppId(appId);
         }
         if (/^https?:\/\//i.test(href)) {
@@ -1742,7 +1893,6 @@
         if (e && e.preventDefault) e.preventDefault();
         var href = el.getAttribute("href");
         if (!href) return;
-        sendUsageEvent("module_click", "power-bi");
         closeSettingsView();
         setActiveMenuByAppId("power-bi");
         var meta = moduleMetaFromLink(el, "power-bi");
@@ -1758,7 +1908,6 @@
       el.addEventListener("click", function (e) {
         var href = el.getAttribute("href");
         if (!href) return;
-        sendUsageEvent("module_click", "logistica");
         closeSettingsView();
         setActiveMenuByAppId("logistica");
         var meta = moduleMetaFromLink(el, "logistica");
@@ -1780,7 +1929,6 @@
       el.addEventListener("click", function (e) {
         var href = el.getAttribute("href");
         if (!href) return;
-        sendUsageEvent("module_click", "gestion-humana");
         closeSettingsView();
         setActiveMenuByAppId("gestion-humana");
         if (e && e.preventDefault) e.preventDefault();
@@ -1795,7 +1943,6 @@
       el.addEventListener("click", function (e) {
         var href = el.getAttribute("href");
         if (!href) return;
-        sendUsageEvent("module_click", "calidad");
         closeSettingsView();
         setActiveMenuByAppId("calidad");
         if (e && e.preventDefault) e.preventDefault();
@@ -1815,16 +1962,18 @@
         closeSettingsView();
 
         var appId = a.getAttribute("data-app-id") || "";
-        if (appId) {
-          sendUsageEvent("module_click", appId);
-        }
         var targetUrl = a.getAttribute("data-target-url");
         if (targetUrl && String(targetUrl).trim() !== "" && targetUrl !== "#") {
           navigateToModule(targetUrl, {
             label: a.getAttribute("data-app-name") || APP_ID_LABELS[appId] || "Módulo",
-            appId: appId
+            appId: appId,
+            programId: programIdFromHref(targetUrl),
+            programLabel: a.getAttribute("data-app-name") || APP_ID_LABELS[appId] || "Módulo"
           });
           return;
+        }
+        if (appId) {
+          sendUsageEvent("module_click", appId);
         }
         if (appId === "power-bi") {
           var tilePb = document.querySelector(".moduleTile--powerBi");
@@ -1866,7 +2015,12 @@
           var tile = document.querySelector('.moduleTile[data-app-id="' + appId + '"]');
           var href = tile && tile.getAttribute("href");
           if (href && /^https?:\/\//i.test(href)) {
-            window.location.href = href;
+            navigateToModule(href, {
+              label: tile.getAttribute("data-app-name") || APP_ID_LABELS[appId] || "Módulo",
+              appId: appId,
+              programId: programIdFromHref(href),
+              programLabel: tile.getAttribute("data-app-name") || APP_ID_LABELS[appId] || "Módulo"
+            });
           }
         }
       });
@@ -1877,18 +2031,25 @@
     var tiles = Array.prototype.slice.call(document.querySelectorAll(".moduleTile"));
     tiles.forEach(function (tile) {
       tile.addEventListener("click", function (evt) {
-        var id = tile.getAttribute("data-app-id");
-        if (id) {
-          sendUsageEvent("module_click", id);
-          setActiveMenuByAppId(id);
+        if (evt.target && evt.target.closest && evt.target.closest(".moduleTileBtn")) {
+          return;
         }
+        var id = tile.getAttribute("data-app-id");
         var href = tile.getAttribute("href");
         if (href && /^https?:\/\//i.test(href) && tile.tagName === "A") {
           if (evt && evt.preventDefault) evt.preventDefault();
+          if (id) setActiveMenuByAppId(id);
           navigateToModule(href, {
             label: tile.getAttribute("data-app-name") || (tile.querySelector(".moduleTileName") || {}).textContent || "Módulo",
-            appId: id || ""
+            appId: id || "",
+            programId: programIdFromHref(href),
+            programLabel: tile.getAttribute("data-app-name") || (tile.querySelector(".moduleTileName") || {}).textContent || "Módulo"
           });
+          return;
+        }
+        if (id) {
+          sendUsageEvent("module_click", id);
+          setActiveMenuByAppId(id);
         }
       });
     });

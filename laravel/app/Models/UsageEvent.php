@@ -11,7 +11,10 @@ class UsageEvent extends Model
     protected $fillable = [
         'event',
         'app_id',
+        'program_id',
+        'program_label',
         'visitor_hash',
+        'user_label',
         'created_at',
     ];
 
