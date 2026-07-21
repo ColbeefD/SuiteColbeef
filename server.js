@@ -1,6 +1,24 @@
 /**
- * Sirve la carpeta del proyecto y reenvía el chat a Gemini usando GEMINI_API_KEY del .env
- * (la clave no viaja al navegador).
+ * WorkColbeef Suite — Backend Node.js (alternativo/portátil).
+ * =============================================================================
+ * Servidor Express que cumple dos funciones:
+ *   1) Servir el frontend estático del portal (site.html, css, script, img).
+ *   2) Exponer la API `/api/*` equivalente a la del backend Laravel.
+ *
+ * Es el backend "ligero": no requiere PHP ni base de datos. Las métricas de uso
+ * se persisten en `data/usage-stats.json` (ver STATS_FILE). En producción se
+ * recomienda Laravel; solo uno de los dos backends debe correr a la vez.
+ *
+ * Contratos de seguridad relevantes:
+ *   - La API key de Gemini (GEMINI_API_KEY) SOLO existe en el servidor; el
+ *     navegador nunca la ve: llama a /api/chat y este proxy adjunta la clave.
+ *   - La contraseña admin y el PIN de Power BI se guardan como hash bcrypt
+ *     codificado en Base64 (ADMIN_PASSWORD_HASH_B64 / POWERBI_PIN_HASH_B64)
+ *     para evitar que el carácter `$` rompa el parseo del .env.
+ *   - El acceso admin se materializa como JWT en cookie HttpOnly.
+ *
+ * @see DOCUMENTACION.md  (secciones 7, 9, 11 y 12)
+ * @see laravel/app/Http/Controllers  (backend equivalente en PHP)
  */
 require("dotenv").config();
 
@@ -18,6 +36,15 @@ var PORT = process.env.PORT || 3000;
 var GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 var GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
+/**
+ * Resuelve el hash bcrypt de la contraseña admin priorizando la variante Base64.
+ *
+ * Se prefiere ADMIN_PASSWORD_HASH_B64 porque el hash bcrypt contiene `$`, que
+ * puede romper el parseo de un .env sin comillas. Si el Base64 no decodifica a
+ * un hash válido (>= 50 chars), se cae al hash en crudo ADMIN_PASSWORD_HASH.
+ *
+ * @returns {string} Hash bcrypt listo para bcrypt.compare(), o "" si no hay.
+ */
 function loadAdminPasswordHash() {
   var b64 = process.env.ADMIN_PASSWORD_HASH_B64;
   if (b64 && String(b64).trim() !== "") {
@@ -41,6 +68,12 @@ var ADMIN_COOKIE_NAME = process.env.ADMIN_COOKIE_NAME || "WorkColbeef_admin_toke
 var COOKIE_SECURE =
   process.env.ADMIN_COOKIE_SECURE === "1" || String(process.env.ADMIN_COOKIE_SECURE || "").toLowerCase() === "true";
 
+/**
+ * Resuelve el hash bcrypt del PIN de Power BI (misma estrategia Base64 que el
+ * hash admin). Ver loadAdminPasswordHash() para el detalle del "por qué Base64".
+ *
+ * @returns {string} Hash bcrypt del PIN, o "" si no está configurado.
+ */
 function loadPowerBiPinHash() {
   var b64 = process.env.POWERBI_PIN_HASH_B64;
   if (b64 && String(b64).trim() !== "") {
@@ -60,6 +93,14 @@ var POWERBI_PIN_HASH = loadPowerBiPinHash();
 var POWERBI_PIN_COOKIE = process.env.POWERBI_PIN_COOKIE || "WorkColbeef_powerbi_unlocked";
 var POWERBI_PIN_TTL_MINUTES = parseInt(String(process.env.POWERBI_PIN_TTL_MINUTES || "120"), 10) || 120;
 
+/**
+ * Normaliza alias comunes del modelo de Gemini a su nombre canónico.
+ * Permite que GEMINI_MODEL acepte formas abreviadas (p. ej. "2.5-flash")
+ * sin que el usuario tenga que recordar el identificador exacto de la API.
+ *
+ * @param {string} rawModel Valor crudo de configuración.
+ * @returns {string} Nombre de modelo válido para la API de Gemini.
+ */
 function normalizeModelName(rawModel) {
   var model = String(rawModel || "").trim().toLowerCase();
   if (!model) return "gemini-2.5-flash";
@@ -72,7 +113,7 @@ function normalizeModelName(rawModel) {
 }
 
 var COLBEEF_CHAT_SYSTEM =
-  "Eres el asistente virtual del sistema WorkColbeef de Colbeef. Respondes de forma breve, amable y profesional en español. CONTEXTO DE LA EMPRESA: Colbeef es un matadero de bovinos ubicado en el municipio de Floridablanca (Santander, Colombia); allí se presta el servicio de faena o beneficio de bovinos. La suite WorkColbeef agrupa el acceso a las aplicaciones internas; no inventes datos operativos ni cifras que no estén en esta descripción. MÓDULOS: 1) GESTIÓN HUMANA — Es el espacio donde se concentran los temas de talento y bienestar del personal: app principal en http://192.168.20.205:5000/login; módulo Contratista en http://192.168.20.205:8009/login (acceso desde la tarjeta Gestión humana en WorkColbeef, botón Contratista). Accesos rápidos típicos como gráficos, cumpleaños y tarjeta del mes, aniversario laboral, áreas de trabajo, EPS, fondo de pensiones, personal activo, hijos activos, solicitudes de permiso y de vacaciones, entre otros. Orienta al usuario a usar ese módulo para RRHH, beneficios y trámites de personal. 2) CONTROL OPERATIVO — Corresponde a la operación de planta y consulta operativa: ingreso de vehículos, plan de faena, pesaje, corrales, insensibilización, rendimientos, consulta de facturas, ranking de clientes, panel o monitor operativo, historial/descargas según la app, etc. 3) LOGÍSTICA — El módulo de Desposte está en http://192.168.20.205:8004/login (acceso desde la tarjeta Logística en WorkColbeef, botón Desposte); Inventarios en http://192.168.20.205:8501/ ; ERP logístico (App Logística) en http://192.168.20.205:8088/login.php ; Lenguas en http://192.168.20.205:8005/ . 4) CALIDAD — Qualapp en http://192.168.20.205:5009/admin/login/ ; Canales en http://192.168.20.205:8006/login ; Colbeef-Ops en http://192.168.20.205:8081 ; acceso desde la tarjeta Calidad en WorkColbeef (botones Qualapp, Canales y Colbeef-Ops). 5) POWER BI — Datos y cifras Colbeef, Control PQRS (informes Microsoft Power BI en vista web) y Analyzer en http://192.168.20.205:9030/analyzer ; acceso desde la tarjeta Power BI en WorkColbeef (botones Datos y cifras Colbeef, Control PQRS y Analyzer; todos piden PIN). Enlaces Power BI: Datos y cifras Colbeef → https://app.powerbi.com/view?r=eyJrIjoiOTVmN2UwN2QtNDMyYy00NjZlLTlmMWItYzQyNzNmMTFjYTY1IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 ; Control PQRS → https://app.powerbi.com/view?r=eyJrIjoiZmViY2FjN2MtZDk2Yy00YWEwLTg2YjQtZjIxZWRlMjMzYzY2IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 ; Analyzer → http://192.168.20.205:9030/analyzer . Si preguntan algo fuera de esta suite o de Colbeef como empresa genérica sin relación con estas herramientas, indica amablemente que solo puedes orientar sobre el uso de WorkColbeef y los módulos descritos.";
+  "Eres el asistente virtual del sistema WorkColbeef de Colbeef. Respondes de forma breve, amable y profesional en español. CONTEXTO DE LA EMPRESA: Colbeef es un matadero de bovinos ubicado en el municipio de Floridablanca (Santander, Colombia); allí se presta el servicio de faena o beneficio de bovinos. La suite WorkColbeef agrupa el acceso a las aplicaciones internas; no inventes datos operativos ni cifras que no estén en esta descripción. MÓDULOS: 1) GESTIÓN HUMANA — Es el espacio donde se concentran los temas de talento y bienestar del personal: app principal en http://192.168.20.205:5000/login; módulo Contratista en http://192.168.20.205:8009/login (acceso desde la tarjeta Gestión humana en WorkColbeef, botón Contratista). Accesos rápidos típicos como gráficos, cumpleaños y tarjeta del mes, aniversario laboral, áreas de trabajo, EPS, fondo de pensiones, personal activo, hijos activos, solicitudes de permiso y de vacaciones, entre otros. Orienta al usuario a usar ese módulo para RRHH, beneficios y trámites de personal. 2) CONTROL OPERATIVO — Corresponde a la operación de planta y consulta operativa: ingreso de vehículos, plan de faena, pesaje, corrales, insensibilización, rendimientos, consulta de facturas, ranking de clientes, panel o monitor operativo, historial/descargas según la app, etc. 3) LOGÍSTICA — El módulo de Desposte está en http://192.168.20.205:8004/login (acceso desde la tarjeta Logística en WorkColbeef, botón Desposte); Inventarios en http://192.168.20.205:8501/ ; ERP logístico (App Logística) en http://192.168.20.205:8088/login.php ; Lenguas en http://192.168.20.205:8005/ . 4) CALIDAD — Canales en http://192.168.20.205:8006/login ; Colbeef-Ops en http://192.168.20.205:8081 ; acceso desde la tarjeta Calidad en WorkColbeef (botones Canales y Colbeef-Ops). 5) POWER BI — Datos y cifras Colbeef, Control PQRS (informes Microsoft Power BI en vista web) y Analyzer en http://192.168.20.205:9030/analyzer ; acceso desde la tarjeta Power BI en WorkColbeef (botones Datos y cifras Colbeef, Control PQRS y Analyzer; todos piden PIN). Enlaces Power BI: Datos y cifras Colbeef → https://app.powerbi.com/view?r=eyJrIjoiOTVmN2UwN2QtNDMyYy00NjZlLTlmMWItYzQyNzNmMTFjYTY1IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 ; Control PQRS → https://app.powerbi.com/view?r=eyJrIjoiZmViY2FjN2MtZDk2Yy00YWEwLTg2YjQtZjIxZWRlMjMzYzY2IiwidCI6ImRkNGU4NmViLTcyMGEtNGQ4MC1iNjE2LTliOWNmOTU1ODZmNCJ9 ; Analyzer → http://192.168.20.205:9030/analyzer . Si preguntan algo fuera de esta suite o de Colbeef como empresa genérica sin relación con estas herramientas, indica amablemente que solo puedes orientar sobre el uso de WorkColbeef y los módulos descritos.";
 
 var rootDir = path.join(__dirname);
 var STATS_FILE = path.join(rootDir, "data", "usage-stats.json");
@@ -131,6 +172,19 @@ function isStatsPostRateLimited(req) {
   return false;
 }
 
+/**
+ * Deriva un identificador anónimo y estable del visitante para métricas.
+ *
+ * Se usa HMAC-SHA256 de "IP|User-Agent" firmado con ADMIN_JWT_SECRET, de modo
+ * que dos visitas del mismo equipo colapsen en el mismo hash SIN almacenar la
+ * IP ni datos personales. No es reversible ni sirve para identificar personas.
+ *
+ * ponytail: si ADMIN_JWT_SECRET es débil se usa un secreto por defecto; el hash
+ * sigue siendo consistente pero no debe tratarse como dato sensible.
+ *
+ * @param {import('express').Request} req
+ * @returns {string} Hash hex de 32 caracteres.
+ */
 function visitorHashNode(req) {
   var ip = String(getClientIp(req));
   var ua = String(req.headers["user-agent"] || "").slice(0, 512);

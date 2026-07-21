@@ -6,8 +6,21 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * Proxy del asistente virtual "Beef" hacia la API de Google Gemini.
+ *
+ * Motivo de existir: la GEMINI_API_KEY nunca debe llegar al navegador. El
+ * frontend llama a /api/chat y este controlador reenvía la conversación a
+ * Gemini adjuntando la clave del servidor, devolviendo la respuesta al cliente.
+ *
+ * @see config/services (GEMINI_API_KEY, GEMINI_MODEL)
+ */
 class ChatProxyController extends Controller
 {
+    /**
+     * Reenvía el mensaje del usuario a Gemini con el prompt de sistema y
+     * devuelve la respuesta. Responde 503 si falta GEMINI_API_KEY.
+     */
     public function chat(Request $request): JsonResponse
     {
         $geminiApiKey = (string) env('GEMINI_API_KEY', '');
@@ -39,8 +52,8 @@ class ChatProxyController extends Controller
             .'3) LOGÍSTICA (incluye: módulo de Desposte en http://192.168.20.205:8004/login — ahí se gestiona el desposte; '
             .'inventarios en http://192.168.20.205:8501/; ERP logístico en http://192.168.20.205:8088/login.php; '
             .'lenguas en http://192.168.20.205:8005/; ingresar lenguas a inventario y generar documentación operativa). '
-            .'4) CALIDAD (incluye: Qualapp en http://192.168.20.205:5009/admin/login/; Canales en http://192.168.20.205:8006/login; '
-            .'Colbeef-Ops en http://192.168.20.205:8081 — acceso desde la tarjeta Calidad en WorkColbeef, botones Qualapp, Canales y Colbeef-Ops; hallazgos, tolerancia, registros, '
+            .'4) CALIDAD (incluye: Canales en http://192.168.20.205:8006/login; '
+            .'Colbeef-Ops en http://192.168.20.205:8081 — acceso desde la tarjeta Calidad en WorkColbeef, botones Canales y Colbeef-Ops; hallazgos, tolerancia, registros, '
             .'dashboards y controles de calidad en planta). '
             .'5) LOCKERBEEF (incluye: migración del control basado en hojas de cálculo a un aplicativo web integral para la '
             .'gestión de recursos físicos, operando sobre una base de datos robusta y centralizada). '

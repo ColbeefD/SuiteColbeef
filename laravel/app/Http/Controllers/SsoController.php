@@ -6,6 +6,15 @@ use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
+/**
+ * Single Sign-On hacia la aplicación externa de Gestión Humana (Flask).
+ *
+ * Solo accesible por un admin ya autenticado en Suite (ruta protegida con
+ * admin.jwt). Emite un JWT de vida corta firmado con el secreto compartido
+ * (SSO_GH_SECRET) para que la app Flask abra sesión sin pedir credenciales.
+ *
+ * @see config/sso.php
+ */
 class SsoController extends Controller
 {
     /**

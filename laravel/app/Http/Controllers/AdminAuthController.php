@@ -9,8 +9,26 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
+/**
+ * Autenticación del panel de administración.
+ *
+ * Flujo: el usuario envía la contraseña maestra → se verifica contra el hash
+ * bcrypt (config('admin.password_hash'), resuelto desde MASTER_PASSWORD_HASH_B64)
+ * → se emite un JWT firmado (firebase/php-jwt) con scope "admin" y se entrega en
+ * una cookie HttpOnly. El middleware VerifyAdminJwt valida esa cookie después.
+ *
+ * Protecciones: rate limiting por IP (RateLimiter) y respuesta 503 si la
+ * autenticación no está configurada en el entorno.
+ *
+ * @see \App\Http\Middleware\VerifyAdminJwt
+ * @see config/admin.php
+ */
 class AdminAuthController extends Controller
 {
+    /**
+     * Verifica la contraseña maestra y, si es correcta, emite la cookie JWT admin.
+     * Responde 401 (credenciales), 429 (rate limit) o 503 (sin configurar).
+     */
     public function login(Request $request): JsonResponse
     {
         if (!$this->isConfigured()) {

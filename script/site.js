@@ -1,3 +1,26 @@
+/**
+ * WorkColbeef Suite — Lógica del portal (frontend).
+ * =============================================================================
+ * Todo el comportamiento del portal vive dentro de una única IIFE para no
+ * contaminar el ámbito global. No hay bundler ni módulos ES: es JavaScript ES5
+ * plano cargado con <script defer>. El punto de entrada es init() (al final del
+ * archivo), que registra cada subsistema con funciones `init*`.
+ *
+ * Subsistemas principales:
+ *   - Ajustes/perfil  → localStorage "suite_settings_v2" (tema, preferencias…)
+ *   - Navegación      → sidebar (escritorio), drawer (móvil), mosaico y menú
+ *   - Accesos recientes → localStorage/sessionStorage según privacidad
+ *   - Acceso admin    → contraseña maestra → JWT en cookie (validado por API)
+ *   - PIN Power BI     → validado en servidor (cookie HttpOnly)
+ *   - PIN Rendimientos → validado en cliente (ver nota en RENDIMIENTOS_PIN)
+ *   - Métricas de uso  → POST /api/stats/event (telemetría no bloqueante)
+ *   - Buscador, chat Beef (Gemini) y reporte de bugs/PQR
+ *
+ * Convención: la telemetría nunca debe interrumpir la navegación; por eso los
+ * fetch de estadísticas capturan el error en silencio.
+ *
+ * @see DOCUMENTACION.md (sección 5.4)
+ */
 (function () {
   /* v2: ignora caché v1 para no mostrar datos viejos (nombre/cargo) tras cambios de perfil por defecto */
   var SETTINGS_KEY = "suite_settings_v2";
@@ -148,6 +171,15 @@
     } catch (e) {}
   }
 
+  /**
+   * Inserta un acceso al inicio de la lista de "recientes" (patrón MRU).
+   *
+   * Deduplica por id/href (si ya existía, sube al tope), recorta a
+   * RECENT_MAX_ITEMS y re-renderiza. El backend de almacenamiento
+   * (localStorage vs sessionStorage) lo decide la preferencia de privacidad.
+   *
+   * @param {{id?:string,label?:string,href:string,appId?:string,programId?:string,programLabel?:string,pinType?:string}} entry
+   */
   function recordRecentAccess(entry) {
     if (!entry || !entry.href) return;
     var list = loadRecentAccessList();
@@ -266,6 +298,19 @@
     renderRecentAccess();
   }
 
+  /**
+   * Punto único de navegación hacia un programa externo.
+   *
+   * Centraliza tres responsabilidades para que cada tarjeta/enlace no las repita:
+   *   1) Interceptar los flujos de PIN (Power BI en servidor, Rendimientos en cliente).
+   *   2) Registrar el acceso reciente (salvo meta.skipRecord).
+   *   3) Emitir la métrica "module_click" antes de abrir el destino.
+   *
+   * Valida que href sea http(s) para evitar navegar a esquemas inseguros.
+   *
+   * @param {string} href URL absoluta del programa.
+   * @param {{label?:string,appId?:string,programId?:string,programLabel?:string,pinType?:string,skipRecord?:boolean}} [meta]
+   */
   function navigateToModule(href, meta) {
     if (!href || !/^https?:\/\//i.test(String(href))) return;
     meta = meta || {};
@@ -286,6 +331,18 @@
     window.location.href = href;
   }
 
+  /**
+   * Construye el objeto `meta` de un enlace de programa a partir del DOM.
+   *
+   * Deriva una etiqueta legible ("Módulo · Programa"), el identificador de
+   * programa desde la URL y el tipo de PIN requerido (data-requires-pin o, por
+   * convención, "powerbi" para todo el módulo Power BI). Así navigateToModule()
+   * recibe siempre la misma forma sin importar de qué tarjeta venga el clic.
+   *
+   * @param {HTMLAnchorElement} el Enlace del programa.
+   * @param {string} appId Id del módulo contenedor.
+   * @returns {{label:string,appId:string,programId:string,programLabel:string,pinType:string}}
+   */
   function moduleMetaFromLink(el, appId) {
     var label = (el.textContent || "").replace(/\s+/g, " ").trim();
     var tile = el.closest(".moduleTile");
@@ -651,6 +708,13 @@
   // --- PIN para Power BI (privacidad) ---
   var powerBiPinOk = false;
   var pendingPowerBiHref = null;
+  /**
+   * PIN de Rendimientos validado EN CLIENTE.
+   * ponytail: es una barrera de conveniencia, no de seguridad — el valor es
+   * visible en el fuente. Ceiling conocido: no protege el acceso directo a la
+   * URL. Upgrade path: replicar el flujo de Power BI (validación en servidor
+   * con hash bcrypt + cookie HttpOnly) si se requiere protección real.
+   */
   var RENDIMIENTOS_PIN = "250626";
 
   function setPowerBiPinError(msg) {
@@ -688,6 +752,14 @@
     pendingRecentAccessMeta = null;
   }
 
+  /**
+   * Difiere la apertura de un informe Power BI hasta validar el PIN en servidor.
+   * Guarda el destino y su meta, y abre el modal; la validación real y la
+   * navegación ocurren al enviar el formulario (initPowerBiPinModal).
+   *
+   * @param {string} href URL del informe Power BI.
+   * @param {object} [meta] Metadatos para telemetría y accesos recientes.
+   */
   function requirePowerBiPinThenOpen(href, meta) {
     if (!href || !/^https?:\/\//i.test(String(href))) return;
     pendingPowerBiHref = href;
@@ -695,6 +767,14 @@
     openPowerBiPinModal();
   }
 
+  /**
+   * Solicita el PIN de Rendimientos (validación en cliente) y, si es correcto,
+   * registra la métrica/acceso reciente y navega. Ver nota de RENDIMIENTOS_PIN
+   * sobre la limitación de seguridad de este flujo.
+   *
+   * @param {string} href URL de Rendimientos.
+   * @param {object} [meta] Metadatos opcionales.
+   */
   function requireRendimientosPinThenOpen(href, meta) {
     if (!href || !/^https?:\/\//i.test(String(href))) return;
     var pin = window.prompt("Ingresa el PIN para abrir Rendimientos:");
@@ -824,6 +904,14 @@
     });
   }
 
+  /**
+   * Convierte una URL en un identificador de programa estable y seguro para
+   * usar como clave de métricas (slug). Ej: "http://192.168.20.205:8004/login"
+   * → "192-168-20-205-8004-login". Recorta a 160 chars (límite de la columna).
+   *
+   * @param {string} href
+   * @returns {string} Slug del programa.
+   */
   function programIdFromHref(href) {
     return String(href || "")
       .toLowerCase()
@@ -833,6 +921,17 @@
       .slice(0, 160);
   }
 
+  /**
+   * Envía un evento de telemetría a /api/stats/event (fire-and-forget).
+   *
+   * Es intencionalmente no bloqueante: cualquier error de red se ignora para
+   * que la recolección de métricas jamás afecte la navegación del usuario.
+   * program_id/program_label solo los persiste el backend Laravel.
+   *
+   * @param {"page_view"|"module_click"|"search_open"|"chat_open"|"chat_message"} event
+   * @param {string} [appId] Id del módulo.
+   * @param {{programId?:string,programLabel?:string}} [meta]
+   */
   function sendUsageEvent(event, appId, meta) {
     var payload = { event: event };
     if (appId) {

@@ -8,8 +8,19 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
+/**
+ * Protección por PIN de los informes de Power BI.
+ *
+ * El PIN se verifica contra un hash bcrypt del servidor (config('powerbi.pin_hash'))
+ * y, si es correcto, se entrega una cookie HttpOnly de "desbloqueo" con TTL
+ * configurable. Nota: el PIN protege el acceso DESDE el portal; no impide abrir
+ * una URL pública de Power BI copiada por fuera (documentado en config/powerbi.php).
+ *
+ * @see config/powerbi.php
+ */
 class PowerBiPinController extends Controller
 {
+    /** Indica si la cookie de desbloqueo vigente permite abrir Power BI. */
     public function session(Request $request): JsonResponse
     {
         $cookieName = (string) config('powerbi.cookie_name', 'WorkColbeef_powerbi_unlocked');

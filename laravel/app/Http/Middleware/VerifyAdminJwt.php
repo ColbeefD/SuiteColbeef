@@ -8,6 +8,15 @@ use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Middleware que protege las rutas admin (alias "admin.jwt").
+ *
+ * Lee la cookie HttpOnly emitida por AdminAuthController, decodifica el JWT con
+ * el secreto compartido y exige que el claim scope sea "admin". Ante fallo,
+ * responde 401 JSON para peticiones de API o redirige a "/" para vistas HTML.
+ *
+ * @see \App\Http\Controllers\AdminAuthController
+ */
 class VerifyAdminJwt
 {
     public function handle(Request $request, Closure $next): Response

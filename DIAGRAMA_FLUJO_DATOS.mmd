@@ -1,0 +1,221 @@
+%% WorkColbeef Suite — Flujo de interacción de la persona
+%% Formato compatible con Mermaid (.mmd)
+%% El portal centraliza accesos; no consulta bases de datos de los programas.
+
+flowchart TB
+    START(["Persona abre<br/>http://WorkColbeef:8000/"])
+    LOAD["Carga el portal<br/>WorkColbeef Suite"]
+    DEVICE{"¿Desde qué<br/>dispositivo ingresa?"}
+    DESKTOP["Escritorio<br/>Menú lateral expandible"]
+    MOBILE["Celular o tablet<br/>Botón hamburguesa + drawer"]
+    HOME["Panel principal<br/>Mosaico de módulos"]
+    ACTION{"¿Qué desea hacer?"}
+
+    START --> LOAD --> DEVICE
+    DEVICE -->|"Computador"| DESKTOP --> HOME
+    DEVICE -->|"Móvil"| MOBILE --> HOME
+    HOME --> ACTION
+
+    subgraph MODULES["RUTA PRINCIPAL · Abrir un módulo o programa"]
+        direction TB
+        SELECT_MODULE{"Selecciona un módulo"}
+
+        CONTROL["Control Operativo"]
+
+        GH["Gestión Humana"]
+        GH_PROGRAM{"Selecciona programa"}
+        GH_MAIN["Gestión humana"]
+        CONTRACTOR["Contratista"]
+
+        LOGISTICS["Logística"]
+        LOG_PROGRAM{"Selecciona programa"}
+        DESPOSTE["Desposte"]
+        INVENTORY["Inventarios"]
+        LOG_APP["App Logística"]
+        PERFORMANCE["Rendimientos"]
+        LANGUAGES["Lenguas"]
+
+        QUALITY["Calidad"]
+        QUALITY_PROGRAM{"Selecciona programa"}
+        CHANNELS["Canales"]
+        COLBEEF_OPS["Colbeef-Ops"]
+
+        POWER_BI["Power BI"]
+        BI_PROGRAM{"Selecciona informe"}
+        DATA_REPORT["Datos y cifras Colbeef"]
+        PQRS_REPORT["Control PQRS"]
+        ANALYZER["Analyzer"]
+
+        SELECT_MODULE -->|"Control Operativo"| CONTROL
+
+        SELECT_MODULE -->|"Gestión Humana"| GH --> GH_PROGRAM
+        GH_PROGRAM --> GH_MAIN
+        GH_PROGRAM --> CONTRACTOR
+
+        SELECT_MODULE -->|"Logística"| LOGISTICS --> LOG_PROGRAM
+        LOG_PROGRAM --> DESPOSTE
+        LOG_PROGRAM --> INVENTORY
+        LOG_PROGRAM --> LOG_APP
+        LOG_PROGRAM --> PERFORMANCE
+        LOG_PROGRAM --> LANGUAGES
+
+        SELECT_MODULE -->|"Calidad"| QUALITY --> QUALITY_PROGRAM
+        QUALITY_PROGRAM --> CHANNELS
+        QUALITY_PROGRAM --> COLBEEF_OPS
+
+        SELECT_MODULE -->|"Power BI"| POWER_BI --> BI_PROGRAM
+        BI_PROGRAM --> DATA_REPORT
+        BI_PROGRAM --> PQRS_REPORT
+        BI_PROGRAM --> ANALYZER
+    end
+
+    ACTION -->|"Abrir aplicación"| SELECT_MODULE
+
+    CONTROL --> ACCESS_ROUTE
+    GH_MAIN --> ACCESS_ROUTE
+    CONTRACTOR --> ACCESS_ROUTE
+    DESPOSTE --> ACCESS_ROUTE
+    INVENTORY --> ACCESS_ROUTE
+    LOG_APP --> ACCESS_ROUTE
+    PERFORMANCE --> ACCESS_ROUTE
+    LANGUAGES --> ACCESS_ROUTE
+    CHANNELS --> ACCESS_ROUTE
+    COLBEEF_OPS --> ACCESS_ROUTE
+
+    DIRECT_OPEN["El portal abre la URL<br/>del programa seleccionado"]
+
+    DATA_REPORT --> ACCESS_ROUTE
+    PQRS_REPORT --> ACCESS_ROUTE
+    ANALYZER --> ACCESS_ROUTE
+
+    ACCESS_ROUTE{"¿El acceso<br/>requiere PIN?"}
+    ACCESS_ROUTE -->|"No"| DIRECT_OPEN
+    ACCESS_ROUTE -->|"Rendimientos"| PERFORMANCE_PIN["Solicita PIN de Rendimientos"]
+    PERFORMANCE_PIN --> PERFORMANCE_CHECK{"¿PIN correcto?"}
+    PERFORMANCE_CHECK -->|"No"| PERFORMANCE_ERROR["Muestra PIN incorrecto"]
+    PERFORMANCE_ERROR --> PERFORMANCE_PIN
+    PERFORMANCE_CHECK -->|"Sí"| DIRECT_OPEN
+
+    ACCESS_ROUTE -->|"Power BI"| BI_PIN["Muestra modal de PIN<br/>para Power BI"]
+    BI_PIN --> BI_CHECK{"¿PIN correcto?"}
+    BI_CHECK -->|"No"| BI_ERROR["Informa el error<br/>y permite reintentar"]
+    BI_ERROR --> BI_PIN
+    BI_CHECK -->|"Sí"| DIRECT_OPEN
+
+    DIRECT_OPEN --> EXTERNAL["La persona interactúa directamente<br/>con la aplicación externa"]
+    EXTERNAL --> RETURN{"¿Regresa a<br/>WorkColbeef?"}
+    RETURN -->|"Sí"| HOME
+    RETURN -->|"No"| END(["Fin de la interacción"])
+
+    subgraph SEARCH_FLOW["BUSCADOR · Encontrar un acceso rápidamente"]
+        SEARCH["Abre Buscar"]
+        TYPE["Escribe módulo o programa"]
+        RESULTS{"¿Hay coincidencias?"}
+        CHOOSE["Selecciona un resultado"]
+        EMPTY["Muestra que no hay resultados"]
+
+        SEARCH --> TYPE --> RESULTS
+        RESULTS -->|"Sí"| CHOOSE
+        RESULTS -->|"No"| EMPTY
+        EMPTY --> TYPE
+    end
+
+    ACTION -->|"Buscar"| SEARCH
+    CHOOSE --> ACCESS_ROUTE
+
+    subgraph RECENT_FLOW["ACCESOS RECIENTES · Retomar una aplicación"]
+        RECENT{"¿Existen accesos recientes?"}
+        RECENT_LIST["Muestra los últimos<br/>programas utilizados"]
+        RECENT_SELECT["Selecciona un acceso"]
+        NO_RECENT["La sección permanece oculta"]
+
+        RECENT -->|"Sí"| RECENT_LIST --> RECENT_SELECT
+        RECENT -->|"No"| NO_RECENT
+    end
+
+    HOME --> RECENT
+    RECENT_SELECT --> ACCESS_ROUTE
+    NO_RECENT --> ACTION
+
+    subgraph CHAT_FLOW["ASISTENTE BEEF · Obtener orientación"]
+        CHAT["Abre el chat Beef"]
+        QUESTION["Escribe una pregunta"]
+        CHAT_WAIT["El portal procesa la solicitud"]
+        ANSWER["Muestra orientación sobre<br/>módulos y accesos"]
+        MORE{"¿Necesita otra ayuda?"}
+
+        CHAT --> QUESTION --> CHAT_WAIT --> ANSWER --> MORE
+        MORE -->|"Sí"| QUESTION
+    end
+
+    ACTION -->|"Consultar asistente"| CHAT
+    MORE -->|"No"| HOME
+
+    subgraph BUG_FLOW["REPORTE DE ERROR · Informar una novedad"]
+        BUG["Abre Reportar un error"]
+        BUG_FORM["Selecciona software y tema<br/>Describe el problema"]
+        BUG_VALID{"¿Formulario válido?"}
+        BUG_FIX["Solicita completar o corregir datos"]
+        BUG_SEND["Envía el reporte"]
+        BUG_CONFIRM["Muestra confirmación<br/>y número de ticket"]
+
+        BUG --> BUG_FORM --> BUG_VALID
+        BUG_VALID -->|"No"| BUG_FIX --> BUG_FORM
+        BUG_VALID -->|"Sí"| BUG_SEND --> BUG_CONFIRM
+    end
+
+    ACTION -->|"Reportar error"| BUG
+    BUG_CONFIRM --> HOME
+
+    subgraph SETTINGS_FLOW["AJUSTES · Administrar la Suite"]
+        SETTINGS["Abre Ajustes"]
+        ADMIN_GATE["Solicita contraseña maestra"]
+        ADMIN_CHECK{"¿Acceso válido?"}
+        ADMIN_ERROR["Informa acceso incorrecto"]
+        SETTINGS_PANEL["Muestra panel de ajustes"]
+        SETTINGS_OPTION{"Selecciona sección"}
+        ACCOUNT["Mi cuenta"]
+        PREFERENCES["Preferencias y tema"]
+        NOTIFICATIONS["Notificaciones"]
+        PRIVACY["Privacidad e historial"]
+        STATS["Estadísticas de uso"]
+        BUG_ADMIN["Gestión de reportes"]
+
+        SETTINGS --> ADMIN_GATE --> ADMIN_CHECK
+        ADMIN_CHECK -->|"No"| ADMIN_ERROR --> ADMIN_GATE
+        ADMIN_CHECK -->|"Sí"| SETTINGS_PANEL --> SETTINGS_OPTION
+        SETTINGS_OPTION --> ACCOUNT
+        SETTINGS_OPTION --> PREFERENCES
+        SETTINGS_OPTION --> NOTIFICATIONS
+        SETTINGS_OPTION --> PRIVACY
+        SETTINGS_OPTION --> STATS
+        SETTINGS_OPTION --> BUG_ADMIN
+    end
+
+    ACTION -->|"Abrir ajustes"| SETTINGS
+    ACCOUNT --> HOME
+    PREFERENCES --> HOME
+    NOTIFICATIONS --> HOME
+    PRIVACY --> HOME
+    STATS --> HOME
+    BUG_ADMIN --> HOME
+
+    NOTE["WorkColbeef funciona como portal de navegación:<br/>organiza y abre aplicaciones mediante sus URLs.<br/>No consulta las bases de datos internas de esos programas."]:::note
+    LOAD -.-> NOTE
+
+    classDef startEnd fill:#084d26,stroke:#06391d,color:#ffffff,stroke-width:2px;
+    classDef decision fill:#fff7df,stroke:#9a6b00,color:#332400,stroke-width:2px;
+    classDef navigation fill:#e8f5ee,stroke:#084d26,color:#10251a,stroke-width:1.5px;
+    classDef module fill:#eef3f8,stroke:#425b76,color:#172331,stroke-width:1.5px;
+    classDef security fill:#fff3f4,stroke:#d61f2c,color:#3a1115,stroke-width:1.5px;
+    classDef result fill:#eaf7ee,stroke:#084d26,color:#10251a,stroke-width:2px;
+    classDef error fill:#fde8e8,stroke:#a61b1b,color:#521010,stroke-width:1.5px;
+    classDef note fill:#f5f5f5,stroke:#666666,color:#222222,stroke-dasharray:5 5;
+
+    class START,END startEnd;
+    class DEVICE,ACTION,SELECT_MODULE,GH_PROGRAM,LOG_PROGRAM,QUALITY_PROGRAM,BI_PROGRAM,ACCESS_ROUTE,PERFORMANCE_CHECK,BI_CHECK,RETURN,RESULTS,RECENT,MORE,BUG_VALID,ADMIN_CHECK,SETTINGS_OPTION decision;
+    class LOAD,DESKTOP,MOBILE,HOME,SEARCH,TYPE,CHOOSE,RECENT_LIST,RECENT_SELECT,CHAT,QUESTION,BUG,BUG_FORM,SETTINGS,SETTINGS_PANEL navigation;
+    class CONTROL,GH,GH_MAIN,CONTRACTOR,LOGISTICS,DESPOSTE,INVENTORY,LOG_APP,PERFORMANCE,LANGUAGES,QUALITY,CHANNELS,COLBEEF_OPS,POWER_BI,DATA_REPORT,PQRS_REPORT,ANALYZER module;
+    class PERFORMANCE_PIN,BI_PIN,ADMIN_GATE security;
+    class DIRECT_OPEN,EXTERNAL,ANSWER,BUG_CONFIRM,ACCOUNT,PREFERENCES,NOTIFICATIONS,PRIVACY,STATS,BUG_ADMIN result;
+    class PERFORMANCE_ERROR,BI_ERROR,EMPTY,BUG_FIX,ADMIN_ERROR error;

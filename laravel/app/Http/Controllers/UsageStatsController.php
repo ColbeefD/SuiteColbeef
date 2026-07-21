@@ -8,6 +8,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
+/**
+ * Registro y agregación de métricas de uso del portal.
+ *
+ * record()  → endpoint público (throttle) que persiste un evento por cada
+ *             page_view / module_click / search_open / chat_open / chat_message,
+ *             incluyendo el módulo (app_id) y el programa específico
+ *             (program_id/program_label). El visitante se anonimiza con un hash.
+ * summary() → endpoint admin que devuelve totales y desgloses por módulo
+ *             (by_app), por programa (by_program) y por día (daily).
+ *
+ * Nota: user_label existe en la tabla pero se persiste NULL a propósito (las
+ * estadísticas se agregan por módulo/programa, no por usuario).
+ *
+ * @see \App\Models\UsageEvent
+ */
 class UsageStatsController extends Controller
 {
     private const EVENTS = [

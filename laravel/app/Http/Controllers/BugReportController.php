@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
+/**
+ * Gestión de reportes de bugs / PQR del portal.
+ *
+ * store()        → alta pública (throttle): crea un ticket WB-YYYYMMDD-XXXXXX.
+ * adminSummary() → panel admin: totales, tiempo medio de resolución, desglose
+ *                  por software y casos recientes.
+ * resolve()      → panel admin: marca un ticket como resuelto (resolved_at).
+ *
+ * @see \App\Models\BugReport
+ */
 class BugReportController extends Controller
 {
     /** @var array<string, string> */
