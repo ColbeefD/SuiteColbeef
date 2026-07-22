@@ -27,6 +27,7 @@ class BugReportController extends Controller
         'gestion-humana' => 'Gestión humana',
         'logistica' => 'Logística',
         'calidad' => 'Calidad',
+        'tesoreria-cartera' => 'Tesorería y cartera',
         'power-bi' => 'Power BI',
         'otro' => 'Otro / no listado',
     ];

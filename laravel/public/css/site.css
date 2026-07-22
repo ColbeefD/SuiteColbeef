@@ -947,14 +947,16 @@ body.mobile-nav-locked {
 .moduleTile--powerBi,
 .moduleTile--logistica,
 .moduleTile--gestion-humana,
-.moduleTile--calidad {
+.moduleTile--calidad,
+.moduleTile--tesoreria {
   cursor: default;
 }
 
 .moduleTile--powerBi .moduleTileDesc,
 .moduleTile--logistica .moduleTileDesc,
 .moduleTile--gestion-humana .moduleTileDesc,
-.moduleTile--calidad .moduleTileDesc {
+.moduleTile--calidad .moduleTileDesc,
+.moduleTile--tesoreria .moduleTileDesc {
   margin-bottom: 0;
 }
 
@@ -975,7 +977,8 @@ body.mobile-nav-locked {
 .moduleTile--powerBi .moduleTileActions,
 .moduleTile--logistica .moduleTileActions,
 .moduleTile--gestion-humana .moduleTileActions,
-.moduleTile--calidad .moduleTileActions {
+.moduleTile--calidad .moduleTileActions,
+.moduleTile--tesoreria .moduleTileActions {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -997,7 +1000,9 @@ body.mobile-nav-locked {
 .moduleTile--gestion-humana:hover .moduleTileActions,
 .moduleTile--gestion-humana:focus-within .moduleTileActions,
 .moduleTile--calidad:hover .moduleTileActions,
-.moduleTile--calidad:focus-within .moduleTileActions {
+.moduleTile--calidad:focus-within .moduleTileActions,
+.moduleTile--tesoreria:hover .moduleTileActions,
+.moduleTile--tesoreria:focus-within .moduleTileActions {
   max-height: 260px;
   opacity: 1;
   pointer-events: auto;
@@ -1013,7 +1018,9 @@ body.mobile-nav-locked {
 .moduleTile--gestion-humana:hover .moduleTileHoverHint,
 .moduleTile--gestion-humana:focus-within .moduleTileHoverHint,
 .moduleTile--calidad:hover .moduleTileHoverHint,
-.moduleTile--calidad:focus-within .moduleTileHoverHint {
+.moduleTile--calidad:focus-within .moduleTileHoverHint,
+.moduleTile--tesoreria:hover .moduleTileHoverHint,
+.moduleTile--tesoreria:focus-within .moduleTileHoverHint {
   opacity: 0;
   max-height: 0;
   margin: 0;
@@ -1025,7 +1032,8 @@ body.mobile-nav-locked {
   .moduleTile--powerBi .moduleTileActions,
   .moduleTile--logistica .moduleTileActions,
   .moduleTile--gestion-humana .moduleTileActions,
-  .moduleTile--calidad .moduleTileActions {
+  .moduleTile--calidad .moduleTileActions,
+  .moduleTile--tesoreria .moduleTileActions {
     max-height: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -1037,7 +1045,8 @@ body.mobile-nav-locked {
   .moduleTile--powerBi .moduleTileHoverHint,
   .moduleTile--logistica .moduleTileHoverHint,
   .moduleTile--gestion-humana .moduleTileHoverHint,
-  .moduleTile--calidad .moduleTileHoverHint {
+  .moduleTile--calidad .moduleTileHoverHint,
+  .moduleTile--tesoreria .moduleTileHoverHint {
     display: none;
   }
 }
@@ -1047,6 +1056,7 @@ body.mobile-nav-locked {
   .moduleTile--logistica .moduleTileActions,
   .moduleTile--gestion-humana .moduleTileActions,
   .moduleTile--calidad .moduleTileActions,
+  .moduleTile--tesoreria .moduleTileActions,
   .moduleTileHoverHint {
     transition: none;
   }
@@ -2171,7 +2181,8 @@ button.historyItem--action {
   .moduleTile--powerBi .moduleTileActions,
   .moduleTile--logistica .moduleTileActions,
   .moduleTile--gestion-humana .moduleTileActions,
-  .moduleTile--calidad .moduleTileActions {
+  .moduleTile--calidad .moduleTileActions,
+  .moduleTile--tesoreria .moduleTileActions {
     max-height: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -2183,7 +2194,8 @@ button.historyItem--action {
   .moduleTile--powerBi .moduleTileHoverHint,
   .moduleTile--logistica .moduleTileHoverHint,
   .moduleTile--gestion-humana .moduleTileHoverHint,
-  .moduleTile--calidad .moduleTileHoverHint {
+  .moduleTile--calidad .moduleTileHoverHint,
+  .moduleTile--tesoreria .moduleTileHoverHint {
     display: none;
   }
 

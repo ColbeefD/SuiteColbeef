@@ -38,6 +38,7 @@ class UsageStatsController extends Controller
         'gestion-humana' => 'Gestión humana',
         'logistica' => 'Logística',
         'calidad' => 'Calidad',
+        'tesoreria-cartera' => 'Tesorería y cartera',
         'power-bi' => 'Power BI',
     ];
 

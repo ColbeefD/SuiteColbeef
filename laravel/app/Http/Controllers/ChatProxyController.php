@@ -55,7 +55,9 @@ class ChatProxyController extends Controller
             .'4) CALIDAD (incluye: Canales en http://192.168.20.205:8006/login; '
             .'Colbeef-Ops en http://192.168.20.205:8081 — acceso desde la tarjeta Calidad en WorkColbeef, botones Canales y Colbeef-Ops; hallazgos, tolerancia, registros, '
             .'dashboards y controles de calidad en planta). '
-            .'5) LOCKERBEEF (incluye: migración del control basado en hojas de cálculo a un aplicativo web integral para la '
+            .'5) TESORERÍA Y CARTERA (incluye: Pago proveedores en http://192.168.20.205:8100/ — acceso desde la tarjeta '
+            .'Tesorería y cartera en WorkColbeef, botón Pago proveedores). '
+            .'6) LOCKERBEEF (incluye: migración del control basado en hojas de cálculo a un aplicativo web integral para la '
             .'gestión de recursos físicos, operando sobre una base de datos robusta y centralizada). '
             .'Si te preguntan algo fuera de este sistema, indica amablemente que solo puedes ayudar con la plataforma WorkColbeef.';
 

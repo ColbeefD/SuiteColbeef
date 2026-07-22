@@ -80,6 +80,20 @@
             </svg>
             <span>Calidad</span>
           </a>
+          <a
+            class="menuItem"
+            href="#"
+            data-app-id="tesoreria-cartera"
+            data-app-name="Tesorería y cartera"
+            aria-label="Tesorería y cartera: ir al panel y elegir Pago proveedores"
+          >
+            <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="7" y="11" width="34" height="27" rx="4" stroke="currentColor" stroke-width="2" />
+              <path d="M7 18h34M29 25h12v8H29a4 4 0 0 1 0-8Z" stroke="currentColor" stroke-width="2" />
+              <circle cx="31.5" cy="29" r="1" fill="currentColor" />
+            </svg>
+            <span>Tesorería y cartera</span>
+          </a>
           <a class="menuItem" href="#" data-app-id="power-bi" data-app-name="Power BI" aria-label="Power BI: ir al panel y elegir informe">
             <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="8" y="10" width="32" height="28" rx="3" stroke="currentColor" stroke-width="2" />
@@ -260,6 +274,28 @@
                   </div>
                 </div>
                 <div
+                  class="moduleTile moduleTile--tesoreria"
+                  data-app-id="tesoreria-cartera"
+                  data-app-name="Tesorería y cartera"
+                  role="group"
+                  aria-label="Tesorería y cartera: pasa el cursor o usa tab para ver Pago proveedores"
+                  tabindex="0"
+                >
+                  <span class="moduleTileIcon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="7" y="11" width="34" height="27" rx="4" stroke="currentColor" stroke-width="2" />
+                      <path d="M7 18h34M29 25h12v8H29a4 4 0 0 1 0-8Z" stroke="currentColor" stroke-width="2" />
+                      <circle cx="31.5" cy="29" r="1" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span class="moduleTileName">Tesorería y cartera</span>
+                  <span class="moduleTileDesc">Accesos para la gestión de pagos, proveedores y cartera.</span>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Pago proveedores.</p>
+                  <div class="moduleTileActions">
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8100/">Pago proveedores</a>
+                  </div>
+                </div>
+                <div
                   class="moduleTile moduleTile--powerBi"
                   data-app-id="power-bi"
                   data-app-name="Power BI"
@@ -343,6 +379,7 @@
                           <option value="gestion-humana">Gestión Humana</option>
                           <option value="logistica">Logística</option>
                           <option value="calidad">Calidad</option>
+                          <option value="tesoreria-cartera">Tesorería y cartera</option>
                           <option value="power-bi">Power BI</option>
                         </select>
                       </label>
@@ -560,6 +597,18 @@
               </div>
             </div>
           </li>
+          <li class="searchModal-item" data-app="tesoreria-cartera">
+            <div class="searchModal-gestionHumanaBlock">
+              <span class="searchModal-gestionHumanaHeading">Tesorería y cartera</span>
+              <div class="searchModal-gestionHumanaActions">
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8100/"
+                  data-search="tesoreria tesorería cartera pago pagos proveedores 8100"
+                  >Pago proveedores</a>
+              </div>
+            </div>
+          </li>
           <li class="searchModal-item searchModal-item--powerBi" data-app="power-bi">
             <div class="searchModal-powerBiBlock">
               <span class="searchModal-powerBiHeading">Power BI</span>
@@ -675,6 +724,7 @@
               <option value="gestion-humana">Gestión humana</option>
               <option value="logistica">Logística</option>
               <option value="calidad">Calidad</option>
+              <option value="tesoreria-cartera">Tesorería y cartera</option>
               <option value="power-bi">Power BI</option>
               <option value="otro">Otro / no listado</option>
             </select>

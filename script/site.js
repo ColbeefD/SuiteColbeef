@@ -100,6 +100,7 @@
     "gestion-humana": "Gestión humana",
     logistica: "Logística",
     calidad: "Calidad",
+    "tesoreria-cartera": "Tesorería y cartera",
     "power-bi": "Power BI"
   };
 
@@ -1967,6 +1968,20 @@
     });
   }
 
+  function initTesoreriaNav() {
+    var els = document.querySelectorAll(".moduleTile--tesoreria .moduleTileBtn");
+    els.forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        var href = el.getAttribute("href");
+        if (!href) return;
+        closeSettingsView();
+        setActiveMenuByAppId("tesoreria-cartera");
+        if (e && e.preventDefault) e.preventDefault();
+        navigateToModule(href, moduleMetaFromLink(el, "tesoreria-cartera"));
+      });
+    });
+  }
+
   function initMenuTracking() {
     var links = Array.prototype.slice.call(document.querySelectorAll(".menuItem"));
     links.forEach(function (a) {
@@ -2036,6 +2051,12 @@
               appId: appId,
               programId: programIdFromHref(href),
               programLabel: tile.getAttribute("data-app-name") || APP_ID_LABELS[appId] || "Módulo"
+            });
+            return;
+          }
+          if (tile && tile.scrollIntoView) {
+            window.requestAnimationFrame(function () {
+              tile.scrollIntoView({ behavior: "smooth", block: "nearest" });
             });
           }
         }
@@ -2182,6 +2203,7 @@
     initLogisticaNav();
     initGestionHumanaNav();
     initCalidadNav();
+    initTesoreriaNav();
     initDashboardMosaic();
     initRecentAccess();
     initAdminAccessModal();
