@@ -101,6 +101,7 @@
     logistica: "Logística",
     calidad: "Calidad",
     "tesoreria-cartera": "Tesorería y cartera",
+    administrativo: "Administrativo",
     "power-bi": "Power BI"
   };
 
@@ -1982,6 +1983,20 @@
     });
   }
 
+  function initAdministrativoNav() {
+    var els = document.querySelectorAll(".moduleTile--administrativo .moduleTileBtn");
+    els.forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        var href = el.getAttribute("href");
+        if (!href) return;
+        closeSettingsView();
+        setActiveMenuByAppId("administrativo");
+        if (e && e.preventDefault) e.preventDefault();
+        navigateToModule(href, moduleMetaFromLink(el, "administrativo"));
+      });
+    });
+  }
+
   function initMenuTracking() {
     var links = Array.prototype.slice.call(document.querySelectorAll(".menuItem"));
     links.forEach(function (a) {
@@ -2204,6 +2219,7 @@
     initGestionHumanaNav();
     initCalidadNav();
     initTesoreriaNav();
+    initAdministrativoNav();
     initDashboardMosaic();
     initRecentAccess();
     initAdminAccessModal();

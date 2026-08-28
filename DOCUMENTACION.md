@@ -1,6 +1,6 @@
 # WorkColbeef Suite — Documentación Técnica
 
-> Portal web corporativo de **Colbeef** (planta de beneficio de bovinos, Floridablanca, Santander) que centraliza el acceso a las aplicaciones internas: Gestión Humana, Logística, Calidad, Tesorería y Cartera, Control Operativo y Power BI.
+> Portal web corporativo de **Colbeef** (planta de beneficio de bovinos, Floridablanca, Santander) que centraliza el acceso a las aplicaciones internas: Gestión Humana, Logística, Calidad, Tesorería y Cartera, Administrativo, Control Operativo y Power BI.
 
 **Versión del documento:** 1.0
 **Última actualización:** Julio 2026
@@ -33,7 +33,7 @@
 
 WorkColbeef Suite es un **portal de acceso unificado** (single pane of glass) a las aplicaciones internas de Colbeef. No reemplaza a las aplicaciones; las **agrupa, protege y organiza** en un panel de módulos, con funciones transversales:
 
-- **Panel de módulos** con tarjetas por área (Gestión Humana, Logística, Calidad, Tesorería y Cartera, Control Operativo, Power BI).
+- **Panel de módulos** con tarjetas por área (Gestión Humana, Logística, Calidad, Tesorería y Cartera, Administrativo, Control Operativo, Power BI).
 - **Accesos recientes** por navegador para retomar rápido el último programa usado.
 - **Buscador** global de módulos, programas y herramientas.
 - **Asistente virtual "Beef"** basado en Google Gemini (proxy en el backend).
@@ -245,7 +245,7 @@ init()
  ├── applySettingsToUI(loadSettings())   → perfil, tema, preferencias
  ├── initSidebarHover / initMobileNav     → navegación escritorio/móvil
  ├── initMenuTracking / initDashboardMosaic
- ├── initPowerBiNav / initLogisticaNav / initGestionHumanaNav / initCalidadNav / initTesoreriaNav
+ ├── initPowerBiNav / initLogisticaNav / initGestionHumanaNav / initCalidadNav / initTesoreriaNav / initAdministrativoNav
  ├── initRecentAccess                     → accesos recientes
  ├── initAdminAccessModal / initSettings* → panel de ajustes (con JWT)
  ├── initPowerBiPinModal                  → flujo de PIN de Power BI
@@ -323,6 +323,11 @@ Todas las URLs están configuradas en `site.html` (mosaico y buscador).
 | Programa | URL | PIN |
 |----------|-----|-----|
 | Pago proveedores | `http://192.168.20.205:8100/` | No |
+
+### Administrativo
+| Programa | URL | PIN |
+|----------|-----|-----|
+| Juricombeef | `http://192.168.20.205:8010/app/login.html` | No |
 
 ### Power BI (todos protegidos con PIN de servidor)
 | Programa | URL |
@@ -624,8 +629,8 @@ Al tocar `site.html`, `css/site.css` o `script/site.js`, **copiar la misma versi
 
 | Término | Significado |
 |---------|-------------|
-| **Módulo** | Área funcional del portal (Gestión Humana, Logística, Calidad, Tesorería y Cartera, Control Operativo, Power BI). |
-| **Programa** | Aplicación concreta dentro de un módulo (Desposte, Canales, Pago proveedores, Analyzer, etc.). |
+| **Módulo** | Área funcional del portal (Gestión Humana, Logística, Calidad, Tesorería y Cartera, Administrativo, Control Operativo, Power BI). |
+| **Programa** | Aplicación concreta dentro de un módulo (Desposte, Canales, Pago proveedores, Juricombeef, Analyzer, etc.). |
 | **PIN** | Clave numérica que protege el acceso a Power BI (servidor) o Rendimientos (cliente). |
 | **JWT** | JSON Web Token; credencial firmada que autoriza al admin, guardada en cookie HttpOnly. |
 | **Hash B64** | Hash bcrypt codificado en Base64 para poder guardarlo en `.env` sin romper el parseo. |

@@ -94,6 +94,18 @@
             </svg>
             <span>Tesorería y cartera</span>
           </a>
+          <a
+            class="menuItem"
+            href="#"
+            data-app-id="administrativo"
+            data-app-name="Administrativo"
+            aria-label="Administrativo: ir al panel y elegir Juricombeef"
+          >
+            <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 40V11h24v29M8 40h32M18 17h4M26 17h4M18 24h4M26 24h4M21 40v-9h6v9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Administrativo</span>
+          </a>
           <a class="menuItem" href="#" data-app-id="power-bi" data-app-name="Power BI" aria-label="Power BI: ir al panel y elegir informe">
             <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="8" y="10" width="32" height="28" rx="3" stroke="currentColor" stroke-width="2" />
@@ -296,6 +308,26 @@
                   </div>
                 </div>
                 <div
+                  class="moduleTile moduleTile--administrativo"
+                  data-app-id="administrativo"
+                  data-app-name="Administrativo"
+                  role="group"
+                  aria-label="Administrativo: pasa el cursor o usa tab para ver Juricombeef"
+                  tabindex="0"
+                >
+                  <span class="moduleTileIcon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 40V11h24v29M8 40h32M18 17h4M26 17h4M18 24h4M26 24h4M21 40v-9h6v9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <span class="moduleTileName">Administrativo</span>
+                  <span class="moduleTileDesc">Accesos para la gestión jurídica y administrativa.</span>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Juricombeef.</p>
+                  <div class="moduleTileActions">
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8010/app/login.html">Juricombeef</a>
+                  </div>
+                </div>
+                <div
                   class="moduleTile moduleTile--powerBi"
                   data-app-id="power-bi"
                   data-app-name="Power BI"
@@ -380,6 +412,7 @@
                           <option value="logistica">Logística</option>
                           <option value="calidad">Calidad</option>
                           <option value="tesoreria-cartera">Tesorería y cartera</option>
+                          <option value="administrativo">Administrativo</option>
                           <option value="power-bi">Power BI</option>
                         </select>
                       </label>
@@ -609,6 +642,18 @@
               </div>
             </div>
           </li>
+          <li class="searchModal-item" data-app="administrativo">
+            <div class="searchModal-gestionHumanaBlock">
+              <span class="searchModal-gestionHumanaHeading">Administrativo</span>
+              <div class="searchModal-gestionHumanaActions">
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8010/app/login.html"
+                  data-search="administrativo administracion administración juridico jurídica juricombeef 8010"
+                  >Juricombeef</a>
+              </div>
+            </div>
+          </li>
           <li class="searchModal-item searchModal-item--powerBi" data-app="power-bi">
             <div class="searchModal-powerBiBlock">
               <span class="searchModal-powerBiHeading">Power BI</span>
@@ -725,6 +770,7 @@
               <option value="logistica">Logística</option>
               <option value="calidad">Calidad</option>
               <option value="tesoreria-cartera">Tesorería y cartera</option>
+              <option value="administrativo">Administrativo</option>
               <option value="power-bi">Power BI</option>
               <option value="otro">Otro / no listado</option>
             </select>
