@@ -949,7 +949,8 @@ body.mobile-nav-locked {
 .moduleTile--gestion-humana,
 .moduleTile--calidad,
 .moduleTile--tesoreria,
-.moduleTile--administrativo {
+.moduleTile--administrativo,
+.moduleTile--control-operativo {
   cursor: default;
 }
 
@@ -958,7 +959,8 @@ body.mobile-nav-locked {
 .moduleTile--gestion-humana .moduleTileDesc,
 .moduleTile--calidad .moduleTileDesc,
 .moduleTile--tesoreria .moduleTileDesc,
-.moduleTile--administrativo .moduleTileDesc {
+.moduleTile--administrativo .moduleTileDesc,
+.moduleTile--control-operativo .moduleTileDesc {
   margin-bottom: 0;
 }
 
@@ -981,7 +983,8 @@ body.mobile-nav-locked {
 .moduleTile--gestion-humana .moduleTileActions,
 .moduleTile--calidad .moduleTileActions,
 .moduleTile--tesoreria .moduleTileActions,
-.moduleTile--administrativo .moduleTileActions {
+.moduleTile--administrativo .moduleTileActions,
+.moduleTile--control-operativo .moduleTileActions {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -1007,7 +1010,9 @@ body.mobile-nav-locked {
 .moduleTile--tesoreria:hover .moduleTileActions,
 .moduleTile--tesoreria:focus-within .moduleTileActions,
 .moduleTile--administrativo:hover .moduleTileActions,
-.moduleTile--administrativo:focus-within .moduleTileActions {
+.moduleTile--administrativo:focus-within .moduleTileActions,
+.moduleTile--control-operativo:hover .moduleTileActions,
+.moduleTile--control-operativo:focus-within .moduleTileActions {
   max-height: 260px;
   opacity: 1;
   pointer-events: auto;
@@ -1027,7 +1032,9 @@ body.mobile-nav-locked {
 .moduleTile--tesoreria:hover .moduleTileHoverHint,
 .moduleTile--tesoreria:focus-within .moduleTileHoverHint,
 .moduleTile--administrativo:hover .moduleTileHoverHint,
-.moduleTile--administrativo:focus-within .moduleTileHoverHint {
+.moduleTile--administrativo:focus-within .moduleTileHoverHint,
+.moduleTile--control-operativo:hover .moduleTileHoverHint,
+.moduleTile--control-operativo:focus-within .moduleTileHoverHint {
   opacity: 0;
   max-height: 0;
   margin: 0;
@@ -1041,7 +1048,8 @@ body.mobile-nav-locked {
   .moduleTile--gestion-humana .moduleTileActions,
   .moduleTile--calidad .moduleTileActions,
   .moduleTile--tesoreria .moduleTileActions,
-  .moduleTile--administrativo .moduleTileActions {
+  .moduleTile--administrativo .moduleTileActions,
+  .moduleTile--control-operativo .moduleTileActions {
     max-height: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -1055,7 +1063,8 @@ body.mobile-nav-locked {
   .moduleTile--gestion-humana .moduleTileHoverHint,
   .moduleTile--calidad .moduleTileHoverHint,
   .moduleTile--tesoreria .moduleTileHoverHint,
-  .moduleTile--administrativo .moduleTileHoverHint {
+  .moduleTile--administrativo .moduleTileHoverHint,
+  .moduleTile--control-operativo .moduleTileHoverHint {
     display: none;
   }
 }
@@ -1067,6 +1076,7 @@ body.mobile-nav-locked {
   .moduleTile--calidad .moduleTileActions,
   .moduleTile--tesoreria .moduleTileActions,
   .moduleTile--administrativo .moduleTileActions,
+  .moduleTile--control-operativo .moduleTileActions,
   .moduleTileHoverHint {
     transition: none;
   }
@@ -2193,7 +2203,8 @@ button.historyItem--action {
   .moduleTile--gestion-humana .moduleTileActions,
   .moduleTile--calidad .moduleTileActions,
   .moduleTile--tesoreria .moduleTileActions,
-  .moduleTile--administrativo .moduleTileActions {
+  .moduleTile--administrativo .moduleTileActions,
+  .moduleTile--control-operativo .moduleTileActions {
     max-height: none !important;
     opacity: 1 !important;
     pointer-events: auto !important;
@@ -2207,7 +2218,8 @@ button.historyItem--action {
   .moduleTile--gestion-humana .moduleTileHoverHint,
   .moduleTile--calidad .moduleTileHoverHint,
   .moduleTile--tesoreria .moduleTileHoverHint,
-  .moduleTile--administrativo .moduleTileHoverHint {
+  .moduleTile--administrativo .moduleTileHoverHint,
+  .moduleTile--control-operativo .moduleTileHoverHint {
     display: none;
   }
 

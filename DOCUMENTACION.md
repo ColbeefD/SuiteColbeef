@@ -245,7 +245,8 @@ init()
  ├── applySettingsToUI(loadSettings())   → perfil, tema, preferencias
  ├── initSidebarHover / initMobileNav     → navegación escritorio/móvil
  ├── initMenuTracking / initDashboardMosaic
- ├── initPowerBiNav / initLogisticaNav / initGestionHumanaNav / initCalidadNav / initTesoreriaNav / initAdministrativoNav
+ ├── initControlOperativoNav / initPowerBiNav / initLogisticaNav / initGestionHumanaNav
+ ├── initCalidadNav / initTesoreriaNav / initAdministrativoNav
  ├── initRecentAccess                     → accesos recientes
  ├── initAdminAccessModal / initSettings* → panel de ajustes (con JWT)
  ├── initPowerBiPinModal                  → flujo de PIN de Power BI
@@ -297,6 +298,7 @@ Todas las URLs están configuradas en `site.html` (mosaico y buscador).
 | Programa | URL | PIN |
 |----------|-----|-----|
 | Control operativo | `http://192.168.100.241:5001/` | No |
+| Validador OD | `http://192.168.20.205:3050/` | No |
 
 ### Gestión Humana
 | Programa | URL | PIN |
@@ -630,7 +632,7 @@ Al tocar `site.html`, `css/site.css` o `script/site.js`, **copiar la misma versi
 | Término | Significado |
 |---------|-------------|
 | **Módulo** | Área funcional del portal (Gestión Humana, Logística, Calidad, Tesorería y Cartera, Administrativo, Control Operativo, Power BI). |
-| **Programa** | Aplicación concreta dentro de un módulo (Desposte, Canales, Pago proveedores, Juricombeef, Analyzer, etc.). |
+| **Programa** | Aplicación concreta dentro de un módulo (Validador OD, Desposte, Canales, Pago proveedores, Juricombeef, Analyzer, etc.). |
 | **PIN** | Clave numérica que protege el acceso a Power BI (servidor) o Rendimientos (cliente). |
 | **JWT** | JSON Web Token; credencial firmada que autoriza al admin, guardada en cookie HttpOnly. |
 | **Hash B64** | Hash bcrypt codificado en Base64 para poder guardarlo en `.env` sin romper el parseo. |

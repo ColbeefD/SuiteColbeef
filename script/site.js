@@ -1920,6 +1920,20 @@
     });
   }
 
+  function initControlOperativoNav() {
+    var els = document.querySelectorAll(".moduleTile--control-operativo .moduleTileBtn");
+    els.forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        var href = el.getAttribute("href");
+        if (!href) return;
+        closeSettingsView();
+        setActiveMenuByAppId("control-operativo");
+        if (e && e.preventDefault) e.preventDefault();
+        navigateToModule(href, moduleMetaFromLink(el, "control-operativo"));
+      });
+    });
+  }
+
   function initLogisticaNav() {
     var els = document.querySelectorAll(".moduleTile--logistica .moduleTileBtn");
     els.forEach(function (el) {
@@ -2213,6 +2227,7 @@
     initSidebarHover();
     initMobileNav();
     initMenuTracking();
+    initControlOperativoNav();
     initPowerBiNav();
     initPowerBiPinModal();
     initLogisticaNav();

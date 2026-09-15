@@ -30,7 +30,7 @@
         </div>
 
         <nav class="menu" id="appsMenu">
-          <a class="menuItem active" href="http://192.168.100.241:5001/" data-app-id="control-operativo" data-app-name="Control operativo" data-target-url="http://192.168.100.241:5001/">
+          <a class="menuItem active" href="#" data-app-id="control-operativo" data-app-name="Control operativo" aria-label="Control operativo: ir al panel y elegir aplicación">
             <img
               class="menuIcon"
               src="img/site/controlOperativo.svg"
@@ -214,13 +214,25 @@
               </header>
 
               <div class="moduleMosaic" role="navigation" aria-label="Accesos a módulos">
-                <a class="moduleTile" href="http://192.168.100.241:5001/" data-app-id="control-operativo" data-app-name="Control operativo">
+                <div
+                  class="moduleTile moduleTile--control-operativo"
+                  data-app-id="control-operativo"
+                  data-app-name="Control operativo"
+                  role="group"
+                  aria-label="Control operativo: pasa el cursor o usa tab para ver Control operativo y Validador OD"
+                  tabindex="0"
+                >
                   <span class="moduleTileIcon" aria-hidden="true">
                     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="10" width="32" height="28" rx="3" stroke="currentColor" stroke-width="2"/><path d="M14 20h8M14 26h20M14 32h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="34" cy="20" r="3" stroke="currentColor" stroke-width="2"/></svg>
                   </span>
                   <span class="moduleTileName">Control operativo</span>
                   <span class="moduleTileDesc">Central operativa para gestionar el flujo de procesos de la planta de beneficio.</span>
-                </a>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Control operativo y Validador OD.</p>
+                  <div class="moduleTileActions">
+                    <a class="moduleTileBtn" href="http://192.168.100.241:5001/">Control operativo</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:3050/">Validador OD</a>
+                  </div>
+                </div>
                 <div
                   class="moduleTile moduleTile--gestion-humana"
                   data-app-id="gestion-humana"
@@ -561,7 +573,13 @@
         <p class="searchModal-live" id="searchModalLive" aria-live="polite"></p>
         <ul class="searchModal-list" id="searchModalRecentList">
           <li class="searchModal-item" data-app="control-operativo">
-            <a class="searchModal-link" href="http://192.168.100.241:5001/" data-search="control operativo planta beneficio faena proceso">Control operativo</a>
+            <div class="searchModal-gestionHumanaBlock">
+              <span class="searchModal-gestionHumanaHeading">Control operativo</span>
+              <div class="searchModal-gestionHumanaActions">
+                <a class="searchModal-link" href="http://192.168.100.241:5001/" data-search="control operativo planta beneficio faena proceso">Control operativo</a>
+                <a class="searchModal-link" href="http://192.168.20.205:3050/" data-search="control operativo validador od validacion validación 3050">Validador OD</a>
+              </div>
+            </div>
           </li>
           <li class="searchModal-item searchModal-item--gestion-humana" data-app="gestion-humana">
             <div class="searchModal-gestionHumanaBlock">
