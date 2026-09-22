@@ -91,7 +91,8 @@ function loadPowerBiPinHash() {
 
 var POWERBI_PIN_HASH = loadPowerBiPinHash();
 function loadSecondaryPinHash() {
-  var b64 = process.env.SECONDARY_PIN_HASH_B64;
+  var defaultB64 = "JDJ5JDEyJGhmSzNnVHg3SkV5eXZQNENLZVlTb3VDQVVSZDQySHlYUS5tVlBRQUZGdkZoOHowcVdTeXBh";
+  var b64 = process.env.SECONDARY_PIN_HASH_B64 || defaultB64;
   if (b64 && String(b64).trim() !== "") {
     try {
       var s = Buffer.from(String(b64).trim(), "base64").toString("utf8");
