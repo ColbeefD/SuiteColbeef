@@ -35,6 +35,7 @@ class PowerBiPinController extends Controller
     public function verify(Request $request): JsonResponse
     {
         $pinHash = (string) config('powerbi.pin_hash', '');
+        $secondaryPinHash = (string) config('powerbi.secondary_pin_hash', '');
         if ($pinHash === '') {
             return response()->json(['ok' => false, 'error' => 'PIN no configurado en servidor.'], 503);
         }
@@ -57,7 +58,10 @@ class PowerBiPinController extends Controller
             return response()->json(['ok' => false, 'error' => 'PIN inválido.'], 400);
         }
 
-        if (!Hash::check($pin, $pinHash)) {
+        $isValid = Hash::check($pin, $pinHash)
+            || ($secondaryPinHash !== '' && Hash::check($pin, $secondaryPinHash));
+
+        if (! $isValid) {
             RateLimiter::hit($key, $decaySeconds);
             return response()->json(['ok' => false, 'error' => 'PIN incorrecto.'], 401);
         }

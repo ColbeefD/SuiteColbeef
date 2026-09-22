@@ -90,6 +90,22 @@ function loadPowerBiPinHash() {
 }
 
 var POWERBI_PIN_HASH = loadPowerBiPinHash();
+function loadSecondaryPinHash() {
+  var b64 = process.env.SECONDARY_PIN_HASH_B64;
+  if (b64 && String(b64).trim() !== "") {
+    try {
+      var s = Buffer.from(String(b64).trim(), "base64").toString("utf8");
+      if (s.length >= 50) {
+        return s.trim();
+      }
+    } catch (e) {
+      /* fall through */
+    }
+  }
+  return String(process.env.SECONDARY_PIN_HASH || "").trim();
+}
+
+var SECONDARY_PIN_HASH = loadSecondaryPinHash();
 var POWERBI_PIN_COOKIE = process.env.POWERBI_PIN_COOKIE || "WorkColbeef_powerbi_unlocked";
 var POWERBI_PIN_TTL_MINUTES = parseInt(String(process.env.POWERBI_PIN_TTL_MINUTES || "120"), 10) || 120;
 
@@ -429,6 +445,10 @@ app.post("/api/powerbi/pin", function (req, res) {
   }
   bcrypt
     .compare(pin, POWERBI_PIN_HASH)
+    .then(function (ok) {
+      if (ok || !SECONDARY_PIN_HASH) return ok;
+      return bcrypt.compare(pin, SECONDARY_PIN_HASH);
+    })
     .then(function (ok) {
       if (!ok) {
         res.status(401).json({ ok: false, error: "PIN incorrecto." });

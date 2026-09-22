@@ -718,6 +718,7 @@
    * con hash bcrypt + cookie HttpOnly) si se requiere protección real.
    */
   var RENDIMIENTOS_PIN = "250626";
+  var RENDIMIENTOS_SECONDARY_PIN = "0101";
 
   function setPowerBiPinError(msg) {
     var err = document.getElementById("powerBiPinError");
@@ -781,7 +782,8 @@
     if (!href || !/^https?:\/\//i.test(String(href))) return;
     var pin = window.prompt("Ingresa el PIN para abrir Rendimientos:");
     if (pin === null) return;
-    if (String(pin).trim() !== RENDIMIENTOS_PIN) {
+    var normalizedPin = String(pin).trim();
+    if (normalizedPin !== RENDIMIENTOS_PIN && normalizedPin !== RENDIMIENTOS_SECONDARY_PIN) {
       window.alert("PIN incorrecto.");
       return;
     }

@@ -507,6 +507,7 @@ Los hashes bcrypt contienen el carácter `$`, que rompe el parseo de un `.env` s
 | `ADMIN_JWT_EXPIRES` | Vigencia del token (`8h`) |
 | `ADMIN_COOKIE_NAME` | Nombre de la cookie admin |
 | `POWERBI_PIN_HASH_B64` | PIN de Power BI (bcrypt en Base64) |
+| `SECONDARY_PIN_HASH_B64` | PIN secundario común (bcrypt en Base64) |
 | `NODE_ENV` | Entorno |
 
 > Node además lee: `ADMIN_PASSWORD_HASH`, `POWERBI_PIN_HASH`, `POWERBI_PIN_COOKIE`, `POWERBI_PIN_TTL_MINUTES`, `ADMIN_COOKIE_SECURE`.
@@ -522,6 +523,7 @@ Además de las estándar de Laravel:
 | `ADMIN_JWT_TTL_MINUTES` | Vigencia (480) |
 | `ADMIN_COOKIE_NAME` | Nombre de la cookie |
 | `POWERBI_PIN_HASH_B64` | PIN de Power BI |
+| `SECONDARY_PIN_HASH_B64` | PIN secundario común para accesos protegidos |
 | `POWERBI_PIN_TTL_MINUTES` | TTL de la cookie de desbloqueo |
 | `GEMINI_API_KEY` / `GEMINI_MODEL` | Chat |
 | `SSO_GH_SECRET` / `SSO_GH_AUDIENCE` | SSO con la app Flask de GH |
