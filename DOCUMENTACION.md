@@ -330,6 +330,7 @@ Todas las URLs están configuradas en `site.html` (mosaico y buscador).
 | Programa | URL | PIN |
 |----------|-----|-----|
 | Juricombeef | `http://192.168.20.205:8010/app/login.html` | No |
+| Contabilidad | `http://192.168.20.205:7000/login?next=/` | No |
 
 ### Power BI (todos protegidos con PIN de servidor)
 | Programa | URL |
@@ -634,7 +635,7 @@ Al tocar `site.html`, `css/site.css` o `script/site.js`, **copiar la misma versi
 | Término | Significado |
 |---------|-------------|
 | **Módulo** | Área funcional del portal (Gestión Humana, Logística, Calidad, Tesorería y Cartera, Administrativo, Control Operativo, Power BI). |
-| **Programa** | Aplicación concreta dentro de un módulo (Validador OD, Desposte, Canales, Pago proveedores, Juricombeef, Analyzer, etc.). |
+| **Programa** | Aplicación concreta dentro de un módulo (Validador OD, Desposte, Canales, Pago proveedores, Juricombeef, Contabilidad, Analyzer, etc.). |
 | **PIN** | Clave numérica que protege el acceso a Power BI (servidor) o Rendimientos (cliente). |
 | **JWT** | JSON Web Token; credencial firmada que autoriza al admin, guardada en cookie HttpOnly. |
 | **Hash B64** | Hash bcrypt codificado en Base64 para poder guardarlo en `.env` sin romper el parseo. |

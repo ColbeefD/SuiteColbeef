@@ -134,7 +134,7 @@ var COLBEEF_CHAT_SYSTEM =
 COLBEEF_CHAT_SYSTEM +=
   " MÓDULO ADICIONAL: TESORERÍA Y CARTERA — Pago proveedores en http://192.168.20.205:8100/; acceso desde la tarjeta Tesorería y cartera en WorkColbeef, botón Pago proveedores.";
 COLBEEF_CHAT_SYSTEM +=
-  " MÓDULO ADMINISTRATIVO — Juricombeef en http://192.168.20.205:8010/app/login.html; acceso desde la tarjeta Administrativo en WorkColbeef, botón Juricombeef.";
+  " MÓDULO ADMINISTRATIVO — Juricombeef en http://192.168.20.205:8010/app/login.html y Contabilidad en http://192.168.20.205:7000/login?next=/; acceso desde la tarjeta Administrativo en WorkColbeef.";
 COLBEEF_CHAT_SYSTEM +=
   " CONTROL OPERATIVO también incluye Validador OD en http://192.168.20.205:3050/; acceso desde la tarjeta Control operativo, botón Validador OD.";
 
