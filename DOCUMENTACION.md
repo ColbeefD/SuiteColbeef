@@ -436,6 +436,10 @@ GET   /api/admin/bugs/summary?days=30        (admin)
 PATCH /api/admin/bugs/{id}/resolve           (admin)
 ```
 
+`POST /api/bugs/report` exige `requester_name`, `requester_email`, `software`,
+`tema`, `detalle` y `mensaje`. El correo del solicitante se configura como
+`Reply-To`, permitiendo que Desarrollo y Tecnología responda directamente.
+
 Al registrar una PQR, Laravel conserva el ticket y envía automáticamente un
 correo a la dirección configurada en `BUG_REPORT_TO_EMAIL`. La respuesta incluye
 `email_sent`; si SMTP falla, el caso no se pierde y la interfaz muestra una
@@ -478,7 +482,9 @@ Solo aplica al backend **Laravel**. Node usa `data/usage-stats.json`.
 |---------|------|-------|
 | `id` | bigint PK | |
 | `ticket_code` | string(40), único | Ej: `WB-20260716-A1B2C3` |
-| `software` | string(64) | Módulo afectado |
+| `requester_name` | string(120), null | Nombre de quien solicita |
+| `requester_email` | string(190), null | Correo de respuesta y `Reply-To` |
+| `software` | string(64) | Módulo o programa afectado |
 | `tema` | string(120) | Categoría |
 | `detalle` | string(200) | Subcategoría |
 | `mensaje` | text | Mínimo 10 caracteres |

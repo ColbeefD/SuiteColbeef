@@ -26,13 +26,29 @@ class BugReportController extends Controller
     /** @var array<string, string> */
     private const SOFTWARE_LABELS = [
         'WorkColbeef-portal' => 'WorkColbeef (portal)',
-        'control-operativo' => 'Control operativo',
+        'control-operativo' => 'Control operativo (módulo)',
+        'control-operativo-app' => 'Control operativo (aplicación)',
+        'validador-od' => 'Validador OD',
         'gestion-humana' => 'Gestión humana',
-        'logistica' => 'Logística',
-        'calidad' => 'Calidad',
-        'tesoreria-cartera' => 'Tesorería y cartera',
-        'administrativo' => 'Administrativo',
-        'power-bi' => 'Power BI',
+        'contratista' => 'Contratista',
+        'logistica' => 'Logística (módulo)',
+        'desposte' => 'Desposte',
+        'inventarios' => 'Inventarios',
+        'app-logistica' => 'App Logística',
+        'rendimientos' => 'Rendimientos',
+        'lenguas' => 'Lenguas',
+        'calidad' => 'Calidad (módulo)',
+        'canales' => 'Canales',
+        'colbeef-ops' => 'Colbeef-Ops',
+        'tesoreria-cartera' => 'Tesorería y cartera (módulo)',
+        'pago-proveedores' => 'Pago proveedores',
+        'administrativo' => 'Administrativo (módulo)',
+        'juricombeef' => 'Juricombeef',
+        'contabilidad' => 'Contabilidad',
+        'power-bi' => 'Power BI (módulo)',
+        'datos-cifras' => 'Datos y cifras Colbeef',
+        'control-pqrs' => 'Control PQRS',
+        'analyzer' => 'Analyzer',
         'otro' => 'Otro / no listado',
     ];
 
@@ -48,6 +64,8 @@ class BugReportController extends Controller
         $softwareKeys = implode(',', array_keys(self::SOFTWARE_LABELS));
 
         $validated = $request->validate([
+            'requester_name' => 'required|string|min:2|max:120',
+            'requester_email' => 'required|string|email:rfc|max:190',
             'software' => 'required|string|in:'.$softwareKeys,
             'tema' => 'required|string|max:120',
             'detalle' => 'required|string|max:200',
@@ -58,6 +76,8 @@ class BugReportController extends Controller
 
         $row = BugReport::query()->create([
             'ticket_code' => $ticketCode,
+            'requester_name' => trim($validated['requester_name']),
+            'requester_email' => Str::lower(trim($validated['requester_email'])),
             'software' => $validated['software'],
             'tema' => $validated['tema'],
             'detalle' => $validated['detalle'],
@@ -95,6 +115,8 @@ class BugReportController extends Controller
             '',
             'ID del caso: '.$report->ticket_code,
             'Fecha y hora: '.($report->created_at?->toIso8601String() ?? 'No disponible'),
+            'Solicitante: '.$report->requester_name,
+            'Correo para responder: '.$report->requester_email,
             'Software o módulo: '.$softwareLabel,
             'Tema: '.$report->tema,
             'Detalle: '.$report->detalle,
@@ -108,8 +130,11 @@ class BugReportController extends Controller
         ]);
 
         try {
-            Mail::raw($body, function ($message) use ($recipient, $subject) {
-                $message->to($recipient)->subject($subject);
+            Mail::raw($body, function ($message) use ($recipient, $subject, $report) {
+                $message
+                    ->to($recipient)
+                    ->replyTo($report->requester_email, $report->requester_name)
+                    ->subject($subject);
             });
 
             return true;
@@ -183,8 +208,11 @@ class BugReportController extends Controller
                     'ticket_code' => $b->ticket_code,
                     'software' => $b->software,
                     'software_label' => self::SOFTWARE_LABELS[$b->software] ?? $b->software,
+                    'requester_name' => $b->requester_name,
+                    'requester_email' => $b->requester_email,
                     'tema' => $b->tema,
                     'detalle' => $b->detalle,
+                    'mensaje' => $b->mensaje,
                     'status' => $b->status,
                     'created_at' => $b->created_at?->toIso8601String(),
                     'resolved_at' => $b->resolved_at?->toIso8601String(),

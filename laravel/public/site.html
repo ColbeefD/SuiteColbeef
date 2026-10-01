@@ -820,17 +820,77 @@
           </div>
         </section>
         <form id="feedbackForm" class="feedbackForm" novalidate>
+          <h3 class="feedbackFormSectionTitle">1. Datos de contacto</h3>
+          <div class="feedbackRequesterGrid">
+            <label class="feedbackField">
+              <span class="feedbackLabel">Nombre completo</span>
+              <input
+                class="feedbackControl"
+                id="feedbackRequesterName"
+                name="requester_name"
+                type="text"
+                maxlength="120"
+                autocomplete="name"
+                placeholder="Nombre de quien solicita"
+                required
+              />
+            </label>
+            <label class="feedbackField">
+              <span class="feedbackLabel">Correo para responder</span>
+              <input
+                class="feedbackControl"
+                id="feedbackRequesterEmail"
+                name="requester_email"
+                type="email"
+                maxlength="190"
+                autocomplete="email"
+                placeholder="nombre@colbeef.com.co"
+                required
+              />
+            </label>
+          </div>
+          <h3 class="feedbackFormSectionTitle">2. Detalle de la solicitud</h3>
           <label class="feedbackField">
-            <span class="feedbackLabel">Software o módulo</span>
+            <span class="feedbackLabel">Software, módulo o programa</span>
             <select class="feedbackControl" id="feedbackSoftware" name="software" required>
               <option value="WorkColbeef-portal" selected>WorkColbeef (portal)</option>
-              <option value="control-operativo">Control operativo</option>
-              <option value="gestion-humana">Gestión humana</option>
-              <option value="logistica">Logística</option>
-              <option value="calidad">Calidad</option>
-              <option value="tesoreria-cartera">Tesorería y cartera</option>
-              <option value="administrativo">Administrativo</option>
-              <option value="power-bi">Power BI</option>
+              <optgroup label="Control operativo">
+                <option value="control-operativo">Control operativo (módulo)</option>
+                <option value="control-operativo-app">Control operativo (aplicación)</option>
+                <option value="validador-od">Validador OD</option>
+              </optgroup>
+              <optgroup label="Gestión humana">
+                <option value="gestion-humana">Gestión humana</option>
+                <option value="contratista">Contratista</option>
+              </optgroup>
+              <optgroup label="Logística">
+                <option value="logistica">Logística (módulo)</option>
+                <option value="desposte">Desposte</option>
+                <option value="inventarios">Inventarios</option>
+                <option value="app-logistica">App Logística</option>
+                <option value="rendimientos">Rendimientos</option>
+                <option value="lenguas">Lenguas</option>
+              </optgroup>
+              <optgroup label="Calidad">
+                <option value="calidad">Calidad (módulo)</option>
+                <option value="canales">Canales</option>
+                <option value="colbeef-ops">Colbeef-Ops</option>
+              </optgroup>
+              <optgroup label="Tesorería y cartera">
+                <option value="tesoreria-cartera">Tesorería y cartera (módulo)</option>
+                <option value="pago-proveedores">Pago proveedores</option>
+              </optgroup>
+              <optgroup label="Administrativo">
+                <option value="administrativo">Administrativo (módulo)</option>
+                <option value="juricombeef">Juricombeef</option>
+                <option value="contabilidad">Contabilidad</option>
+              </optgroup>
+              <optgroup label="Power BI">
+                <option value="power-bi">Power BI (módulo)</option>
+                <option value="datos-cifras">Datos y cifras Colbeef</option>
+                <option value="control-pqrs">Control PQRS</option>
+                <option value="analyzer">Analyzer</option>
+              </optgroup>
               <option value="otro">Otro / no listado</option>
             </select>
           </label>
@@ -840,8 +900,14 @@
               <option value="">Seleccionar un tema</option>
               <option value="Error o fallo">Error o fallo</option>
               <option value="Rendimiento o lentitud">Rendimiento o lentitud</option>
-              <option value="Sugerencia de mejora">Sugerencia de mejora</option>
               <option value="Acceso o sesión">Acceso o sesión</option>
+              <option value="Datos o información incorrecta">Datos o información incorrecta</option>
+              <option value="Reportes y exportaciones">Reportes y exportaciones</option>
+              <option value="Notificaciones o correo">Notificaciones o correo</option>
+              <option value="Integración entre sistemas">Integración entre sistemas</option>
+              <option value="Seguridad o permisos">Seguridad o permisos</option>
+              <option value="Sugerencia de mejora">Sugerencia de mejora</option>
+              <option value="Solicitud de nueva funcionalidad">Solicitud de nueva funcionalidad</option>
               <option value="Otro">Otro</option>
             </select>
           </label>

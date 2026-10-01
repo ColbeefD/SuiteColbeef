@@ -1270,7 +1270,7 @@
     table.className = "bugStatsTable";
     var thead = document.createElement("thead");
     thead.innerHTML =
-      "<tr><th>ID</th><th>Software</th><th>Tema</th><th>Fecha petición</th><th>Estado</th><th>Resuelto / acción</th></tr>";
+      "<tr><th>ID</th><th>Software</th><th>Solicitante</th><th>Tema</th><th>Descripción</th><th>Fecha petición</th><th>Estado</th><th>Resuelto / acción</th></tr>";
     table.appendChild(thead);
     var tbody = document.createElement("tbody");
     recent.forEach(function (r) {
@@ -1283,9 +1283,26 @@
       var tdSoft = document.createElement("td");
       tdSoft.textContent = r.software_label || r.software || "";
       tr.appendChild(tdSoft);
+      var tdRequester = document.createElement("td");
+      var requesterName = document.createElement("strong");
+      requesterName.textContent = r.requester_name || "Sin nombre";
+      tdRequester.appendChild(requesterName);
+      if (r.requester_email) {
+        var requesterEmail = document.createElement("a");
+        requesterEmail.href = "mailto:" + String(r.requester_email);
+        requesterEmail.textContent = String(r.requester_email);
+        requesterEmail.className = "bugRequesterEmail";
+        tdRequester.appendChild(document.createElement("br"));
+        tdRequester.appendChild(requesterEmail);
+      }
+      tr.appendChild(tdRequester);
       var tdTema = document.createElement("td");
       tdTema.textContent = (r.tema || "") + (r.detalle ? " — " + r.detalle : "");
       tr.appendChild(tdTema);
+      var tdMessage = document.createElement("td");
+      tdMessage.textContent = r.mensaje || "";
+      tdMessage.className = "bugMessageCell";
+      tr.appendChild(tdMessage);
       var tdWhen = document.createElement("td");
       tdWhen.textContent = formatBugReportDateTime(r.created_at);
       tr.appendChild(tdWhen);
@@ -1363,10 +1380,16 @@
   }
 
   var DETALLES_POR_TEMA = {
-    "Error o fallo": ["Pantalla en blanco", "Mensaje de error visible", "No carga un módulo", "Comportamiento inesperado", "Otro"],
-    "Rendimiento o lentitud": ["Carga lenta en general", "Solo un módulo lento", "Timeout o cierre de sesión", "Otro"],
-    "Sugerencia de mejora": ["Interfaz", "Nuevo reporte o dato", "Flujo de trabajo", "Otro"],
-    "Acceso o sesión": ["No puedo iniciar sesión", "Sesión se cierra sola", "Permisos o roles", "Otro"],
+    "Error o fallo": ["Pantalla en blanco", "Mensaje de error visible", "No carga un módulo", "Botón o acción no funciona", "Comportamiento inesperado", "Otro"],
+    "Rendimiento o lentitud": ["Carga lenta en general", "Solo un módulo lento", "Proceso bloqueado", "Timeout o cierre de sesión", "Otro"],
+    "Acceso o sesión": ["No puedo iniciar sesión", "Sesión se cierra sola", "Usuario bloqueado", "Contraseña o PIN", "Otro"],
+    "Datos o información incorrecta": ["Dato desactualizado", "Dato faltante", "Cálculo incorrecto", "Registro duplicado", "Otro"],
+    "Reportes y exportaciones": ["No genera el reporte", "Exportación incompleta", "Formato incorrecto", "Filtros no aplican", "Otro"],
+    "Notificaciones o correo": ["Correo no llega", "Notificación duplicada", "Destinatario incorrecto", "Contenido incorrecto", "Otro"],
+    "Integración entre sistemas": ["Datos no sincronizan", "Servicio externo no responde", "Información diferente entre sistemas", "Otro"],
+    "Seguridad o permisos": ["Falta de permisos", "Rol incorrecto", "Acceso no autorizado", "Actividad sospechosa", "Otro"],
+    "Sugerencia de mejora": ["Interfaz y usabilidad", "Nuevo reporte o dato", "Flujo de trabajo", "Automatización", "Otro"],
+    "Solicitud de nueva funcionalidad": ["Nuevo módulo", "Nuevo campo", "Nueva consulta o reporte", "Nueva integración", "Otro"],
     "Otro": ["Describir en el cuadro de abajo"]
   };
 
@@ -1837,11 +1860,22 @@
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
+        var requesterName = ((document.getElementById("feedbackRequesterName") || {}).value || "").trim();
+        var requesterEmailEl = document.getElementById("feedbackRequesterEmail");
+        var requesterEmail = ((requesterEmailEl || {}).value || "").trim();
         var software = ((document.getElementById("feedbackSoftware") || {}).value || "").trim();
         var tema = (document.getElementById("feedbackTema") || {}).value || "";
         var detalle = (document.getElementById("feedbackDetalle") || {}).value || "";
         var mensaje = ((document.getElementById("feedbackMensaje") || {}).value || "").trim();
 
+        if (requesterName.length < 2) {
+          window.alert("Ingresa el nombre completo de quien solicita.");
+          return;
+        }
+        if (!requesterEmailEl || !requesterEmail || !requesterEmailEl.checkValidity()) {
+          window.alert("Ingresa un correo válido para poder responder la solicitud.");
+          return;
+        }
         if (!software) {
           window.alert("Selecciona el software o módulo.");
           return;
@@ -1871,6 +1905,8 @@
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "application/json" },
           body: JSON.stringify({
+            requester_name: requesterName,
+            requester_email: requesterEmail,
             software: software,
             tema: tema,
             detalle: detalle,

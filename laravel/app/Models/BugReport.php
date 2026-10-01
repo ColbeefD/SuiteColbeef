@@ -8,6 +8,8 @@ class BugReport extends Model
 {
     protected $fillable = [
         'ticket_code',
+        'requester_name',
+        'requester_email',
         'software',
         'tema',
         'detalle',

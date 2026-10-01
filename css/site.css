@@ -2352,7 +2352,7 @@ button.historyItem--action {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 500px;
+  max-width: 680px;
   max-height: min(92vh, 720px);
   overflow-y: auto;
   background: var(--panel);
@@ -2424,6 +2424,21 @@ body[data-suite-theme="oscuro"] .feedbackModal-intro a {
   gap: 14px;
 }
 
+.feedbackFormSectionTitle {
+  margin: 6px 0 0;
+  padding-bottom: 8px;
+  color: var(--green);
+  font-size: 15px;
+  font-weight: 850;
+  border-bottom: 1px solid rgba(8, 77, 38, 0.16);
+}
+
+.feedbackRequesterGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .feedbackField {
   display: flex;
   flex-direction: column;
@@ -2444,6 +2459,27 @@ body[data-suite-theme="oscuro"] .feedbackModal-intro a {
   color: var(--text);
   background: var(--input-surface);
   font-family: inherit;
+}
+
+.feedbackControl:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(8, 77, 38, 0.13);
+}
+
+.feedbackControl optgroup {
+  font-weight: 800;
+  color: var(--green);
+}
+
+.feedbackControl option {
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .feedbackRequesterGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .feedbackControl:disabled {
@@ -3544,6 +3580,20 @@ body[data-suite-theme="oscuro"] .usageBarTrack {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.82rem;
+}
+
+.bugRequesterEmail {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+
+.bugMessageCell {
+  min-width: 220px;
+  max-width: 360px;
+  white-space: normal;
+  line-height: 1.45;
 }
 
 .bugStatsTable th,

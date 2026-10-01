@@ -178,12 +178,12 @@ flowchart TB
 
     subgraph BUG_FLOW["REPORTE DE ERROR · Informar una novedad"]
         BUG["Abre Reportar un error"]
-        BUG_FORM["Selecciona software y tema<br/>Describe el problema"]
+        BUG_FORM["Ingresa nombre y correo<br/>Selecciona programa y tema<br/>Describe el problema"]
         BUG_VALID{"¿Formulario válido?"}
         BUG_FIX["Solicita completar o corregir datos"]
         BUG_SEND["Registra el caso en WorkColbeef"]
         BUG_LOADING["Pantalla de carga<br/>Enviando reporte…"]
-        BUG_EMAIL["Envía correo automáticamente<br/>por SMTP a Desarrollo y Tecnología"]
+        BUG_EMAIL["Envía correo automáticamente<br/>por SMTP a Desarrollo y Tecnología<br/>Reply-To: correo del solicitante"]
         BUG_EMAIL_RESULT{"¿Correo enviado?"}
         BUG_CONFIRM["Check verde<br/>Muestra ticket y envío correcto"]
         BUG_EMAIL_WARNING["X roja<br/>Conserva ticket y muestra el error"]
