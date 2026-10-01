@@ -2870,11 +2870,53 @@ body[data-suite-theme="oscuro"] .searchModal-dialog {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 10px 44px 10px 12px;
   font-size: 14px;
   color: var(--text);
   background: var(--input-surface);
   font-family: inherit;
+}
+
+.adminAccessPasswordWrap {
+  position: relative;
+  display: block;
+}
+
+.adminAccessPasswordToggle {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.adminAccessPasswordToggle:hover,
+.adminAccessPasswordToggle[aria-pressed="true"] {
+  color: var(--green);
+  background: rgba(8, 77, 38, 0.09);
+}
+
+.adminAccessPasswordToggle:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+}
+
+.adminAccessPasswordToggle svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .adminAccessModal-input:focus {

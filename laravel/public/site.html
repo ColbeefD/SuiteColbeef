@@ -715,15 +715,30 @@
         <form id="adminAccessForm" class="adminAccessModal-form" novalidate>
           <label class="adminAccessModal-field">
             <span>Contraseña maestra</span>
-            <input
-              type="password"
-              id="adminAccessPassword"
-              class="adminAccessModal-input"
-              placeholder="••••••••"
-              minlength="6"
-              autocomplete="current-password"
-              required
-            />
+            <span class="adminAccessPasswordWrap">
+              <input
+                type="password"
+                id="adminAccessPassword"
+                class="adminAccessModal-input"
+                placeholder="••••••••"
+                minlength="6"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="adminAccessPasswordToggle"
+                id="adminAccessPasswordToggle"
+                aria-label="Mostrar contraseña"
+                aria-pressed="false"
+                title="Mostrar contraseña"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                  <circle cx="12" cy="12" r="2.8"></circle>
+                </svg>
+              </button>
+            </span>
           </label>
           <p id="adminAccessError" class="adminAccessModal-error" hidden></p>
           <div class="adminAccessModal-actions">

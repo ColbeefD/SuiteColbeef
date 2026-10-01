@@ -521,6 +521,17 @@
     err.textContent = hasMsg ? String(msg) : "";
   }
 
+  function setAdminPasswordVisibility(visible) {
+    var pwd = document.getElementById("adminAccessPassword");
+    var toggle = document.getElementById("adminAccessPasswordToggle");
+    if (pwd) pwd.type = visible ? "text" : "password";
+    if (toggle) {
+      toggle.setAttribute("aria-pressed", visible ? "true" : "false");
+      toggle.setAttribute("aria-label", visible ? "Ocultar contraseña" : "Mostrar contraseña");
+      toggle.title = visible ? "Ocultar contraseña" : "Mostrar contraseña";
+    }
+  }
+
   function openAdminAccessModal() {
     closeSearchModal();
     closeFeedbackModal();
@@ -533,6 +544,7 @@
     var pwd = document.getElementById("adminAccessPassword");
     if (pwd) {
       pwd.value = "";
+      setAdminPasswordVisibility(false);
       pwd.focus();
     }
   }
@@ -649,6 +661,7 @@
     var cancelBtn = document.getElementById("adminAccessCancel");
     var submitBtn = document.getElementById("adminAccessSubmit");
     var pwd = document.getElementById("adminAccessPassword");
+    var passwordToggle = document.getElementById("adminAccessPasswordToggle");
     if (!modal || !form) return;
 
     function cancelFlow() {
@@ -659,6 +672,12 @@
     if (backdrop) backdrop.addEventListener("click", cancelFlow);
     if (closeBtn) closeBtn.addEventListener("click", cancelFlow);
     if (cancelBtn) cancelBtn.addEventListener("click", cancelFlow);
+    if (passwordToggle) {
+      passwordToggle.addEventListener("click", function () {
+        setAdminPasswordVisibility(!pwd || pwd.type === "password");
+        if (pwd) pwd.focus();
+      });
+    }
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
