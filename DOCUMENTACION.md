@@ -433,17 +433,23 @@ GET  /api/admin/stats?days=30   (admin)  → totales, by_app, by_program, daily
 ```http
 POST  /api/bugs/report                       (público, throttle 20/min)
 GET   /api/admin/bugs/summary?days=30        (admin)
+GET   /api/admin/bugs/{id}/attachment        (admin)
 PATCH /api/admin/bugs/{id}/resolve           (admin)
 ```
 
 `POST /api/bugs/report` exige `requester_name`, `requester_email`, `software`,
-`tema`, `detalle` y `mensaje`. El correo del solicitante se configura como
-`Reply-To`, permitiendo que Desarrollo y Tecnología responda directamente.
+`tema`, `detalle` y `mensaje`; admite además una captura opcional en
+`attachment` (PNG, JPG o WEBP, máximo 5 MB). La imagen se almacena en el disco
+privado de Laravel y solo se entrega mediante el endpoint protegido de
+administración. El correo del solicitante se configura como `Reply-To`.
 
 Al registrar una PQR, Laravel conserva el ticket y envía automáticamente un
-correo a la dirección configurada en `BUG_REPORT_TO_EMAIL`. La respuesta incluye
+correo a las direcciones configuradas en `BUG_REPORT_TO_EMAIL`, separadas por
+comas. La respuesta incluye
 `email_sent`; si SMTP falla, el caso no se pierde y la interfaz muestra una
-advertencia para que el equipo pueda revisar la configuración.
+advertencia para que el equipo pueda revisar la configuración. Al marcar el caso
+como resuelto, se envía otro correo al solicitante con el ticket, módulo,
+clasificación, descripción y fecha de solución.
 
 ### Chat (asistente Beef)
 
@@ -488,6 +494,9 @@ Solo aplica al backend **Laravel**. Node usa `data/usage-stats.json`.
 | `tema` | string(120) | Categoría |
 | `detalle` | string(200) | Subcategoría |
 | `mensaje` | text | Mínimo 10 caracteres |
+| `attachment_path` | string(255), null | Ruta privada de la captura |
+| `attachment_name` | string(255), null | Nombre original para descarga |
+| `attachment_mime` | string(100), null | MIME validado de la imagen |
 | `status` | string(24) | `open` / `resolved` |
 | `visitor_hash` | string(64), null | Hash anónimo |
 | `resolved_at` | timestamp, null | Fecha de resolución |
@@ -540,7 +549,7 @@ Además de las estándar de Laravel:
 | `GEMINI_API_KEY` / `GEMINI_MODEL` | Chat |
 | `MAIL_MAILER`, `MAIL_SCHEME`, `MAIL_HOST`, `MAIL_PORT` | Transporte SMTP |
 | `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS` | Credenciales y remitente SMTP |
-| `BUG_REPORT_TO_EMAIL` | Destinatario automático de reportes PQR |
+| `BUG_REPORT_TO_EMAIL` | Uno o varios destinatarios PQR separados por comas |
 | `SSO_GH_SECRET` / `SSO_GH_AUDIENCE` | SSO con la app Flask de GH |
 | `GH_APP_BASE_URL` / `GH_SSO_ADMIN_USER_ID` / `SSO_GH_TTL_SECONDS` | Parámetros del SSO |
 

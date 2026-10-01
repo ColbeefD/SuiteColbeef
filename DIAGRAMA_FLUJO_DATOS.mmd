@@ -178,10 +178,10 @@ flowchart TB
 
     subgraph BUG_FLOW["REPORTE DE ERROR · Informar una novedad"]
         BUG["Abre Reportar un error"]
-        BUG_FORM["Ingresa nombre y correo<br/>Selecciona programa y tema<br/>Describe el problema"]
+        BUG_FORM["Ingresa nombre y correo<br/>Selecciona programa y tema<br/>Describe el problema<br/>Puede adjuntar una captura"]
         BUG_VALID{"¿Formulario válido?"}
         BUG_FIX["Solicita completar o corregir datos"]
-        BUG_SEND["Registra el caso en WorkColbeef"]
+        BUG_SEND["Registra el caso en WorkColbeef<br/>Guarda la captura de forma privada"]
         BUG_LOADING["Pantalla de carga<br/>Enviando reporte…"]
         BUG_EMAIL["Envía correo automáticamente<br/>por SMTP a Desarrollo y Tecnología<br/>Reply-To: correo del solicitante"]
         BUG_EMAIL_RESULT{"¿Correo enviado?"}
@@ -212,6 +212,9 @@ flowchart TB
         PRIVACY["Privacidad e historial"]
         STATS["Estadísticas de uso"]
         BUG_ADMIN["Gestión de reportes"]
+        BUG_DETAIL["Consulta datos completos<br/>y captura protegida"]
+        BUG_RESOLVE{"¿Marca el caso<br/>como resuelto?"}
+        BUG_RESOLVED_EMAIL["Envía correo automático<br/>al solicitante"]
 
         SETTINGS --> ADMIN_GATE --> ADMIN_CHECK
         ADMIN_CHECK -->|"No"| ADMIN_ERROR --> ADMIN_GATE
@@ -221,7 +224,9 @@ flowchart TB
         SETTINGS_OPTION --> NOTIFICATIONS
         SETTINGS_OPTION --> PRIVACY
         SETTINGS_OPTION --> STATS
-        SETTINGS_OPTION --> BUG_ADMIN
+        SETTINGS_OPTION --> BUG_ADMIN --> BUG_DETAIL --> BUG_RESOLVE
+        BUG_RESOLVE -->|"Sí"| BUG_RESOLVED_EMAIL
+        BUG_RESOLVE -->|"No"| BUG_ADMIN
     end
 
     ACTION -->|"Abrir ajustes"| SETTINGS
@@ -230,7 +235,7 @@ flowchart TB
     NOTIFICATIONS --> HOME
     PRIVACY --> HOME
     STATS --> HOME
-    BUG_ADMIN --> HOME
+    BUG_RESOLVED_EMAIL --> HOME
 
     NOTE["WorkColbeef funciona como portal de navegación:<br/>organiza y abre aplicaciones mediante sus URLs.<br/>No consulta las bases de datos internas de esos programas."]:::note
     LOAD -.-> NOTE
@@ -245,9 +250,9 @@ flowchart TB
     classDef note fill:#f5f5f5,stroke:#666666,color:#222222,stroke-dasharray:5 5;
 
     class START,END startEnd;
-    class DEVICE,ACTION,SELECT_MODULE,CONTROL_PROGRAM,GH_PROGRAM,LOG_PROGRAM,QUALITY_PROGRAM,TREASURY_PROGRAM,ADMIN_PROGRAM,BI_PROGRAM,ACCESS_ROUTE,PERFORMANCE_CHECK,BI_CHECK,RETURN,RESULTS,RECENT,MORE,BUG_VALID,BUG_EMAIL_RESULT,ADMIN_CHECK,SETTINGS_OPTION decision;
+    class DEVICE,ACTION,SELECT_MODULE,CONTROL_PROGRAM,GH_PROGRAM,LOG_PROGRAM,QUALITY_PROGRAM,TREASURY_PROGRAM,ADMIN_PROGRAM,BI_PROGRAM,ACCESS_ROUTE,PERFORMANCE_CHECK,BI_CHECK,RETURN,RESULTS,RECENT,MORE,BUG_VALID,BUG_EMAIL_RESULT,ADMIN_CHECK,SETTINGS_OPTION,BUG_RESOLVE decision;
     class LOAD,DESKTOP,MOBILE,HOME,SEARCH,TYPE,CHOOSE,RECENT_LIST,RECENT_SELECT,CHAT,QUESTION,BUG,BUG_FORM,BUG_LOADING,SETTINGS,SETTINGS_PANEL navigation;
     class CONTROL,CONTROL_MAIN,OD_VALIDATOR,GH,GH_MAIN,CONTRACTOR,LOGISTICS,DESPOSTE,INVENTORY,LOG_APP,PERFORMANCE,LANGUAGES,QUALITY,CHANNELS,COLBEEF_OPS,TREASURY,SUPPLIER_PAYMENT,ADMIN_MODULE,JURICOM_BEEF,ACCOUNTING,POWER_BI,DATA_REPORT,PQRS_REPORT,ANALYZER module;
     class PERFORMANCE_PIN,BI_PIN,ADMIN_GATE security;
-    class DIRECT_OPEN,EXTERNAL,ANSWER,BUG_EMAIL,BUG_CONFIRM,ACCOUNT,PREFERENCES,NOTIFICATIONS,PRIVACY,STATS,BUG_ADMIN result;
+    class DIRECT_OPEN,EXTERNAL,ANSWER,BUG_EMAIL,BUG_CONFIRM,ACCOUNT,PREFERENCES,NOTIFICATIONS,PRIVACY,STATS,BUG_ADMIN,BUG_DETAIL,BUG_RESOLVED_EMAIL result;
     class PERFORMANCE_ERROR,BI_ERROR,EMPTY,BUG_FIX,BUG_EMAIL_WARNING,ADMIN_ERROR error;

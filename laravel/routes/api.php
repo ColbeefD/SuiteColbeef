@@ -31,6 +31,8 @@ Route::middleware('admin.jwt')->group(function () {
     ]));
     Route::get('/admin/stats', [UsageStatsController::class, 'summary']);
     Route::get('/admin/bugs/summary', [BugReportController::class, 'adminSummary']);
+    Route::get('/admin/bugs/{id}/attachment', [BugReportController::class, 'attachment'])
+        ->whereNumber('id');
     Route::patch('/admin/bugs/{id}/resolve', [BugReportController::class, 'resolve'])
         ->whereNumber('id');
     Route::post('/admin/sso/gh', [SsoController::class, 'issueGestionHumana']);

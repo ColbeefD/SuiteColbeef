@@ -1300,7 +1300,8 @@
       tdTema.textContent = (r.tema || "") + (r.detalle ? " — " + r.detalle : "");
       tr.appendChild(tdTema);
       var tdMessage = document.createElement("td");
-      tdMessage.textContent = r.mensaje || "";
+      var messagePreview = r.mensaje || "";
+      tdMessage.textContent = messagePreview.length > 140 ? messagePreview.slice(0, 137) + "…" : messagePreview;
       tdMessage.className = "bugMessageCell";
       tr.appendChild(tdMessage);
       var tdWhen = document.createElement("td");
@@ -1310,6 +1311,14 @@
       tdSt.textContent = r.status === "resolved" ? "Resuelto" : "Abierto";
       tr.appendChild(tdSt);
       var tdAct = document.createElement("td");
+      tdAct.className = "bugActionCell";
+      var detailBtn = document.createElement("button");
+      detailBtn.type = "button";
+      detailBtn.className = "bugResolveBtn";
+      detailBtn.textContent = "Ver detalle";
+      detailBtn.setAttribute("data-bug-detail-target", "bug-detail-" + String(r.id));
+      detailBtn.setAttribute("aria-expanded", "false");
+      tdAct.appendChild(detailBtn);
       if (r.status !== "resolved") {
         var btn = document.createElement("button");
         btn.type = "button";
@@ -1318,10 +1327,61 @@
         btn.setAttribute("data-bug-resolve-id", String(r.id));
         tdAct.appendChild(btn);
       } else {
-        tdAct.textContent = formatBugReportDateTime(r.resolved_at);
+        var resolvedWhen = document.createElement("span");
+        resolvedWhen.className = "bugResolvedWhen";
+        resolvedWhen.textContent = formatBugReportDateTime(r.resolved_at);
+        tdAct.appendChild(resolvedWhen);
       }
       tr.appendChild(tdAct);
       tbody.appendChild(tr);
+
+      var detailTr = document.createElement("tr");
+      detailTr.id = "bug-detail-" + String(r.id);
+      detailTr.className = "bugDetailRow";
+      detailTr.hidden = true;
+      var detailTd = document.createElement("td");
+      detailTd.colSpan = 8;
+      var detailPanel = document.createElement("div");
+      detailPanel.className = "bugDetailPanel";
+      var detailText = document.createElement("div");
+      detailText.className = "bugDetailText";
+      var detailTitle = document.createElement("strong");
+      detailTitle.textContent = "Información completa del caso";
+      var detailMeta = document.createElement("p");
+      detailMeta.textContent =
+        (r.requester_name || "Sin nombre") +
+        " · " +
+        (r.requester_email || "Sin correo") +
+        " · " +
+        (r.software_label || r.software || "Sin módulo");
+      var detailTopic = document.createElement("p");
+      detailTopic.textContent = (r.tema || "Sin tema") + (r.detalle ? " — " + r.detalle : "");
+      var detailMessage = document.createElement("p");
+      detailMessage.className = "bugDetailMessage";
+      detailMessage.textContent = r.mensaje || "Sin descripción";
+      detailText.appendChild(detailTitle);
+      detailText.appendChild(detailMeta);
+      detailText.appendChild(detailTopic);
+      detailText.appendChild(detailMessage);
+      detailPanel.appendChild(detailText);
+      if (r.has_attachment && r.attachment_url) {
+        var attachmentLink = document.createElement("a");
+        attachmentLink.className = "bugAttachmentLink";
+        attachmentLink.href = r.attachment_url;
+        attachmentLink.target = "_blank";
+        attachmentLink.rel = "noopener";
+        attachmentLink.title = "Abrir captura en tamaño completo";
+        var attachmentImage = document.createElement("img");
+        attachmentImage.className = "bugAttachmentPreview";
+        attachmentImage.src = r.attachment_url;
+        attachmentImage.alt = "Captura adjunta al caso " + (r.ticket_code || "");
+        attachmentImage.loading = "lazy";
+        attachmentLink.appendChild(attachmentImage);
+        detailPanel.appendChild(attachmentLink);
+      }
+      detailTd.appendChild(detailPanel);
+      detailTr.appendChild(detailTd);
+      tbody.appendChild(detailTr);
     });
     table.appendChild(tbody);
     wrap.appendChild(table);
@@ -1349,6 +1409,16 @@
       if (!t || !t.getAttribute) {
         return;
       }
+      var detailTarget = t.getAttribute("data-bug-detail-target");
+      if (detailTarget) {
+        var detailRow = document.getElementById(detailTarget);
+        if (detailRow) {
+          detailRow.hidden = !detailRow.hidden;
+          t.setAttribute("aria-expanded", detailRow.hidden ? "false" : "true");
+          t.textContent = detailRow.hidden ? "Ver detalle" : "Ocultar detalle";
+        }
+        return;
+      }
       var id = t.getAttribute("data-bug-resolve-id");
       if (!id) {
         return;
@@ -1369,6 +1439,13 @@
             window.alert((out.data && out.data.error) || "No se pudo actualizar.");
             t.disabled = false;
             return;
+          }
+          if (out.data.already_resolved) {
+            window.alert("El caso ya estaba marcado como resuelto.");
+          } else if (out.data.notification_sent === true) {
+            window.alert("Caso resuelto y correo enviado al solicitante.");
+          } else {
+            window.alert(out.data.notification_warning || "Caso resuelto; no fue posible enviar el correo al solicitante.");
           }
           loadBugAdminStats();
         })
@@ -1867,6 +1944,8 @@
         var tema = (document.getElementById("feedbackTema") || {}).value || "";
         var detalle = (document.getElementById("feedbackDetalle") || {}).value || "";
         var mensaje = ((document.getElementById("feedbackMensaje") || {}).value || "").trim();
+        var attachmentEl = document.getElementById("feedbackAttachment");
+        var attachment = attachmentEl && attachmentEl.files ? attachmentEl.files[0] : null;
 
         if (requesterName.length < 2) {
           window.alert("Ingresa el nombre completo de quien solicita.");
@@ -1892,6 +1971,17 @@
           window.alert("Describe el problema con al menos unas pocas líneas (mínimo 10 caracteres).");
           return;
         }
+        if (attachment) {
+          var allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+          if (allowedTypes.indexOf(attachment.type) === -1) {
+            window.alert("La captura debe ser una imagen PNG, JPG o WEBP.");
+            return;
+          }
+          if (attachment.size > 5 * 1024 * 1024) {
+            window.alert("La captura no puede superar los 5 MB.");
+            return;
+          }
+        }
 
         if (submitBtn) submitBtn.disabled = true;
         showFeedbackSubmissionStatus(
@@ -1901,17 +1991,21 @@
           false
         );
 
+        var reportBody = new FormData();
+        reportBody.append("requester_name", requesterName);
+        reportBody.append("requester_email", requesterEmail);
+        reportBody.append("software", software);
+        reportBody.append("tema", tema);
+        reportBody.append("detalle", detalle);
+        reportBody.append("mensaje", mensaje);
+        if (attachment) {
+          reportBody.append("attachment", attachment);
+        }
+
         fetch("/api/bugs/report", {
           method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            requester_name: requesterName,
-            requester_email: requesterEmail,
-            software: software,
-            tema: tema,
-            detalle: detalle,
-            mensaje: mensaje
-          })
+          headers: { Accept: "application/json" },
+          body: reportBody
         })
           .then(function (res) {
             return res.json().then(function (data) {

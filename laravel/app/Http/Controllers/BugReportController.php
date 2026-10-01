@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -70,21 +71,53 @@ class BugReportController extends Controller
             'tema' => 'required|string|max:120',
             'detalle' => 'required|string|max:200',
             'mensaje' => 'required|string|min:10|max:8000',
+            'attachment' => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         $ticketCode = $this->makeUniqueTicketCode();
+        $attachment = $request->file('attachment');
+        $attachmentPath = null;
+        $attachmentName = null;
+        $attachmentMime = null;
 
-        $row = BugReport::query()->create([
-            'ticket_code' => $ticketCode,
-            'requester_name' => trim($validated['requester_name']),
-            'requester_email' => Str::lower(trim($validated['requester_email'])),
-            'software' => $validated['software'],
-            'tema' => $validated['tema'],
-            'detalle' => $validated['detalle'],
-            'mensaje' => $validated['mensaje'],
-            'status' => 'open',
-            'visitor_hash' => $this->visitorHash($request),
-        ]);
+        if ($attachment) {
+            $extension = Str::lower($attachment->extension() ?: 'jpg');
+            $attachmentPath = $attachment->storeAs('bug-reports', $ticketCode.'.'.$extension, 'local');
+            if (! $attachmentPath) {
+                return response()->json([
+                    'ok' => false,
+                    'error' => 'No se pudo guardar la captura. Intenta nuevamente.',
+                ], 500);
+            }
+            $attachmentName = Str::limit(
+                str_replace(["\r", "\n", "\0"], '', basename($attachment->getClientOriginalName())),
+                255,
+                ''
+            );
+            $attachmentMime = $attachment->getMimeType();
+        }
+
+        try {
+            $row = BugReport::query()->create([
+                'ticket_code' => $ticketCode,
+                'requester_name' => trim($validated['requester_name']),
+                'requester_email' => Str::lower(trim($validated['requester_email'])),
+                'software' => $validated['software'],
+                'tema' => $validated['tema'],
+                'detalle' => $validated['detalle'],
+                'mensaje' => $validated['mensaje'],
+                'attachment_path' => $attachmentPath,
+                'attachment_name' => $attachmentName,
+                'attachment_mime' => $attachmentMime,
+                'status' => 'open',
+                'visitor_hash' => $this->visitorHash($request),
+            ]);
+        } catch (Throwable $exception) {
+            if ($attachmentPath) {
+                Storage::disk('local')->delete($attachmentPath);
+            }
+            throw $exception;
+        }
 
         $softwareLabel = self::SOFTWARE_LABELS[$row->software] ?? $row->software;
         $emailSent = $this->sendReportEmail($row, $softwareLabel);
@@ -101,8 +134,11 @@ class BugReportController extends Controller
 
     private function sendReportEmail(BugReport $report, string $softwareLabel): bool
     {
-        $recipient = trim((string) config('mail.bug_report_to', ''));
-        if ($recipient === '') {
+        $recipients = array_values(array_filter(
+            array_map('trim', explode(',', (string) config('mail.bug_report_to', ''))),
+            fn (string $email) => filter_var($email, FILTER_VALIDATE_EMAIL) !== false
+        ));
+        if ($recipients === []) {
             return false;
         }
 
@@ -120,6 +156,7 @@ class BugReportController extends Controller
             'Software o módulo: '.$softwareLabel,
             'Tema: '.$report->tema,
             'Detalle: '.$report->detalle,
+            'Captura adjunta: '.($report->attachment_path ? ($report->attachment_name ?: 'Sí') : 'No'),
             '',
             'Descripción:',
             $report->mensaje,
@@ -130,11 +167,21 @@ class BugReportController extends Controller
         ]);
 
         try {
-            Mail::raw($body, function ($message) use ($recipient, $subject, $report) {
+            Mail::raw($body, function ($message) use ($recipients, $subject, $report) {
                 $message
-                    ->to($recipient)
+                    ->to($recipients)
                     ->replyTo($report->requester_email, $report->requester_name)
                     ->subject($subject);
+
+                if ($report->attachment_path && Storage::disk('local')->exists($report->attachment_path)) {
+                    $options = [
+                        'as' => $report->attachment_name ?: basename($report->attachment_path),
+                    ];
+                    if ($report->attachment_mime) {
+                        $options['mime'] = $report->attachment_mime;
+                    }
+                    $message->attach(Storage::disk('local')->path($report->attachment_path), $options);
+                }
             });
 
             return true;
@@ -213,6 +260,10 @@ class BugReportController extends Controller
                     'tema' => $b->tema,
                     'detalle' => $b->detalle,
                     'mensaje' => $b->mensaje,
+                    'has_attachment' => filled($b->attachment_path),
+                    'attachment_url' => filled($b->attachment_path)
+                        ? '/api/admin/bugs/'.$b->id.'/attachment'
+                        : null,
                     'status' => $b->status,
                     'created_at' => $b->created_at?->toIso8601String(),
                     'resolved_at' => $b->resolved_at?->toIso8601String(),
@@ -262,12 +313,72 @@ class BugReportController extends Controller
         $bug->status = 'resolved';
         $bug->resolved_at = now();
         $bug->save();
+        $notificationSent = $this->sendResolvedEmail($bug);
 
         return response()->json([
             'ok' => true,
             'ticket_code' => $bug->ticket_code,
             'resolved_at' => $bug->resolved_at?->toIso8601String(),
+            'notification_sent' => $notificationSent,
+            'notification_warning' => $notificationSent
+                ? null
+                : 'El caso quedó resuelto, pero no se pudo enviar el correo al solicitante.',
         ]);
+    }
+
+    public function attachment(int $id)
+    {
+        $bug = BugReport::query()->find($id);
+        if (! $bug || ! $bug->attachment_path || ! Storage::disk('local')->exists($bug->attachment_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('local')->response(
+            $bug->attachment_path,
+            $bug->attachment_name ?: basename($bug->attachment_path),
+            ['Content-Type' => $bug->attachment_mime ?: 'application/octet-stream'],
+            'inline'
+        );
+    }
+
+    private function sendResolvedEmail(BugReport $report): bool
+    {
+        if (! $report->requester_email) {
+            return false;
+        }
+
+        $softwareLabel = self::SOFTWARE_LABELS[$report->software] ?? $report->software;
+        $subject = '[WorkColbeef] Caso solucionado ['.$report->ticket_code.']';
+        $body = implode("\n", [
+            'Hola '.$report->requester_name.',',
+            '',
+            'Tu solicitud fue marcada como solucionada por Desarrollo y Tecnología.',
+            '',
+            'ID del caso: '.$report->ticket_code,
+            'Software o módulo: '.$softwareLabel,
+            'Tema: '.$report->tema,
+            'Detalle: '.$report->detalle,
+            'Fecha de solución: '.($report->resolved_at?->toIso8601String() ?? now()->toIso8601String()),
+            '',
+            'Descripción original:',
+            $report->mensaje,
+            '',
+            'Si el inconveniente continúa, responde a este correo indicando el ID del caso.',
+            '',
+            'Este mensaje fue enviado automáticamente por WorkColbeef.',
+        ]);
+
+        try {
+            Mail::raw($body, function ($message) use ($report, $subject) {
+                $message->to($report->requester_email, $report->requester_name)->subject($subject);
+            });
+
+            return true;
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return false;
+        }
     }
 
     private function makeUniqueTicketCode(): string

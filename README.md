@@ -214,7 +214,7 @@ Estas URLs se abren desde las tarjetas del panel (mosaico), y la información de
 ## Troubleshooting rápido
 
 - **El chat responde error 503**: falta `GEMINI_API_KEY` en el `.env` del backend que estés usando.
-- **No entra a Ajustes / contraseña “incorrecta” siempre**: usa **`MASTER_PASSWORD_HASH_B64`** / **`ADMIN_PASSWORD_HASH_B64`** en el `.env` (sin caracteres `$`; genera con `php laravel/scripts/make-master-hash.php "Colbeef2026*"`). En Laravel: `php artisan config:clear` tras cambiar el `.env`. Con **HTTP** (no HTTPS), la cookie admin solo funciona si `secure` es false (Laravel ya usa `$request->secure()`; en Node no pongas `ADMIN_COOKIE_SECURE=true` salvo HTTPS).
+- **No entra a Ajustes / contraseña “incorrecta” siempre**: usa **`MASTER_PASSWORD_HASH_B64`** / **`ADMIN_PASSWORD_HASH_B64`** en el `.env` (sin caracteres `$`; genera con `php laravel/scripts/make-master-hash.php "tu_clave"`). En Laravel: `php artisan config:clear` tras cambiar el `.env`. Con **HTTP** (no HTTPS), la cookie admin solo funciona si `secure` es false (Laravel ya usa `$request->secure()`; en Node no pongas `ADMIN_COOKIE_SECURE=true` salvo HTTPS).
 - **Cookie de admin cambió**: si cambiaste `ADMIN_COOKIE_NAME`, tendrás que iniciar sesión otra vez.
 
 ---

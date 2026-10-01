@@ -921,9 +921,20 @@
             <span class="feedbackLabel">Descripción</span>
             <textarea class="feedbackControl feedbackTextarea" id="feedbackMensaje" name="mensaje" rows="5" placeholder="Incluye toda la información posible (pasos para reproducir el error, mensaje en pantalla, navegador, etc.)." required></textarea>
           </label>
+          <label class="feedbackField">
+            <span class="feedbackLabel">Captura de pantalla <small>(opcional)</small></span>
+            <input
+              class="feedbackControl feedbackFileControl"
+              id="feedbackAttachment"
+              name="attachment"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+            />
+            <span class="feedbackFieldHelp">PNG, JPG o WEBP. Tamaño máximo: 5 MB.</span>
+          </label>
           <p class="feedbackHint">
             <span class="feedbackHintIcon" aria-hidden="true">&#128206;</span>
-            Tras registrar el caso verás el ID y la confirmación del envío automático.
+            La captura se guardará de forma privada. Tras registrar el caso verás el ID y la confirmación del envío automático.
           </p>
           <div class="feedbackActions">
             <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackCancelBtn">Cancelar</button>
