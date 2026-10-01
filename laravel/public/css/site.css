@@ -3392,6 +3392,122 @@ body[data-suite-theme="oscuro"] .usageBarTrack {
 }
 
 /* Registro de bugs (modal + Ajustes) */
+.feedbackSubmissionStatus {
+  min-height: 390px;
+  padding: clamp(24px, 5vw, 44px) 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.feedbackSubmissionStatus[hidden] {
+  display: none;
+}
+
+.feedbackStatusIcon {
+  width: 92px;
+  height: 92px;
+  margin-bottom: 22px;
+  display: grid;
+  place-items: center;
+}
+
+.feedbackStatusSpinner {
+  width: 68px;
+  height: 68px;
+  border: 6px solid rgba(8, 77, 38, 0.14);
+  border-top-color: var(--green);
+  border-right-color: var(--red);
+  border-radius: 50%;
+  animation: feedbackStatusSpin 0.85s linear infinite;
+}
+
+.feedbackStatusCheck,
+.feedbackStatusError {
+  display: none;
+  width: 88px;
+  height: 88px;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.feedbackSubmissionStatus.is-success .feedbackStatusSpinner,
+.feedbackSubmissionStatus.is-error .feedbackStatusSpinner {
+  display: none;
+}
+
+.feedbackSubmissionStatus.is-success .feedbackStatusCheck {
+  display: block;
+  stroke: var(--green);
+  animation: feedbackStatusResultIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feedbackSubmissionStatus.is-error .feedbackStatusError {
+  display: block;
+  stroke: var(--red);
+  animation: feedbackStatusResultIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feedbackStatusTitle {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.45rem, 4vw, 2rem);
+  line-height: 1.2;
+}
+
+.feedbackStatusMessage {
+  max-width: 520px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.feedbackStatusActions {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.feedbackSubmissionStatus .feedbackTicketBox {
+  width: min(100%, 560px);
+  margin-top: 24px;
+  text-align: left;
+}
+
+@keyframes feedbackStatusSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes feedbackStatusResultIn {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedbackStatusSpinner {
+    animation-duration: 1.8s;
+  }
+
+  .feedbackStatusCheck,
+  .feedbackStatusError {
+    animation: none !important;
+  }
+}
+
 .feedbackTicketBox {
   margin: 0.75rem 0 0;
   padding: 0.85rem 1rem;
@@ -3404,16 +3520,6 @@ body[data-suite-theme="oscuro"] .usageBarTrack {
   margin: 0 0 0.4rem;
   font-size: 0.92rem;
   color: var(--text);
-}
-
-.feedbackTicketLine--sent {
-  color: var(--green);
-  font-weight: 700;
-}
-
-.feedbackTicketLine--warning {
-  color: var(--red);
-  font-weight: 700;
 }
 
 .feedbackTicketLine code {

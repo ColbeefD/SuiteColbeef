@@ -784,6 +784,41 @@
           <strong>Desarrollo y Tecnología</strong>. Se guardará un <strong>ID de caso</strong>,
           la <strong>fecha y hora</strong> y el <strong>software</strong> afectado.
         </p>
+        <section
+          id="feedbackSubmissionStatus"
+          class="feedbackSubmissionStatus is-loading"
+          aria-live="polite"
+          aria-atomic="true"
+          hidden
+        >
+          <div class="feedbackStatusIcon" aria-hidden="true">
+            <span class="feedbackStatusSpinner"></span>
+            <svg class="feedbackStatusCheck" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="28" />
+              <path d="m19 33 9 9 18-21" />
+            </svg>
+            <svg class="feedbackStatusError" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="28" />
+              <path d="m22 22 20 20M42 22 22 42" />
+            </svg>
+          </div>
+          <h3 class="feedbackStatusTitle" id="feedbackStatusTitle">Enviando reporte…</h3>
+          <p class="feedbackStatusMessage" id="feedbackStatusMessage">
+            Estamos registrando el caso y enviando el correo. No cierres esta ventana.
+          </p>
+          <div id="feedbackTicketBox" class="feedbackTicketBox" hidden>
+            <p class="feedbackTicketLine"><strong>ID del caso:</strong> <code id="feedbackTicketCode"></code></p>
+            <p class="feedbackTicketLine"><strong>Fecha y hora (servidor):</strong> <span id="feedbackTicketWhen"></span></p>
+            <p class="fieldHint">Los administradores ven el seguimiento en <strong>Ajustes → Bugs</strong>.</p>
+            <div class="feedbackTicketActions">
+              <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackCopyIdBtn">Copiar ID</button>
+            </div>
+          </div>
+          <div class="feedbackStatusActions">
+            <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackRetryBtn" hidden>Intentar de nuevo</button>
+            <button type="button" class="feedbackBtn feedbackBtn--primary" id="feedbackStatusCloseBtn" hidden>Cerrar</button>
+          </div>
+        </section>
         <form id="feedbackForm" class="feedbackForm" novalidate>
           <label class="feedbackField">
             <span class="feedbackLabel">Software o módulo</span>
@@ -824,15 +859,6 @@
             <span class="feedbackHintIcon" aria-hidden="true">&#128206;</span>
             Tras registrar el caso verás el ID y la confirmación del envío automático.
           </p>
-          <div id="feedbackTicketBox" class="feedbackTicketBox" hidden>
-            <p class="feedbackTicketLine"><strong>ID del caso:</strong> <code id="feedbackTicketCode"></code></p>
-            <p class="feedbackTicketLine"><strong>Fecha y hora (servidor):</strong> <span id="feedbackTicketWhen"></span></p>
-            <p class="feedbackTicketLine" id="feedbackEmailStatus"></p>
-            <p class="fieldHint">Los administradores ven el seguimiento en <strong>Ajustes → Bugs</strong>.</p>
-            <div class="feedbackTicketActions">
-              <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackCopyIdBtn">Copiar ID</button>
-            </div>
-          </div>
           <div class="feedbackActions">
             <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackCancelBtn">Cancelar</button>
             <button type="submit" class="feedbackBtn feedbackBtn--primary" id="feedbackSubmitBtn">Registrar y enviar</button>

@@ -1473,19 +1473,48 @@
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
     var form = document.getElementById("feedbackForm");
-    if (form) form.reset();
+    if (form) {
+      form.reset();
+      form.hidden = false;
+    }
+    var status = document.getElementById("feedbackSubmissionStatus");
+    if (status) {
+      status.hidden = true;
+      status.className = "feedbackSubmissionStatus is-loading";
+    }
     var ticketBox = document.getElementById("feedbackTicketBox");
     if (ticketBox) ticketBox.hidden = true;
-    var emailStatus = document.getElementById("feedbackEmailStatus");
-    if (emailStatus) {
-      emailStatus.textContent = "";
-      emailStatus.classList.remove("feedbackTicketLine--sent", "feedbackTicketLine--warning");
-    }
     var sw = document.getElementById("feedbackSoftware");
     if (sw) sw.value = "WorkColbeef-portal";
     fillFeedbackDetalleOptions("");
     var firstField = document.getElementById("feedbackTema");
     if (firstField) firstField.focus();
+  }
+
+  function showFeedbackSubmissionStatus(state, title, message, canRetry) {
+    var form = document.getElementById("feedbackForm");
+    var status = document.getElementById("feedbackSubmissionStatus");
+    var titleEl = document.getElementById("feedbackStatusTitle");
+    var messageEl = document.getElementById("feedbackStatusMessage");
+    var retryBtn = document.getElementById("feedbackRetryBtn");
+    var closeBtn = document.getElementById("feedbackStatusCloseBtn");
+    if (form) form.hidden = true;
+    if (!status) return;
+    status.hidden = false;
+    status.className = "feedbackSubmissionStatus is-" + state;
+    if (titleEl) titleEl.textContent = title;
+    if (messageEl) messageEl.textContent = message;
+    if (retryBtn) retryBtn.hidden = !canRetry;
+    if (closeBtn) closeBtn.hidden = state === "loading";
+  }
+
+  function restoreFeedbackForm() {
+    var form = document.getElementById("feedbackForm");
+    var status = document.getElementById("feedbackSubmissionStatus");
+    var ticketBox = document.getElementById("feedbackTicketBox");
+    if (form) form.hidden = false;
+    if (status) status.hidden = true;
+    if (ticketBox) ticketBox.hidden = true;
   }
 
   function closeFeedbackModal() {
@@ -1758,6 +1787,8 @@
     var temaEl = document.getElementById("feedbackTema");
     var copyBtn = document.getElementById("feedbackCopyIdBtn");
     var submitBtn = document.getElementById("feedbackSubmitBtn");
+    var retryBtn = document.getElementById("feedbackRetryBtn");
+    var statusCloseBtn = document.getElementById("feedbackStatusCloseBtn");
 
     if (openBtn) {
       openBtn.addEventListener("click", function (e) {
@@ -1775,6 +1806,13 @@
     if (backdrop) backdrop.addEventListener("click", closeFeedbackModal);
     if (closeBtn) closeBtn.addEventListener("click", closeFeedbackModal);
     if (cancelBtn) cancelBtn.addEventListener("click", closeFeedbackModal);
+    if (statusCloseBtn) statusCloseBtn.addEventListener("click", closeFeedbackModal);
+    if (retryBtn) {
+      retryBtn.addEventListener("click", function () {
+        if (submitBtn) submitBtn.disabled = false;
+        restoreFeedbackForm();
+      });
+    }
 
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
@@ -1822,6 +1860,12 @@
         }
 
         if (submitBtn) submitBtn.disabled = true;
+        showFeedbackSubmissionStatus(
+          "loading",
+          "Enviando reporte…",
+          "Estamos registrando el caso y enviando el correo. No cierres esta ventana.",
+          false
+        );
 
         fetch("/api/bugs/report", {
           method: "POST",
@@ -1847,7 +1891,7 @@
               if (data && data.errors) {
                 err = err + " " + JSON.stringify(data.errors);
               }
-              window.alert(err);
+              showFeedbackSubmissionStatus("error", "No se pudo enviar", err, true);
               return;
             }
             var ticket = data.ticket_code || "—";
@@ -1859,19 +1903,30 @@
             if (codeEl) codeEl.textContent = ticket;
             if (whenEl) whenEl.textContent = whenLabel;
             if (box) box.hidden = false;
-            var emailStatus = document.getElementById("feedbackEmailStatus");
-            if (emailStatus) {
-              emailStatus.classList.toggle("feedbackTicketLine--sent", data.email_sent === true);
-              emailStatus.classList.toggle("feedbackTicketLine--warning", data.email_sent !== true);
-              emailStatus.textContent =
-                data.email_sent === true
-                  ? "Correo enviado automáticamente a Desarrollo y Tecnología."
-                  : data.email_warning || "El caso quedó registrado, pero el correo automático no pudo enviarse.";
+            if (data.email_sent === true) {
+              showFeedbackSubmissionStatus(
+                "success",
+                "¡Reporte enviado!",
+                "El caso fue registrado y el correo llegó al sistema de Desarrollo y Tecnología.",
+                false
+              );
+            } else {
+              showFeedbackSubmissionStatus(
+                "error",
+                "Caso registrado, correo no enviado",
+                data.email_warning || "Conservamos el ID del caso, pero el correo automático no pudo enviarse.",
+                false
+              );
             }
           })
           .catch(function () {
             if (submitBtn) submitBtn.disabled = false;
-            window.alert("No hay conexión con el servidor o falta migrar la base (Laravel + migrate).");
+            showFeedbackSubmissionStatus(
+              "error",
+              "Error de conexión",
+              "No se pudo contactar al servidor. Verifica la conexión e intenta de nuevo.",
+              true
+            );
           });
       });
     }
