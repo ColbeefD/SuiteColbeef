@@ -1362,8 +1362,6 @@
     });
   }
 
-  var FEEDBACK_EMAIL = "desarrollo.tecnologia@colbeef.com";
-  var lastBugMailtoPayload = null;
   var DETALLES_POR_TEMA = {
     "Error o fallo": ["Pantalla en blanco", "Mensaje de error visible", "No carga un módulo", "Comportamiento inesperado", "Otro"],
     "Rendimiento o lentitud": ["Carga lenta en general", "Solo un módulo lento", "Timeout o cierre de sesión", "Otro"],
@@ -1478,7 +1476,11 @@
     if (form) form.reset();
     var ticketBox = document.getElementById("feedbackTicketBox");
     if (ticketBox) ticketBox.hidden = true;
-    lastBugMailtoPayload = null;
+    var emailStatus = document.getElementById("feedbackEmailStatus");
+    if (emailStatus) {
+      emailStatus.textContent = "";
+      emailStatus.classList.remove("feedbackTicketLine--sent", "feedbackTicketLine--warning");
+    }
     var sw = document.getElementById("feedbackSoftware");
     if (sw) sw.value = "WorkColbeef-portal";
     fillFeedbackDetalleOptions("");
@@ -1754,7 +1756,6 @@
     var cancelBtn = document.getElementById("feedbackCancelBtn");
     var form = document.getElementById("feedbackForm");
     var temaEl = document.getElementById("feedbackTema");
-    var mailBtn = document.getElementById("feedbackMailtoBtn");
     var copyBtn = document.getElementById("feedbackCopyIdBtn");
     var submitBtn = document.getElementById("feedbackSubmitBtn");
 
@@ -1792,36 +1793,6 @@
         } else {
           window.prompt("Copia el ID:", code);
         }
-      });
-    }
-
-    if (mailBtn) {
-      mailBtn.addEventListener("click", function () {
-        if (!lastBugMailtoPayload) {
-          window.alert("Primero registra el caso con el botón «Registrar caso».");
-          return;
-        }
-        var p = lastBugMailtoPayload;
-        var subject = "[WorkColbeef] " + p.tema + " — " + p.detalle + " [" + p.ticket_code + "]";
-        var body =
-          "ID caso: " +
-          p.ticket_code +
-          "\nFecha registro: " +
-          p.reported_at_label +
-          "\nSoftware: " +
-          p.software_label +
-          "\n\nTema: " +
-          p.tema +
-          "\nDetalle: " +
-          p.detalle +
-          "\n\nDescripción:\n" +
-          p.mensaje +
-          "\n\n---\nWorkColbeef (bugs / PQR)";
-        var url =
-          "mailto:" + FEEDBACK_EMAIL +
-          "?subject=" + encodeURIComponent(subject) +
-          "&body=" + encodeURIComponent(body);
-        window.location.href = url;
       });
     }
 
@@ -1882,21 +1853,21 @@
             var ticket = data.ticket_code || "—";
             var whenIso = data.reported_at || "";
             var whenLabel = formatBugReportDateTime(whenIso);
-            var swLabel = data.software_label || software;
             var codeEl = document.getElementById("feedbackTicketCode");
             var whenEl = document.getElementById("feedbackTicketWhen");
             var box = document.getElementById("feedbackTicketBox");
             if (codeEl) codeEl.textContent = ticket;
             if (whenEl) whenEl.textContent = whenLabel;
             if (box) box.hidden = false;
-            lastBugMailtoPayload = {
-              ticket_code: ticket,
-              reported_at_label: whenLabel,
-              software_label: swLabel,
-              tema: tema,
-              detalle: detalle,
-              mensaje: mensaje
-            };
+            var emailStatus = document.getElementById("feedbackEmailStatus");
+            if (emailStatus) {
+              emailStatus.classList.toggle("feedbackTicketLine--sent", data.email_sent === true);
+              emailStatus.classList.toggle("feedbackTicketLine--warning", data.email_sent !== true);
+              emailStatus.textContent =
+                data.email_sent === true
+                  ? "Correo enviado automáticamente a Desarrollo y Tecnología."
+                  : data.email_warning || "El caso quedó registrado, pero el correo automático no pudo enviarse.";
+            }
           })
           .catch(function () {
             if (submitBtn) submitBtn.disabled = false;

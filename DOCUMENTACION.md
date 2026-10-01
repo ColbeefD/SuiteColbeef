@@ -381,7 +381,7 @@ Backend recomendado. Sirve `laravel/public/` y monta `routes/api.php` bajo `/api
 | `ChatProxyController` | Proxy a Gemini (prompt más breve que el de Node) |
 | `PowerBiPinController` | Verificación del PIN de Power BI; rate limit 12/10min; cookie de desbloqueo |
 | `UsageStatsController` | Registro y resumen de métricas (incluye **desglose por programa**) |
-| `BugReportController` | Alta pública de PQR y panel admin (totales, tiempo medio, resolver) |
+| `BugReportController` | Alta pública de PQR, envío SMTP automático y panel admin (totales, tiempo medio, resolver) |
 | `SsoController` | Emite JWT corto para SSO hacia la app Flask de Gestión Humana |
 
 **Middleware `VerifyAdminJwt`** (alias `admin.jwt`): lee la cookie, decodifica el JWT y exige `scope === "admin"`. Devuelve 401 (API) o redirige a `/` (HTML).
@@ -435,6 +435,11 @@ POST  /api/bugs/report                       (público, throttle 20/min)
 GET   /api/admin/bugs/summary?days=30        (admin)
 PATCH /api/admin/bugs/{id}/resolve           (admin)
 ```
+
+Al registrar una PQR, Laravel conserva el ticket y envía automáticamente un
+correo a la dirección configurada en `BUG_REPORT_TO_EMAIL`. La respuesta incluye
+`email_sent`; si SMTP falla, el caso no se pierde y la interfaz muestra una
+advertencia para que el equipo pueda revisar la configuración.
 
 ### Chat (asistente Beef)
 
@@ -527,6 +532,9 @@ Además de las estándar de Laravel:
 | `SECONDARY_PIN_HASH_B64` | PIN secundario común para accesos protegidos |
 | `POWERBI_PIN_TTL_MINUTES` | TTL de la cookie de desbloqueo |
 | `GEMINI_API_KEY` / `GEMINI_MODEL` | Chat |
+| `MAIL_MAILER`, `MAIL_SCHEME`, `MAIL_HOST`, `MAIL_PORT` | Transporte SMTP |
+| `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS` | Credenciales y remitente SMTP |
+| `BUG_REPORT_TO_EMAIL` | Destinatario automático de reportes PQR |
 | `SSO_GH_SECRET` / `SSO_GH_AUDIENCE` | SSO con la app Flask de GH |
 | `GH_APP_BASE_URL` / `GH_SSO_ADMIN_USER_ID` / `SSO_GH_TTL_SECONDS` | Parámetros del SSO |
 

@@ -3406,6 +3406,16 @@ body[data-suite-theme="oscuro"] .usageBarTrack {
   color: var(--text);
 }
 
+.feedbackTicketLine--sent {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.feedbackTicketLine--warning {
+  color: var(--red);
+  font-weight: 700;
+}
+
 .feedbackTicketLine code {
   font-size: 1rem;
   font-weight: 600;

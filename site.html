@@ -780,9 +780,9 @@
         </div>
         <h2 class="feedbackModal-title" id="feedbackModalTitle">Reporte de bugs / PQR</h2>
         <p class="feedbackModal-intro">
-          Se guarda un <strong>ID de caso</strong>, la <strong>fecha y hora</strong> y el <strong>software</strong> afectado.
-          Opcionalmente puedes enviar también un correo a
-          <a href="mailto:desarrollo.tecnologia@colbeef.com">desarrollo.tecnologia@colbeef.com</a>.
+          Registra la novedad y WorkColbeef la enviará automáticamente a
+          <strong>Desarrollo y Tecnología</strong>. Se guardará un <strong>ID de caso</strong>,
+          la <strong>fecha y hora</strong> y el <strong>software</strong> afectado.
         </p>
         <form id="feedbackForm" class="feedbackForm" novalidate>
           <label class="feedbackField">
@@ -822,20 +822,20 @@
           </label>
           <p class="feedbackHint">
             <span class="feedbackHintIcon" aria-hidden="true">&#128206;</span>
-            Tras registrar el caso verás el ID; si adjuntas capturas, usa el botón de correo e incluye el ID en el mensaje.
+            Tras registrar el caso verás el ID y la confirmación del envío automático.
           </p>
           <div id="feedbackTicketBox" class="feedbackTicketBox" hidden>
             <p class="feedbackTicketLine"><strong>ID del caso:</strong> <code id="feedbackTicketCode"></code></p>
             <p class="feedbackTicketLine"><strong>Fecha y hora (servidor):</strong> <span id="feedbackTicketWhen"></span></p>
+            <p class="feedbackTicketLine" id="feedbackEmailStatus"></p>
             <p class="fieldHint">Los administradores ven el seguimiento en <strong>Ajustes → Bugs</strong>.</p>
             <div class="feedbackTicketActions">
               <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackCopyIdBtn">Copiar ID</button>
-              <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackMailtoBtn">Enviar por correo</button>
             </div>
           </div>
           <div class="feedbackActions">
             <button type="button" class="feedbackBtn feedbackBtn--ghost" id="feedbackCancelBtn">Cancelar</button>
-            <button type="submit" class="feedbackBtn feedbackBtn--primary" id="feedbackSubmitBtn">Registrar caso</button>
+            <button type="submit" class="feedbackBtn feedbackBtn--primary" id="feedbackSubmitBtn">Registrar y enviar</button>
           </div>
         </form>
       </div>

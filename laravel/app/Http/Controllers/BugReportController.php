@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\BugReport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * Gestión de reportes de bugs / PQR del portal.
  *
- * store()        → alta pública (throttle): crea un ticket WB-YYYYMMDD-XXXXXX.
+ * store()        → alta pública (throttle): crea un ticket WB-YYYYMMDD-XXXXXX
+ *                  y lo notifica automáticamente por SMTP.
  * adminSummary() → panel admin: totales, tiempo medio de resolución, desglose
  *                  por software y casos recientes.
  * resolve()      → panel admin: marca un ticket como resuelto (resolved_at).
@@ -63,12 +66,58 @@ class BugReportController extends Controller
             'visitor_hash' => $this->visitorHash($request),
         ]);
 
+        $softwareLabel = self::SOFTWARE_LABELS[$row->software] ?? $row->software;
+        $emailSent = $this->sendReportEmail($row, $softwareLabel);
+
         return response()->json([
             'ok' => true,
             'ticket_code' => $row->ticket_code,
             'reported_at' => $row->created_at?->toIso8601String(),
-            'software_label' => self::SOFTWARE_LABELS[$row->software] ?? $row->software,
+            'software_label' => $softwareLabel,
+            'email_sent' => $emailSent,
+            'email_warning' => $emailSent ? null : 'El caso quedó registrado, pero no se pudo enviar el correo automático.',
         ], 201);
+    }
+
+    private function sendReportEmail(BugReport $report, string $softwareLabel): bool
+    {
+        $recipient = trim((string) config('mail.bug_report_to', ''));
+        if ($recipient === '') {
+            return false;
+        }
+
+        $subjectTema = str_replace(["\r", "\n"], ' ', $report->tema);
+        $subjectDetalle = str_replace(["\r", "\n"], ' ', $report->detalle);
+        $subject = "[WorkColbeef] {$subjectTema} — {$subjectDetalle} [{$report->ticket_code}]";
+
+        $body = implode("\n", [
+            'Nuevo reporte de bugs / PQR registrado en WorkColbeef',
+            '',
+            'ID del caso: '.$report->ticket_code,
+            'Fecha y hora: '.($report->created_at?->toIso8601String() ?? 'No disponible'),
+            'Software o módulo: '.$softwareLabel,
+            'Tema: '.$report->tema,
+            'Detalle: '.$report->detalle,
+            '',
+            'Descripción:',
+            $report->mensaje,
+            '',
+            'Estado inicial: Abierto',
+            '',
+            'Este mensaje fue enviado automáticamente por WorkColbeef.',
+        ]);
+
+        try {
+            Mail::raw($body, function ($message) use ($recipient, $subject) {
+                $message->to($recipient)->subject($subject);
+            });
+
+            return true;
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return false;
+        }
     }
 
     public function adminSummary(Request $request): JsonResponse
