@@ -219,7 +219,7 @@
                   data-app-id="control-operativo"
                   data-app-name="Control operativo"
                   role="group"
-                  aria-label="Control operativo: pasa el cursor o usa tab para ver Control operativo y Validador OD"
+                  aria-label="Control operativo: pasa el cursor o usa tab para ver Control operativo, Validador OD e Inv Controller"
                   tabindex="0"
                 >
                   <span class="moduleTileIcon" aria-hidden="true">
@@ -227,10 +227,11 @@
                   </span>
                   <span class="moduleTileName">Control operativo</span>
                   <span class="moduleTileDesc">Central operativa para gestionar el flujo de procesos de la planta de beneficio.</span>
-                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Control operativo y Validador OD.</p>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Control operativo, Validador OD e Inv Controller.</p>
                   <div class="moduleTileActions">
                     <a class="moduleTileBtn" href="http://192.168.100.241:5001/">Control operativo</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:3050/">Validador OD</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:5175/ingresar">Inv Controller</a>
                   </div>
                 </div>
                 <div
@@ -579,6 +580,7 @@
               <div class="searchModal-gestionHumanaActions">
                 <a class="searchModal-link" href="http://192.168.100.241:5001/" data-search="control operativo planta beneficio faena proceso">Control operativo</a>
                 <a class="searchModal-link" href="http://192.168.20.205:3050/" data-search="control operativo validador od validacion validación 3050">Validador OD</a>
+                <a class="searchModal-link" href="http://192.168.20.205:5175/ingresar" data-search="control operativo inv controller inventario 5175">Inv Controller</a>
               </div>
             </div>
           </li>
@@ -873,6 +875,7 @@
                 <option value="control-operativo">Control operativo (módulo)</option>
                 <option value="control-operativo-app">Control operativo (aplicación)</option>
                 <option value="validador-od">Validador OD</option>
+                <option value="inv-controller">Inv Controller</option>
               </optgroup>
               <optgroup label="Gestión humana">
                 <option value="gestion-humana">Gestión humana</option>
