@@ -239,7 +239,7 @@
                   data-app-id="gestion-humana"
                   data-app-name="Gestion Humana"
                   role="group"
-                  aria-label="Gestión humana: pasa el cursor o usa tab para ver Gestión humana y Contratista"
+                  aria-label="Gestión humana: pasa el cursor o usa tab para ver Gestión humana, Contratista y Focales Bienestar"
                   tabindex="0"
                 >
                   <span class="moduleTileIcon" aria-hidden="true">
@@ -247,10 +247,11 @@
                   </span>
                   <span class="moduleTileName">Gestión humana</span>
                   <span class="moduleTileDesc">Personal activo, permisos, eventos, beneficios, EPS y tableros de talento.</span>
-                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Gestión humana y Contratista.</p>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Gestión humana, Contratista y Focales Bienestar.</p>
                   <div class="moduleTileActions">
                     <a class="moduleTileBtn" href="http://192.168.20.205:5000/login">Gestión humana</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8009/login">Contratista</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:3020/">Focales Bienestar</a>
                   </div>
                 </div>
                 <div
@@ -598,6 +599,11 @@
                   href="http://192.168.20.205:8009/login"
                   data-search="contratista gestion humana gh rrhh 8009 login"
                   >Contratista</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:3020/"
+                  data-search="focales bienestar gestion humana gh 3020"
+                  >Focales Bienestar</a>
               </div>
             </div>
           </li>
@@ -880,6 +886,7 @@
               <optgroup label="Gestión humana">
                 <option value="gestion-humana">Gestión humana</option>
                 <option value="contratista">Contratista</option>
+                <option value="focales-bienestar">Focales Bienestar</option>
               </optgroup>
               <optgroup label="Logística">
                 <option value="logistica">Logística (módulo)</option>
