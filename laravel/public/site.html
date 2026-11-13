@@ -239,7 +239,7 @@
                   data-app-id="gestion-humana"
                   data-app-name="Gestion Humana"
                   role="group"
-                  aria-label="Gestión humana: pasa el cursor o usa tab para ver Gestión humana, Contratista y Focales Bienestar"
+                  aria-label="Gestión humana: pasa el cursor o usa tab para ver Gestión humana, Contratista, Focales Bienestar y Administración GH"
                   tabindex="0"
                 >
                   <span class="moduleTileIcon" aria-hidden="true">
@@ -247,11 +247,12 @@
                   </span>
                   <span class="moduleTileName">Gestión humana</span>
                   <span class="moduleTileDesc">Personal activo, permisos, eventos, beneficios, EPS y tableros de talento.</span>
-                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Gestión humana, Contratista y Focales Bienestar.</p>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Gestión humana, Contratista, Focales Bienestar y Administración GH.</p>
                   <div class="moduleTileActions">
                     <a class="moduleTileBtn" href="http://192.168.20.205:5000/login">Gestión humana</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8009/login">Contratista</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:3020/">Focales Bienestar</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:5005/admin">Administración GH</a>
                   </div>
                 </div>
                 <div
@@ -604,6 +605,11 @@
                   href="http://192.168.20.205:3020/"
                   data-search="focales bienestar gestion humana gh 3020"
                   >Focales Bienestar</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:5005/admin"
+                  data-search="administracion administrador gestion humana gh 5005"
+                  >Administración GH</a>
               </div>
             </div>
           </li>
@@ -887,6 +893,7 @@
                 <option value="gestion-humana">Gestión humana</option>
                 <option value="contratista">Contratista</option>
                 <option value="focales-bienestar">Focales Bienestar</option>
+                <option value="administracion-gh">Administración GH</option>
               </optgroup>
               <optgroup label="Logística">
                 <option value="logistica">Logística (módulo)</option>
