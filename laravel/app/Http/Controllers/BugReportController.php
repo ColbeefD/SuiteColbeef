@@ -37,7 +37,7 @@ class BugReportController extends Controller
         'inventarios' => 'Inventarios',
         'app-logistica' => 'App Logística',
         'rendimientos' => 'Rendimientos',
-        'lenguas' => 'Lenguas',
+        'lenguas' => 'Despacho de lenguas',
         'calidad' => 'Calidad (módulo)',
         'canales' => 'Canales',
         'colbeef-ops' => 'Colbeef-Ops',

@@ -313,7 +313,7 @@ Todas las URLs están configuradas en `site.html` (mosaico y buscador).
 | Inventarios | `http://192.168.20.205:8501/` | No |
 | App Logística | `http://192.168.20.205:8088/login.php` | No |
 | Rendimientos | `http://192.168.20.205:8090/` | **Sí** (cliente, `250626`) |
-| Lenguas | `http://192.168.20.205:8005/` | No |
+| Despacho de lenguas | `http://192.168.20.205:8007/` | No |
 
 ### Calidad
 | Programa | URL | PIN |

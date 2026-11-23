@@ -52,7 +52,7 @@ class ChatProxyController extends Controller
             .'como EPS y pensiones, y panel de gráficos). '
             .'3) LOGÍSTICA (incluye: módulo de Desposte en http://192.168.20.205:8004/login — ahí se gestiona el desposte; '
             .'inventarios en http://192.168.20.205:8501/; ERP logístico en http://192.168.20.205:8088/login.php; '
-            .'lenguas en http://192.168.20.205:8005/; ingresar lenguas a inventario y generar documentación operativa). '
+            .'Despacho de lenguas en http://192.168.20.205:8007/; ingresar lenguas a inventario y generar documentación operativa). '
             .'4) CALIDAD (incluye: Canales en http://192.168.20.205:8006/login; '
             .'Colbeef-Ops en http://192.168.20.205:8081 — acceso desde la tarjeta Calidad en WorkColbeef, botones Canales y Colbeef-Ops; hallazgos, tolerancia, registros, '
             .'dashboards y controles de calidad en planta). '
