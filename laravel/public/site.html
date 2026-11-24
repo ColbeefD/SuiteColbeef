@@ -274,7 +274,6 @@
                     <a class="moduleTileBtn" href="http://192.168.20.205:8501/">Inventarios</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8088/login.php">App Logística</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8090/" data-requires-pin="rendimientos">Rendimientos</a>
-                    <a class="moduleTileBtn" href="http://192.168.20.205:8007/">Despacho de lenguas</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8005/">Despacho de lenguas</a>
                   </div>
                 </div>
@@ -283,7 +282,7 @@
                   data-app-id="calidad"
                   data-app-name="Calidad"
                   role="group"
-                  aria-label="Calidad: pasa el cursor o usa tab para ver Canales y Colbeef-Ops"
+                  aria-label="Calidad: pasa el cursor o usa tab para ver Canales, Colbeef-Ops e Inventario de lenguas"
                   tabindex="0"
                 >
                   <span class="moduleTileIcon" aria-hidden="true">
@@ -295,10 +294,11 @@
                   </span>
                   <span class="moduleTileName">Calidad</span>
                   <span class="moduleTileDesc">Gestión de procesos, registros y controles de calidad en planta.</span>
-                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Canales y Colbeef-Ops.</p>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Canales, Colbeef-Ops e Inventario de lenguas.</p>
                   <div class="moduleTileActions">
                     <a class="moduleTileBtn" href="http://192.168.20.205:8006/login">Canales</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8081">Colbeef-Ops</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8007/">Inventario de lenguas</a>
                   </div>
                 </div>
                 <div
@@ -646,11 +646,6 @@
                   >Rendimientos</a>
                 <a
                   class="searchModal-link"
-                  href="http://192.168.20.205:8007/"
-                  data-search="logistica despacho lenguas app 8007"
-                  >Despacho de lenguas</a>
-                <a
-                  class="searchModal-link"
                   href="http://192.168.20.205:8005/"
                   data-search="logistica despacho lenguas app 8005"
                   >Despacho de lenguas</a>
@@ -671,6 +666,11 @@
                   href="http://192.168.20.205:8081"
                   data-search="calidad colbeef ops operaciones calidad planta"
                   >Colbeef-Ops</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8007/"
+                  data-search="calidad inventario lenguas app 8007"
+                  >Inventario de lenguas</a>
               </div>
             </div>
           </li>
@@ -922,13 +922,13 @@
                 <option value="inventarios">Inventarios</option>
                 <option value="app-logistica">App Logística</option>
                 <option value="rendimientos">Rendimientos</option>
-                <option value="lenguas">Despacho de lenguas</option>
-                <option value="lenguas-8005">Despacho de lenguas (8005)</option>
+                <option value="lenguas-8005">Despacho de lenguas</option>
               </optgroup>
               <optgroup label="Calidad">
                 <option value="calidad">Calidad (módulo)</option>
                 <option value="canales">Canales</option>
                 <option value="colbeef-ops">Colbeef-Ops</option>
+                <option value="lenguas">Inventario de lenguas</option>
               </optgroup>
               <optgroup label="Tesorería y cartera">
                 <option value="tesoreria-cartera">Tesorería y cartera (módulo)</option>
