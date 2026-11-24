@@ -85,7 +85,7 @@
             href="#"
             data-app-id="tesoreria-cartera"
             data-app-name="Tesorería y cartera"
-            aria-label="Tesorería y cartera: ir al panel y elegir Pago proveedores"
+            aria-label="Tesorería y cartera: ir al panel y elegir Pago proveedores o Gestión cartera"
           >
             <svg class="menuIcon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="7" y="11" width="34" height="27" rx="4" stroke="currentColor" stroke-width="2" />
@@ -275,6 +275,7 @@
                     <a class="moduleTileBtn" href="http://192.168.20.205:8088/login.php">App Logística</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8090/" data-requires-pin="rendimientos">Rendimientos</a>
                     <a class="moduleTileBtn" href="http://192.168.20.205:8007/">Despacho de lenguas</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8005/">Despacho de lenguas</a>
                   </div>
                 </div>
                 <div
@@ -305,7 +306,7 @@
                   data-app-id="tesoreria-cartera"
                   data-app-name="Tesorería y cartera"
                   role="group"
-                  aria-label="Tesorería y cartera: pasa el cursor o usa tab para ver Pago proveedores"
+                  aria-label="Tesorería y cartera: pasa el cursor o usa tab para ver Pago proveedores o Gestión cartera"
                   tabindex="0"
                 >
                   <span class="moduleTileIcon" aria-hidden="true">
@@ -317,9 +318,10 @@
                   </span>
                   <span class="moduleTileName">Tesorería y cartera</span>
                   <span class="moduleTileDesc">Accesos para la gestión de pagos, proveedores y cartera.</span>
-                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Pago proveedores.</p>
+                  <p class="moduleTileHoverHint">Pasa el cursor por esta tarjeta para ver Pago proveedores y Gestión cartera.</p>
                   <div class="moduleTileActions">
                     <a class="moduleTileBtn" href="http://192.168.20.205:8100/">Pago proveedores</a>
+                    <a class="moduleTileBtn" href="http://192.168.20.205:8765/">Gestión cartera</a>
                   </div>
                 </div>
                 <div
@@ -647,6 +649,11 @@
                   href="http://192.168.20.205:8007/"
                   data-search="logistica despacho lenguas app 8007"
                   >Despacho de lenguas</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8005/"
+                  data-search="logistica despacho lenguas app 8005"
+                  >Despacho de lenguas</a>
               </div>
             </div>
           </li>
@@ -676,6 +683,11 @@
                   href="http://192.168.20.205:8100/"
                   data-search="tesoreria tesorería cartera pago pagos proveedores 8100"
                   >Pago proveedores</a>
+                <a
+                  class="searchModal-link"
+                  href="http://192.168.20.205:8765/"
+                  data-search="tesoreria tesorería cartera gestion gestión 8765"
+                  >Gestión cartera</a>
               </div>
             </div>
           </li>
@@ -911,6 +923,7 @@
                 <option value="app-logistica">App Logística</option>
                 <option value="rendimientos">Rendimientos</option>
                 <option value="lenguas">Despacho de lenguas</option>
+                <option value="lenguas-8005">Despacho de lenguas (8005)</option>
               </optgroup>
               <optgroup label="Calidad">
                 <option value="calidad">Calidad (módulo)</option>
@@ -920,6 +933,7 @@
               <optgroup label="Tesorería y cartera">
                 <option value="tesoreria-cartera">Tesorería y cartera (módulo)</option>
                 <option value="pago-proveedores">Pago proveedores</option>
+                <option value="gestion-cartera">Gestión cartera</option>
               </optgroup>
               <optgroup label="Administrativo">
                 <option value="administrativo">Administrativo (módulo)</option>
