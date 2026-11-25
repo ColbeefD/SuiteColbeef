@@ -345,6 +345,10 @@
    * @param {string} appId Id del módulo contenedor.
    * @returns {{label:string,appId:string,programId:string,programLabel:string,pinType:string}}
    */
+  function skipsPowerBiPin(el) {
+    return el && el.getAttribute("data-powerbi-pin") === "none";
+  }
+
   function moduleMetaFromLink(el, appId) {
     var label = (el.textContent || "").replace(/\s+/g, " ").trim();
     var tile = el.closest(".moduleTile");
@@ -360,7 +364,7 @@
       appId: appId || (tile && tile.getAttribute("data-app-id")) || "",
       programId: programIdFromHref(el.getAttribute("href") || label),
       programLabel: label || moduleName || "Módulo",
-      pinType: el.getAttribute("data-requires-pin") === "rendimientos" ? "rendimientos" : appId === "power-bi" ? "powerbi" : ""
+      pinType: el.getAttribute("data-requires-pin") === "rendimientos" ? "rendimientos" : appId === "power-bi" && !skipsPowerBiPin(el) ? "powerbi" : ""
     };
   }
 
@@ -1686,9 +1690,14 @@
         if (/^https?:\/\//i.test(href)) {
           var meta = moduleMetaFromLink(a, appId || "");
           if (appId === "power-bi") {
-            meta.pinType = "powerbi";
             meta.appId = "power-bi";
-            requirePowerBiPinThenOpen(href, meta);
+            if (skipsPowerBiPin(a)) {
+              meta.pinType = "";
+              navigateToModule(href, meta);
+            } else {
+              meta.pinType = "powerbi";
+              requirePowerBiPinThenOpen(href, meta);
+            }
           } else if (a.getAttribute("data-requires-pin") === "rendimientos") {
             meta.pinType = "rendimientos";
             meta.appId = meta.appId || "logistica";
@@ -2091,8 +2100,13 @@
         closeSettingsView();
         setActiveMenuByAppId("power-bi");
         var meta = moduleMetaFromLink(el, "power-bi");
-        meta.pinType = "powerbi";
-        requirePowerBiPinThenOpen(href, meta);
+        if (skipsPowerBiPin(el)) {
+          meta.pinType = "";
+          navigateToModule(href, meta);
+        } else {
+          meta.pinType = "powerbi";
+          requirePowerBiPinThenOpen(href, meta);
+        }
       });
     });
   }
